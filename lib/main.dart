@@ -61,26 +61,22 @@ class Profile extends StatelessWidget {
     );
   }
 }
-/// -----------------------------------
-///            Login Widget           
-/// -----------------------------------
-class Login extends StatefulWidget {
-  final loginAction;
-  final String loginError;
 
-  const Login(this.loginAction, this.loginError);
+/// -----------------------------------
+///            Graphs Widget
+/// -----------------------------------
+class Graph extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-      return _DogState();
+    return GraphState();
   }
 
 
 }
 
-
-class _CounterState extends State<Login> {
-  int _counter = 0;
+class GraphState extends State<Graph> {
+  int _counter = 8000;
 
   void _increment() {
     setState(() {
@@ -116,34 +112,15 @@ class _CounterState extends State<Login> {
     );
   }
 }
+/// -----------------------------------
+///            Login Widget           
+/// -----------------------------------
+class Login extends StatelessWidget {
+  final loginAction;
+  final String loginError;
 
-class _DogState extends State<Login> {
-  int _counter = 0;
-  bool state=false;
+  const Login(this.loginAction, this.loginError);
 
-
-  void _toggleFavorite() {
-    setState(() {
-      state= !state;
-    });
-
-  }
-
-  void _increment() {
-    setState(() {
-      // This call to setState tells the Flutter framework
-      // that something has changed in this State, which
-      // causes it to rerun the build method below so that
-      // the display can reflect the updated values. If you
-      // change _counter without calling setState(), then
-      // the build method won't be called again, and so
-      // nothing would appear to happen.
-      if(!state) {
-        return;
-      }
-      _counter--;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,23 +134,15 @@ class _DogState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         ElevatedButton(
-          onPressed: _increment,
-          child: state
-              ? const Text('Increment')
-              : const Text('OFFLINE')
+            onPressed: loginAction,
+            child: const Text('LOGIN')
         ),
-        ElevatedButton(
-          onPressed: _toggleFavorite,
-          child: state
-              ? const Text('Disable')
-              : const Text('Enable')
-        ),
-        const SizedBox(width: 16),
-        Text('Count: $_counter'),
       ],
     );
   }
 }
+
+
 
 /// -----------------------------------
 ///                 App
@@ -193,38 +162,51 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   bool isBusy = false;
+
   bool isLoggedIn = false;
 
-  bool isCounter = false;
-  bool isProfile = false;
-  bool isDog = false;
 
-
-  late String errorMessage='cic';
-  late String name='rat';
-  late String picture='dog';
+  late String errorMessage='NO GOOD';
+  late String name='RAT2.0';
+  late String picture='BIG';
 
 
 
   void loginAction()  {
-    setState(() {  });
+    setState(() {
+      isLoggedIn=true;
+    });
 
-      print('hello');
-
-  }
-
-  void dogAction()  {
-    setState(() { isDog=!isDog; });
-
-    print('hello');
+      print('logged in');
 
   }
 
 
-  void profileAction()  {
-    setState(() { isProfile=!isProfile; });
+  void logoutAction()  {
+    setState(() {
+      isLoggedIn=false;
+    });
 
-    print('hello');
+    print('logged out');
+
+  }
+
+
+
+  List<Widget> getWidget() {
+    var pwdWidgets = <Widget>[];
+
+    if(isLoggedIn){
+
+      pwdWidgets.add(Profile(logoutAction,name,picture));
+      pwdWidgets.add(Graph());
+
+    }
+    else
+    {
+      pwdWidgets.add(Login(loginAction,errorMessage));
+    }
+    return pwdWidgets;
 
   }
 
@@ -244,95 +226,12 @@ class _MyAppState extends State<MyApp> {
 
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  child: isProfile
-                      ? Profile(loginAction,name,picture)
-                      : Login(loginAction,errorMessage)
-                ),
-                Container(
-                  child: isDog
-                      ? Profile(loginAction,name,picture)
-                      : Login(loginAction,errorMessage)
-                ),
-            ],
-          ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    onPressed: profileAction,
-                    child: isProfile
-                        ? const Text('Disable')
-                        : const Text('Enable')
-                ),
-                ElevatedButton(
-                    onPressed: dogAction,
-                    child: isDog
-                        ? const Text('Disable')
-                        : const Text('Enable')
-                ),
-              ],
-            ),
-
-          ],
+              children: getWidget()
         )
+       ]
       )
+    )
     );
   }
 
 }
-/*
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Auth0 Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Auth0 Demo'),
-        ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  child: isProfile
-                      ? Profile(loginAction,name,picture)
-                      : Login(loginAction,errorMessage)
-                ),
-                Container(
-                  child: isDog
-                      ? Profile(loginAction,name,picture)
-                      : Login(loginAction,errorMessage)
-                ),
-            ],
-          ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    onPressed: profileAction,
-                    child: isProfile
-                        ? const Text('Disable')
-                        : const Text('Enable')
-                ),
-                ElevatedButton(
-                    onPressed: dogAction,
-                    child: isDog
-                        ? const Text('Disable')
-                        : const Text('Enable')
-                ),
-              ],
-            ),
-
-          ],
-        )
-      )
-    );
-  }
-*/
