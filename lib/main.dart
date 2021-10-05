@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:auth0/auth0.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 final FlutterAppAuth appAuth = FlutterAppAuth();
 final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -24,7 +25,23 @@ const AUTH0_REDIRECT_URI = 'com.auth0.flutterdemo://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
 
 /// -----------------------------------
-///           Profile Widget           
+///           Providers Widget
+/// -----------------------------------
+
+
+class Counter extends ChangeNotifier {
+  var _count = 90;
+
+  get count => _count;
+
+  void incrementCounter(BuildContext context) {
+    _count += 1;
+    notifyListeners();
+  }
+}
+
+/// -----------------------------------
+///           Profile Widget
 /// -----------------------------------
 
 class Profile extends StatelessWidget {
@@ -63,8 +80,35 @@ class Profile extends StatelessWidget {
 }
 
 /// -----------------------------------
-///            Graphs Widget
+///            Games Widget
 /// -----------------------------------
+
+class Graph extends StatelessWidget
+{
+
+  void _increment(BuildContext context) {
+    Provider.of<Counter>(context, listen: false).incrementCounter(context);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    var counter = Provider.of<Counter>(context).count;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+          onPressed: () => _increment(context),
+          child: const Text('Increment'),
+        ),
+        const SizedBox(width: 16),
+        Text('Count: $counter'),
+      ],
+    );
+  }
+
+}
+/*
 class Graph extends StatefulWidget {
 
   @override
@@ -75,8 +119,9 @@ class Graph extends StatefulWidget {
 
 }
 
+
 class GraphState extends State<Graph> {
-  int _counter = 8000;
+  int rolled=0;
 
   void _increment() {
     setState(() {
@@ -88,6 +133,44 @@ class GraphState extends State<Graph> {
       // the build method won't be called again, and so
       // nothing would appear to happen.
       _counter++;
+    });
+  }
+
+
+  List<Widget> getWidget() {
+    var pwdWidgets = <Widget>[];
+
+    if(rolled==0){
+
+      pwdWidgets.add(const Game1());
+
+    }
+    else if(rolled==1)
+    {
+      pwdWidgets.add(const Game2());
+    }
+    else
+    {
+      pwdWidgets.add(Graph());
+    }
+    return pwdWidgets;
+
+  }
+  void roll() {
+    setState(() {
+      // This call to setState tells the Flutter framework
+      // that something has changed in this State, which
+      // causes it to rerun the build method below so that
+      // the display can reflect the updated values. If you
+      // change _counter without calling setState(), then
+      // the build method won't be called again, and so
+      // nothing would appear to happen.
+      if(rolled<2) {
+        rolled++;
+      }
+      else {
+        rolled=0;
+      }
     });
   }
 
@@ -112,6 +195,60 @@ class GraphState extends State<Graph> {
     );
   }
 }
+
+
+class Game1 extends StatelessWidget {
+  const Game1({Key? key}) : super(key: key);
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called,
+    // for instance, as done by the _increment method above.
+    // The Flutter framework has been optimized to make
+    // rerunning build methods fast, so that you can just
+    // rebuild anything that needs updating rather than
+    // having to individually changes instances of widgets.
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+            onPressed: () {  },
+            child: const Text('raatto')
+        ),
+      ],
+    );
+  }
+}
+
+class Game2 extends StatelessWidget {
+  const Game2({Key? key}) : super(key: key);
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called,
+    // for instance, as done by the _increment method above.
+    // The Flutter framework has been optimized to make
+    // rerunning build methods fast, so that you can just
+    // rebuild anything that needs updating rather than
+    // having to individually changes instances of widgets.
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+            onPressed: () {  },
+            child: const Text('raatto')
+        ),
+      ],
+    );
+  }
+}
+*/
 /// -----------------------------------
 ///            Login Widget           
 /// -----------------------------------
@@ -214,23 +351,28 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Auth0 Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Auth0 Demo'),
+    return MultiProvider(providers: [
+        ChangeNotifierProvider.value(
+        value: Counter(),
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: getWidget()
-        )
-       ]
-      )
-    )
+        ],
+        child : MaterialApp(
+              title: 'Auth0 Demo',
+              home: Scaffold(
+                  appBar: AppBar(
+                      title: Text('Auth0 Demo'),
+                      ),
+                      body: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                      Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: getWidget()
+                                      )
+                                      ]
+                                )
+                              )
+              )
     );
   }
 
