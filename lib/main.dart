@@ -40,7 +40,7 @@ class Counter extends ChangeNotifier {
 const AUTH0_DOMAIN = 'custompolarui.eu.auth0.com';
 const AUTH0_CLIENT_ID = 'X0L4w8enh5WEt3zkKl4U0aZxSCw4hEhG';
 
-const AUTH0_REDIRECT_URI = 'com.auth0.flutterdemo://login-callback';
+const AUTH0_REDIRECT_URI = 'com.auth0.custompolarui://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
 
 void main() {
@@ -92,7 +92,47 @@ class Graph extends StatelessWidget
     Provider.of<Counter>(context, listen: false).incrementCounter(context);
   }
 
+  Map<String, dynamic> parseIdToken(String idToken) {
+    final parts = idToken.split(r'.');
+    assert(parts.length == 3);
 
+    return jsonDecode(
+        utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
+  }
+
+
+  Future<void> loginAction() async {
+
+    print(AuthorizationTokenRequest(
+        AUTH0_CLIENT_ID,
+        AUTH0_REDIRECT_URI,
+        issuer: 'https://$AUTH0_DOMAIN',
+        scopes: ['openid'],
+    ));
+
+
+    try {
+      final AuthorizationTokenResponse result =
+      await appAuth.authorizeAndExchangeCode(
+        AuthorizationTokenRequest(
+            AUTH0_CLIENT_ID,
+            AUTH0_REDIRECT_URI,
+            issuer: 'https://$AUTH0_DOMAIN',
+            promptValues: ['login'],
+            scopes: ['openid']
+        ),
+      );
+
+
+
+
+      final idToken = parseIdToken(result.idToken);
+      print(idToken);
+      await secureStorage.write(
+          key: 'refresh_token', value: result.refreshToken);
+
+    } catch (e, s) { }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +141,7 @@ class Graph extends StatelessWidget
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () => _increment(context),
+          onPressed: () => loginAction(),
           child: const Text('Increment'),
         ),
         const SizedBox(width: 16),
@@ -111,6 +151,7 @@ class Graph extends StatelessWidget
   }
 
 }
+
 
 class SecondScreen extends StatelessWidget {
   const SecondScreen({Key? key}) : super(key: key);

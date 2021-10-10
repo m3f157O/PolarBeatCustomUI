@@ -42,13 +42,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.auth0.custom_polar_beat_ui_v2"
+        applicationId "com.auth0.custompolarui"
         minSdkVersion 18
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-                'appAuthRedirectScheme': 'com.auth0.flutterdemo'
+                'appAuthRedirectScheme': 'com.auth0.custompolarui'
         ]
     }
 
