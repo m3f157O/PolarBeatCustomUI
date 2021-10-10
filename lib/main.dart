@@ -132,7 +132,7 @@ class SecondScreen extends StatelessWidget {
                       Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                           Graph()
+                            Graph()
                           ]
                       )
                     ]
