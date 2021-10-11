@@ -42,13 +42,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.auth0.custompolarui"
+        applicationId "com.auth0.custompolarinterface"
         minSdkVersion 18
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-                'appAuthRedirectScheme': 'com.auth0.custompolarui'
+                'appAuthRedirectScheme': 'com.auth0.custompolarinterface'
         ]
     }
 

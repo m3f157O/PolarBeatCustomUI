@@ -37,10 +37,10 @@ class Counter extends ChangeNotifier {
 ///           Auth0 Variables
 /// -----------------------------------
 
-const AUTH0_DOMAIN = 'custompolarui.eu.auth0.com';
-const AUTH0_CLIENT_ID = 'X0L4w8enh5WEt3zkKl4U0aZxSCw4hEhG';
+const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
+const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
 
-const AUTH0_REDIRECT_URI = 'com.auth0.custompolarui://login-callback';
+const AUTH0_REDIRECT_URI = 'com.auth0.custompolarinterface://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
 
 void main() {
@@ -52,32 +52,33 @@ void main() {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => const FirstScreen(),
+        '/': (context) => const AuthenticatorScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        '/second': (context) => const SecondScreen(),
+        '/second': (context) => const LogoutScreen(),
       },
     ),
   );
 }
 
-class FirstScreen extends StatelessWidget {
-  const FirstScreen({Key? key}) : super(key: key);
+
+
+class LogoutScreen extends StatelessWidget {
+  const LogoutScreen({Key? key}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('First Screen'),
+        title: const Text('Logout Screen'),
       ),
       body: Center(
         child: ElevatedButton(
           // Within the `FirstScreen` widget
           onPressed: () {
             // Navigate to the second screen using a named route.
-            Navigator.pushNamed(context, '/second');
           },
-          child: const Text('Launch screen'),
+          child: const Text('LOGOUT'),
         ),
       ),
     );
@@ -85,12 +86,8 @@ class FirstScreen extends StatelessWidget {
 }
 
 
-class Graph extends StatelessWidget
+class Authenticator extends StatelessWidget
 {
-
-  void _increment(BuildContext context) {
-    Provider.of<Counter>(context, listen: false).incrementCounter(context);
-  }
 
   Map<String, dynamic> parseIdToken(String idToken) {
     final parts = idToken.split(r'.');
@@ -101,7 +98,7 @@ class Graph extends StatelessWidget
   }
 
 
-  Future<void> loginAction() async {
+  Future<void> loginAction(BuildContext context) async {
 
     print(AuthorizationTokenRequest(
         AUTH0_CLIENT_ID,
@@ -128,24 +125,24 @@ class Graph extends StatelessWidget
 
       final idToken = parseIdToken(result.idToken);
       print(idToken);
+      print('above me is a token');
       await secureStorage.write(
           key: 'refresh_token', value: result.refreshToken);
 
     } catch (e, s) { }
+    Navigator.pushNamed(context, '/second');
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var counter = Provider.of<Counter>(context).count;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () => loginAction(),
-          child: const Text('Increment'),
+          onPressed: () => loginAction(context),
+          child: const Text('LOGIN'),
         ),
-        const SizedBox(width: 16),
-        Text('Count: $counter'),
       ],
     );
   }
@@ -153,8 +150,8 @@ class Graph extends StatelessWidget
 }
 
 
-class SecondScreen extends StatelessWidget {
-  const SecondScreen({Key? key}) : super(key: key);
+class AuthenticatorScreen extends StatelessWidget {
+  const AuthenticatorScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +170,7 @@ class SecondScreen extends StatelessWidget {
                       Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Graph()
+                            Authenticator()
                           ]
                       )
                     ]
