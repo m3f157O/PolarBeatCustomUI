@@ -76,7 +76,9 @@ class LogoutScreen extends StatelessWidget {
         child: ElevatedButton(
           // Within the `FirstScreen` widget
           onPressed: () {
-            // Navigate to the second screen using a named route.
+            secureStorage.delete(key: 'refresh_token');
+            Navigator.pop(context);
+
           },
           child: const Text('LOGOUT'),
         ),
@@ -86,8 +88,11 @@ class LogoutScreen extends StatelessWidget {
 }
 
 
-class Authenticator extends StatelessWidget
-{
+
+
+class AuthenticatorScreen extends StatelessWidget {
+  const AuthenticatorScreen({Key? key}) : super(key: key);
+
 
   Map<String, dynamic> parseIdToken(String idToken) {
     final parts = idToken.split(r'.');
@@ -100,14 +105,6 @@ class Authenticator extends StatelessWidget
 
   Future<void> loginAction(BuildContext context) async {
 
-    print(AuthorizationTokenRequest(
-        AUTH0_CLIENT_ID,
-        AUTH0_REDIRECT_URI,
-        issuer: 'https://$AUTH0_DOMAIN',
-        scopes: ['openid'],
-    ));
-
-
     try {
       final AuthorizationTokenResponse result =
       await appAuth.authorizeAndExchangeCode(
@@ -115,7 +112,6 @@ class Authenticator extends StatelessWidget
             AUTH0_CLIENT_ID,
             AUTH0_REDIRECT_URI,
             issuer: 'https://$AUTH0_DOMAIN',
-            promptValues: ['login'],
             scopes: ['openid']
         ),
       );
@@ -136,25 +132,6 @@ class Authenticator extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          onPressed: () => loginAction(context),
-          child: const Text('LOGIN'),
-        ),
-      ],
-    );
-  }
-
-}
-
-
-class AuthenticatorScreen extends StatelessWidget {
-  const AuthenticatorScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider.value(
         value: Counter(),
@@ -170,9 +147,16 @@ class AuthenticatorScreen extends StatelessWidget {
                       Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Authenticator()
-                          ]
-                      )
+                            Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              ElevatedButton(
+                                onPressed: () => loginAction(context),
+                                child: const Text('LOGIN'),
+                              ),
+                            ],
+                          ),                          ]
+                                )
                     ]
                 )
             )
