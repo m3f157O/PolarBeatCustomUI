@@ -260,7 +260,9 @@ class PolarTokenGetter extends StatefulWidget {
 
 class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
 
-  void fetchAlbum() async {
+  late Future<String> token;
+
+  Future<String> fetchAlbum() async {
     var response = await http.post('https://polarremote.com/v2/oauth2/token',
         headers:
         {
@@ -281,11 +283,12 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
       code=user['access_token'];
       print(code);
       // then parse the JSON.
+      return code;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       final body = json.decode(response.body);
-      print(body['error']);
+      return '404';
     }
   }
 
@@ -296,6 +299,7 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
     fetchAlbum();
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fetch Data Example',
@@ -307,10 +311,11 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
           title: const Text('Fetch Data Example'),
         ),
         body: Center(
-          child: FutureBuilder<Album>(
+          child: FutureBuilder<String>(
+            future: fetchAlbum(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!.title);
+                return Text(snapshot.data!);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -319,9 +324,9 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
               return const CircularProgressIndicator();
             },
           ),
+          ),
         ),
-      ),
-    );
+      );
   }
 
 }
