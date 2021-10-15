@@ -101,6 +101,7 @@ var code='empty';
 const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
 const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
 const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
+const POLAR_CLIENT_SECRET = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';
 
 const AUTH0_REDIRECT_URI = 'com.auth0.custompolarinterface://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
@@ -116,7 +117,6 @@ void main() {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) =>  PolarAuth(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        '/second': (context) => const AuthenticatorScreen(),
       },
     ),
   );
@@ -146,7 +146,10 @@ class WebViewWebPage extends StatefulWidget {
   _WebViewWebPageState createState() => _WebViewWebPageState();
 }
 
-class _WebViewWebPageState extends State<WebViewWebPage> {
+
+
+class _WebViewWebPageState extends State<WebViewWebPage>
+{
   static const url = 'https://flow.polar.com/oauth2/authorization?response_type=code&client_id=$POLAR_CLIENT_ID';
 
   @override
@@ -163,12 +166,12 @@ class _WebViewWebPageState extends State<WebViewWebPage> {
           onWebViewCreated: (InAppWebViewController controller) {
           },
           onLoadStart: (InAppWebViewController controller, String url) {
-            if(url.contains('com.auth0.custompolarinterface://login-callback',0)) {
-              print('rat');
-              code='ooo';
+            var callback='com.auth0.custompolarinterface://login-callback?code=';
+            if(url.contains(callback,0)) {
+              code=url.substring(callback.length);
               Navigator.of(context, rootNavigator: true)
                   .push(MaterialPageRoute(
-                  builder: (context) => LogoutScreen()));
+                  builder: (context) => const DebugStuff()));
             }
           },
 
@@ -183,112 +186,9 @@ class _WebViewWebPageState extends State<WebViewWebPage> {
 
 
 
+class DebugStuff extends StatelessWidget {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class RequesterToPolar extends StatefulWidget {
-  const RequesterToPolar({Key? key}) : super(key: key);
-
-  @override
-  AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
-}
-
-
-class AuthCodeRequestToPolar extends State<RequesterToPolar> {
-
-
-  late Future<Album> futureAlbum;
-
-  Future<Album> fetchAlbum() async {
-    final response = await http
-        .get(Uri.parse('https://flow.polar.com/oauth2/authorization?response_type=code&client_id=$POLAR_CLIENT_ID'));
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Album.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    futureAlbum = fetchAlbum();
-  }
-
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: FutureBuilder<Album>(
-            future: futureAlbum,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data!.title);
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-}
-
-class Graph extends StatelessWidget
-{
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          onPressed: () => print(code),
-          child: Text(code),
-        ),
-      ],
-    );
-  }
-
-}
-
-
-class LogoutScreen extends StatelessWidget {
-
-  const LogoutScreen({Key? key}) : super(key: key);
+  const DebugStuff({Key? key}) : super(key: key);
 
 
 
@@ -310,12 +210,17 @@ class LogoutScreen extends StatelessWidget {
                       Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Graph()
-                              ],
-                            ),                          ]
+                          Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context, rootNavigator: true)
+                                  .push(MaterialPageRoute(
+                                  builder: (context) => const PolarTokenGetter())),
+                              child: Text(code),
+                            ),
+                          ],
+                        )                   ]
                       )
                     ]
                 )
@@ -323,6 +228,102 @@ class LogoutScreen extends StatelessWidget {
         )
     );
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class PolarTokenGetter extends StatefulWidget {
+  const PolarTokenGetter({Key? key}) : super(key: key);
+
+  @override
+  AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
+}
+
+
+class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
+
+  void fetchAlbum() async {
+    var response = await http.post('https://polarremote.com/v2/oauth2/token',
+        headers:
+        {
+          'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json;charset=UTF-8'
+        },
+        body:
+        {
+          "code": code,
+          "grant_type": "authorization_code"
+        }
+        );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      Map<String, dynamic> user = jsonDecode(response.body);
+      code=user['access_token'];
+      print(code);
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      final body = json.decode(response.body);
+      print(body['error']);
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAlbum();
+  }
+
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Fetch Data Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Fetch Data Example'),
+        ),
+        body: Center(
+          child: FutureBuilder<Album>(
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data!.title);
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
 }
 
 
