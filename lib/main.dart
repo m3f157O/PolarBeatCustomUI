@@ -98,6 +98,7 @@ class Counter extends ChangeNotifier {
 ///           Auth0 Variables
 /// -----------------------------------
 var code='empty';
+var id='54588317';
 const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
 const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
 const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
@@ -239,59 +240,43 @@ class DebugStuff extends StatelessWidget {
 
 
 
-class PolarUserRegistrator extends StatefulWidget {
-  const PolarUserRegistrator({Key? key}) : super(key: key);
 
-  @override
-  RegisterUserToPolar createState() => RegisterUserToPolar();
-}
+class RegisterUserToPolar extends StatelessWidget {
+
+  const RegisterUserToPolar({Key? key, required this.userToken, required this.userId}) : super(key: key);
 
 
+  final String userToken;
+  final String userId;
 
-
-class RegisterUserToPolar extends State<PolarUserRegistrator> {
-
-  late Future<String> token;
-
-  Future<String> fetchAlbum() async {
-    var response = await http.post('https://polarremote.com/v2/oauth2/token',
+  void fetchAlbum() async {
+    var response = await http.post('https://www.polaraccesslink.com/v3/users',
         headers:
         {
-          'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json;charset=UTF-8'
+          "Authorization": userToken
         },
         body:
         {
-          "code": code,
-          "grant_type": "authorization_code"
+          "member-id": userId
         }
     );
+    print(userToken);
+    print(userId);
 
-    var token;
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      token= "Bearer <" + user['access_token'] + ">";
-      var id= user['x_user_id'];
+      var id= user['registration-date'];
       print(id);
-      print(token);
       // then parse the JSON.
-      return id.toString();
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      final body = json.decode(response.body);
-      return '404';
+      print(response.statusCode);
     }
   }
 
 
-  @override
-  void initState() {
-    super.initState();
-    fetchAlbum();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,28 +290,19 @@ class RegisterUserToPolar extends State<PolarUserRegistrator> {
           title: const Text('Fetch Data Example'),
         ),
         body: Center(
-          child: FutureBuilder<String>(
-            future: fetchAlbum(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ElevatedButton(
-                  onPressed: () => Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(
-                      builder: (context) => PolarAuth())),
-                  child: Text("AUTENTICATE"),
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
+
+                child:  ElevatedButton(
+                  onPressed: () => fetchAlbum(),
+                  child: const Text("HELLO"),
+                )
+
 
 
               // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
+
           ),
         ),
-      ),
-    );
+      );
   }
 
 }
@@ -339,6 +315,7 @@ class RegisterUserToPolar extends State<PolarUserRegistrator> {
 class PolarTokenGetter extends StatefulWidget {
   const PolarTokenGetter({Key? key}) : super(key: key);
 
+
   @override
   AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
 }
@@ -346,6 +323,7 @@ class PolarTokenGetter extends StatefulWidget {
 
 class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
 
+  late Future<String> msg;
 
   Future<String> fetchAlbum() async {
     var response = await http.post('https://polarremote.com/v2/oauth2/token',
@@ -371,11 +349,10 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
       print(id);
       print(token);
       // then parse the JSON.
-      return id.toString();
+      return token.toString();
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      final body = json.decode(response.body);
       return '404';
     }
   }
@@ -384,7 +361,7 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
   @override
   void initState() {
     super.initState();
-    fetchAlbum();
+    msg=fetchAlbum();
   }
 
   @override
@@ -400,14 +377,14 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
         ),
         body: Center(
           child: FutureBuilder<String>(
-            future: fetchAlbum(),
+            future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ElevatedButton(
                   onPressed: () => Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(
-                      builder: (context) => PolarAuth())),
-                  child: Text("AUTENTICATE"),
+                      builder: (context) => RegisterUserToPolar(userToken: snapshot.data!, userId: id,))),
+                  child: Text("AUTENTICATE " + snapshot.data!),
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
