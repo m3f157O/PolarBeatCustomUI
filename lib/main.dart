@@ -239,26 +239,17 @@ class DebugStuff extends StatelessWidget {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-class PolarTokenGetter extends StatefulWidget {
-  const PolarTokenGetter({Key? key}) : super(key: key);
+class PolarUserRegistrator extends StatefulWidget {
+  const PolarUserRegistrator({Key? key}) : super(key: key);
 
   @override
-  AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
+  RegisterUserToPolar createState() => RegisterUserToPolar();
 }
 
 
-class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
+
+
+class RegisterUserToPolar extends State<PolarUserRegistrator> {
 
   late Future<String> token;
 
@@ -275,15 +266,18 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
           "code": code,
           "grant_type": "authorization_code"
         }
-        );
+    );
 
+    var token;
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      code=user['access_token'];
-      print(code);
+      token= "Bearer <" + user['access_token'] + ">";
+      var id= user['x_user_id'];
+      print(id);
+      print(token);
       // then parse the JSON.
-      return code;
+      return id.toString();
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -315,10 +309,110 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
             future: fetchAlbum(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!);
+                return ElevatedButton(
+                  onPressed: () => Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                      builder: (context) => PolarAuth())),
+                  child: Text("AUTENTICATE"),
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
+
+
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+
+
+
+
+
+class PolarTokenGetter extends StatefulWidget {
+  const PolarTokenGetter({Key? key}) : super(key: key);
+
+  @override
+  AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
+}
+
+
+class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
+
+
+  Future<String> fetchAlbum() async {
+    var response = await http.post('https://polarremote.com/v2/oauth2/token',
+        headers:
+        {
+          'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json;charset=UTF-8'
+        },
+        body:
+        {
+          "code": code,
+          "grant_type": "authorization_code"
+        }
+        );
+
+    var token;
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      Map<String, dynamic> user = jsonDecode(response.body);
+      token= "Bearer <" + user['access_token'] + ">";
+      var id= user['x_user_id'];
+      print(id);
+      print(token);
+      // then parse the JSON.
+      return id.toString();
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      final body = json.decode(response.body);
+      return '404';
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAlbum();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Fetch Data Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Fetch Data Example'),
+        ),
+        body: Center(
+          child: FutureBuilder<String>(
+            future: fetchAlbum(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ElevatedButton(
+                  onPressed: () => Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                      builder: (context) => PolarAuth())),
+                  child: Text("AUTENTICATE"),
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+
 
               // By default, show a loading spinner.
               return const CircularProgressIndicator();
