@@ -5,99 +5,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:auth0/auth0.dart';
-import 'package:flutter_appauth/flutter_appauth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-final FlutterAppAuth appAuth = FlutterAppAuth();
-final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-
-
-/// -----------------------------------
-///           Providers Widget
-/// -----------------------------------
-
-class Album {
-  final int userId;
-  final int id;
-  final String title;
-
-  Album({
-    required this.userId,
-    required this.id,
-    required this.title,
-  });
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-    );
-  }
-}
-
-class Counter extends ChangeNotifier {
-
- /* late Future<Album> futureAlbum;
-
-  Future<Album> fetchAlbum() async {
-    final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Album.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
-
-
-  Widget futureBuilder(BuildContext context){
-    return FutureBuilder<Album>(
-      future: futureAlbum,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data!.title);
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-
-        // By default, show a loading spinner.
-        return const CircularProgressIndicator();
-      },
-    );
-  }
-
-
-
-
-  void firstRequest() {
-    futureAlbum=fetchAlbum();
-    print(futureAlbum);
-    notifyListeners();
-  }
-
-  */
-}
 
 
 /// -----------------------------------
 ///           Auth0 Variables
 /// -----------------------------------
-var id='54588317';
 const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
 const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
 const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
@@ -158,28 +74,21 @@ class _WebViewWebPageState extends State<WebViewWebPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Webview App"),
+        title: const Text("Authenticating..."),
       ),
-      body: Container(
-        child: InAppWebView(
-          initialUrl: url,
-          initialHeaders: {},
-          initialOptions: {},
-          onWebViewCreated: (InAppWebViewController controller) {
-          },
-          onLoadStart: (InAppWebViewController controller, String url) {
-            var callback='com.auth0.custompolarinterface://login-callback?code=';
-            if(url.contains(callback,0)) {
-              String code=url.substring(callback.length);
-              Navigator.of(context, rootNavigator: true)
-                  .push(MaterialPageRoute(
-                  builder: (context) => ViewCodeBeforeSending(text : code)));
+      body: InAppWebView(
+        initialUrlRequest:
+        URLRequest(url: Uri.parse("https://flow.polar.com/oauth2/authorization?response_type=code&client_id=$POLAR_CLIENT_ID")),
+        onLoadStart: (controller, url) {
+          var callback='com.auth0.custompolarinterface://login-callback?code=';
+          if(url!.toString().contains(callback,0)) {
+            String code=url.toString().substring(callback.length);
+            Navigator.of(context, rootNavigator: true)
+                .push(MaterialPageRoute(
+                builder: (context) => ViewCodeBeforeSending(text : code)));
             }
-          },
-
+        }
       ),
-
-      )
     );
 
   }
@@ -196,12 +105,7 @@ class ViewCodeBeforeSending extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider.value(
-        value: Counter(),
-      ),
-    ],
-        child : MaterialApp(
+    return MaterialApp(
             title: 'Auth0 2',
             home: Scaffold(
 
@@ -218,7 +122,7 @@ class ViewCodeBeforeSending extends StatelessWidget {
                               onPressed: () => Navigator.of(context, rootNavigator: true)
                                   .push(MaterialPageRoute(
                                   builder: (context) => SendCodeToPolar(code : text))),
-                              child: Text(text),
+                              child: const Text("SEND AUTHENTICATION CODE TO POLAR"),
                             ),
                           ],
                         )                   ]
@@ -226,7 +130,6 @@ class ViewCodeBeforeSending extends StatelessWidget {
                     ]
                 )
             )
-        )
     );
   }
 }
@@ -256,7 +159,7 @@ class TokenRequestToPolar extends State<SendCodeToPolar> {
   TokenRequestToPolar(this.code);
 
   Future<String> fetchAlbum() async {
-    var response = await http.post('https://polarremote.com/v2/oauth2/token',
+    var response = await http.post(Uri.parse('https://polarremote.com/v2/oauth2/token'),
         headers:
         {
           'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
@@ -270,21 +173,21 @@ class TokenRequestToPolar extends State<SendCodeToPolar> {
         }
         );
 
-    var token;
+
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      token= "Bearer " + user['access_token'];
-      print(user['x_user_id']);
-      print(user['hello']);
-      print(id);
+      String token= "Bearer " + user['access_token'];
+
+      String id="User_id_"+user['x_user_id'].toString();
+
 
       // then parse the JSON.
-      return token.toString();
+      return id+token.toString(); //really don't want to use a list, I'd rather parse the whole string
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return '404';
+      return response.statusCode.toString();
     }
   }
 
@@ -298,24 +201,29 @@ class TokenRequestToPolar extends State<SendCodeToPolar> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fetch Data Example',
+      title: 'GET YOUR TOKEN',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Fetch Data Example'),
+          title: const Text('PRESS AUTHENTICATE TO GET YOUR TOKEN'),
         ),
         body: Center(
           child: FutureBuilder<String>(
             future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                String userId=snapshot.data!.substring(0,snapshot.data!.indexOf("B"));
+                String token=snapshot.data!.substring(snapshot.data!.indexOf("B"));
+                print(userId);
+                print(token);
                 return ElevatedButton(
                   onPressed: () => Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(
-                      builder: (context) => RegisterClientAPI(userToken: snapshot.data!, userId: "User_id_54588317",))),
-                  child: Text("AUTENTICATE " + snapshot.data!),
+                      builder: (context) => RegisterClientAPI(userToken: token, userId: userId))),
+                  child: Text("AUTENTICATE " + token),
+
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
@@ -347,7 +255,7 @@ class RegisterClientAPI extends StatelessWidget {
   final String userId;
 
   void fetchAlbum() async {
-    var response = await http.post('https://www.polaraccesslink.com/v3/users',
+    var response = await http.post(Uri.parse('https://www.polaraccesslink.com/v3/users'),
         headers:
         {
         'Content-Type': 'application/json',
@@ -373,7 +281,7 @@ class RegisterClientAPI extends StatelessWidget {
   }
 
   void fetchActivities() async {
-    var response = await http.get('https://www.polaraccesslink.com/v3/notifications',
+    var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
         headers:
         {
           'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
