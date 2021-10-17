@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.0
+  shared_preferences: ^2.0.8
   flutter_inappwebview: ^5.3.2
 
 dev_dependencies:
