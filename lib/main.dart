@@ -97,7 +97,6 @@ class Counter extends ChangeNotifier {
 /// -----------------------------------
 ///           Auth0 Variables
 /// -----------------------------------
-var code='empty';
 var id='54588317';
 const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
 const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
@@ -116,7 +115,7 @@ void main() {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) =>  PolarAuth(),
+        '/': (context) =>  const GetAuthCodeFromPolar(),
         // When navigating to the "/second" route, build the SecondScreen widget.
       },
     ),
@@ -128,7 +127,9 @@ void main() {
 
 
 
-class PolarAuth extends StatelessWidget {
+class GetAuthCodeFromPolar extends StatelessWidget {
+  const GetAuthCodeFromPolar({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -137,17 +138,17 @@ class PolarAuth extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WebViewWebPage(),
+      home: const WebViewWebPage(),
     );
   }
 }
 
 class WebViewWebPage extends StatefulWidget {
+  const WebViewWebPage({Key? key}) : super(key: key);
+
   @override
   _WebViewWebPageState createState() => _WebViewWebPageState();
 }
-
-
 
 class _WebViewWebPageState extends State<WebViewWebPage>
 {
@@ -157,7 +158,7 @@ class _WebViewWebPageState extends State<WebViewWebPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Webview App"),
+        title: const Text("Webview App"),
       ),
       body: Container(
         child: InAppWebView(
@@ -169,10 +170,10 @@ class _WebViewWebPageState extends State<WebViewWebPage>
           onLoadStart: (InAppWebViewController controller, String url) {
             var callback='com.auth0.custompolarinterface://login-callback?code=';
             if(url.contains(callback,0)) {
-              code=url.substring(callback.length);
+              String code=url.substring(callback.length);
               Navigator.of(context, rootNavigator: true)
                   .push(MaterialPageRoute(
-                  builder: (context) => const DebugStuff()));
+                  builder: (context) => ViewCodeBeforeSending(text : code)));
             }
           },
 
@@ -187,12 +188,11 @@ class _WebViewWebPageState extends State<WebViewWebPage>
 
 
 
-class DebugStuff extends StatelessWidget {
 
-  const DebugStuff({Key? key}) : super(key: key);
+class ViewCodeBeforeSending extends StatelessWidget {
 
-
-
+  final String text;
+  const ViewCodeBeforeSending({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -217,8 +217,8 @@ class DebugStuff extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () => Navigator.of(context, rootNavigator: true)
                                   .push(MaterialPageRoute(
-                                  builder: (context) => const PolarTokenGetter())),
-                              child: Text(code),
+                                  builder: (context) => SendCodeToPolar(code : text))),
+                              child: Text(text),
                             ),
                           ],
                         )                   ]
@@ -238,92 +238,22 @@ class DebugStuff extends StatelessWidget {
 
 
 
+class SendCodeToPolar extends StatefulWidget {
 
-
-
-class RegisterUserToPolar extends StatelessWidget {
-
-  const RegisterUserToPolar({Key? key, required this.userToken, required this.userId}) : super(key: key);
-
-
-  final String userToken;
-  final String userId;
-
-  void fetchAlbum() async {
-    var response = await http.post('https://www.polaraccesslink.com/v3/users',
-        headers:
-        {
-          "Authorization": userToken
-        },
-        body:
-        {
-          "member-id": userId
-        }
-    );
-    print(userToken);
-    print(userId);
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      Map<String, dynamic> user = jsonDecode(response.body);
-      var id= user['registration-date'];
-      print(id);
-      // then parse the JSON.
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      print(response.statusCode);
-    }
-  }
-
+  final String code;
+  const SendCodeToPolar({Key? key, required this.code}) : super(key: key);
 
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Fetch Data Example'),
-        ),
-        body: Center(
-
-                child:  ElevatedButton(
-                  onPressed: () => fetchAlbum(),
-                  child: const Text("HELLO"),
-                )
-
-
-
-              // By default, show a loading spinner.
-
-          ),
-        ),
-      );
-  }
-
+  TokenRequestToPolar createState() => TokenRequestToPolar(code);
 }
 
+class TokenRequestToPolar extends State<SendCodeToPolar> {
 
-
-
-
-
-class PolarTokenGetter extends StatefulWidget {
-  const PolarTokenGetter({Key? key}) : super(key: key);
-
-
-  @override
-  AuthCodeRequestToPolar createState() => AuthCodeRequestToPolar();
-}
-
-
-class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
-
+  final String code;
   late Future<String> msg;
+
+  TokenRequestToPolar(this.code);
 
   Future<String> fetchAlbum() async {
     var response = await http.post('https://polarremote.com/v2/oauth2/token',
@@ -344,10 +274,11 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      token= "Bearer <" + user['access_token'] + ">";
-      var id= user['x_user_id'];
+      token= "Bearer " + user['access_token'];
+      print(user['x_user_id']);
+      print(user['hello']);
       print(id);
-      print(token);
+
       // then parse the JSON.
       return token.toString();
     } else {
@@ -383,7 +314,7 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
                 return ElevatedButton(
                   onPressed: () => Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(
-                      builder: (context) => RegisterUserToPolar(userToken: snapshot.data!, userId: id,))),
+                      builder: (context) => RegisterClientAPI(userToken: snapshot.data!, userId: "User_id_54588317",))),
                   child: Text("AUTENTICATE " + snapshot.data!),
                 );
               } else if (snapshot.hasError) {
@@ -405,80 +336,98 @@ class AuthCodeRequestToPolar extends State<PolarTokenGetter> {
 
 
 
-class AuthenticatorScreen extends StatelessWidget {
 
 
-  const AuthenticatorScreen({Key? key}) : super(key: key);
+class RegisterClientAPI extends StatelessWidget {
+
+  const RegisterClientAPI({Key? key, required this.userToken, required this.userId}) : super(key: key);
 
 
-  Map<String, dynamic> parseIdToken(String idToken) {
-    final parts = idToken.split(r'.');
-    assert(parts.length == 3);
+  final String userToken;
+  final String userId;
 
-    return jsonDecode(
-        utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
+  void fetchAlbum() async {
+    var response = await http.post('https://www.polaraccesslink.com/v3/users',
+        headers:
+        {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': userToken
+        },
+        body:
+        jsonEncode({"member-id": userId})
+    );
+
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print(user['registration-date']);
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print(response.statusCode);
+      print(response.contentLength);
+    }
   }
 
-  Future<void> loginAction(BuildContext context) async {
-
-    try {
-      final AuthorizationTokenResponse result =
-      await appAuth.authorizeAndExchangeCode(
-        AuthorizationTokenRequest(
-            AUTH0_CLIENT_ID,
-            AUTH0_REDIRECT_URI,
-            issuer: 'https://$AUTH0_DOMAIN',
-            scopes: ['openid']
-        ),
-      );
+  void fetchActivities() async {
+    var response = await http.get('https://www.polaraccesslink.com/v3/notifications',
+        headers:
+        {
+          'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
+          'Accept': 'application/json',
+        },
+    );
 
 
-
-
-      final idToken = parseIdToken(result.idToken);
-      print(idToken);
-      print('above me is a token');
-      await secureStorage.write(
-          key: 'refresh_token', value: result.refreshToken);
-
-    } catch (e, s) { }
-    Navigator.pushNamed(context, '/second');
-
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print(user["available-user-data"]);
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print(response.statusCode);
+      print(response.body);
+    }
   }
+
 
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider.value(
-        value: Counter(),
+    return MaterialApp(
+      title: 'Fetch Data Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-    ],
-        child : MaterialApp(
-            title: 'Auth0 Demo',
-            home: Scaffold(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Fetch Data Example'),
+        ),
+        body: Center(
 
-                body: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              ElevatedButton(
-                                onPressed: () => loginAction(context),
-                                child: const Text('LOGIN'),
-                              ),
-                            ],
-                          ),                          ]
-                                )
-                    ]
-                )
+            child:
+            Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => fetchAlbum(),
+                    child: const Text("REGISTER USER"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => fetchActivities(),
+                    child: const Text("GET NOTIFICATIONS"),
+                  ),
+                ],
             )
         )
+      ),
+
     );
   }
-
 }
+
