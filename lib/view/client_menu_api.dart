@@ -1,21 +1,23 @@
 
 
 import 'dart:convert';
+import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ClientMenuAPI extends StatelessWidget {
 
-  const ClientMenuAPI({Key? key, required this.userToken, required this.userId}) : super(key: key);
+  const ClientMenuAPI({Key? key}) : super(key: key);
 
 
-  final String userToken;
-  final String userId;
 
 
-  void fetchAlbum() async {
+  void fetchAlbum(BuildContext context) async {
+    String userToken=Provider.of<AppData>(context,listen: false).token;
+    String userId=Provider.of<AppData>(context,listen: false).userid;
     var response = await http.post(Uri.parse('https://www.polaraccesslink.com/v3/users'),
         headers:
         {
@@ -84,7 +86,7 @@ class ClientMenuAPI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () => fetchAlbum(),
+                    onPressed: () => fetchAlbum(context),
                     child: const Text("REGISTER USER"),
                   ),
                   ElevatedButton(

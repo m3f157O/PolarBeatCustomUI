@@ -1,4 +1,3 @@
-
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +6,7 @@ import 'package:provider/provider.dart';
 
 class ViewAndSendAuthCode extends StatelessWidget {
 
-  final String text;
-  const ViewAndSendAuthCode({Key? key, required this.text}) : super(key: key);
+  const ViewAndSendAuthCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

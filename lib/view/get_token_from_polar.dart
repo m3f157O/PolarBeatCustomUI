@@ -10,20 +10,17 @@ import 'package:http/http.dart' as http;
 
 class GetTokenFromPolar extends StatefulWidget {
 
-  final String code;
-  const GetTokenFromPolar({Key? key, required this.code}) : super(key: key);
+  const GetTokenFromPolar({Key? key}) : super(key: key);
 
 
   @override
-  TokenRequestToPolar createState() => TokenRequestToPolar(code);
+  TokenRequestToPolar createState() => TokenRequestToPolar();
 }
 
 class TokenRequestToPolar extends State<GetTokenFromPolar> {
 
-  final String code;
   late Future<String> msg;
 
-  TokenRequestToPolar(this.code);
 
 
   Future<String> fetchAlbum(String toSend) async {
