@@ -1,9 +1,8 @@
 
 
 import 'dart:convert';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
+import 'package:custom_polar_beat_ui_v2/model/model.dart';     //TODO fix this
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -71,13 +70,13 @@ class ClientMenuAPI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fetch Data Example',
+      title: 'BASIC CLIENT MENU',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Fetch Data Example'),
+            title: const Text('BASIC CLIENT MENU'),
           ),
           body: Center(
 

@@ -29,6 +29,14 @@ class BaseCommand {
     Provider.of<AppData>(context,listen: false).setToken(token);
     Provider.of<AppData>(context,listen: false).setUserId(userId);
   }
+
+  String getToken(BuildContext context) {
+    return Provider.of<AppData>(context,listen: false).token;
+  }
+
+  String getAuth(BuildContext context) {
+    return Provider.of<AppData>(context,listen: false).userid;
+  }
 // Services
 }
 

@@ -51,7 +51,5 @@ class AppData extends ChangeNotifier {
   }
 
 
-// Eventually other stuff would go here, appSettings, premiumUser flags, currentTheme, etc...
 }
 
-// Provide quick lookup methods for all the top-level models and services. Keeps the Command code slightly cleaner.

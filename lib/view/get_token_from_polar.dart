@@ -2,7 +2,9 @@
 import 'dart:convert';
 
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
+import 'package:custom_polar_beat_ui_v2/model/model.dart'; //TODO <---this is bad
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +75,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('PRESS AUTHENTICATE TO GET YOUR TOKEN'),
+          title: const Text('THIS IS YOUR TOKEN'),
         ),
         body: Center(
           child: FutureBuilder<String>(

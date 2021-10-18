@@ -1,8 +1,7 @@
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ViewAndSendAuthCode extends StatelessWidget {
 
@@ -25,7 +24,7 @@ class ViewAndSendAuthCode extends StatelessWidget {
                           children: <Widget>[
                             ElevatedButton(
                               onPressed: () => BaseCommand().toGetTokenFromPolar(context),
-                              child: Text(Provider.of<AppData>(context,listen: false).code),
+                              child: const Text("THIS IS A DEBUG SCREEN"),
                             ),
                           ],
                         )                   ]
