@@ -1,7 +1,7 @@
 
 
 import 'dart:convert';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';     //TODO fix this
+import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

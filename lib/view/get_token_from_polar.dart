@@ -49,7 +49,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
       String id="User_id_"+user['x_user_id'].toString();
 
 
-      // then parse the JSON.
+      // evil string hack, the B is always there
       return id+token.toString(); //really don't want to use a list, I'd rather parse the whole string
     } else {
       // If the server did not return a 200 OK response,
@@ -82,18 +82,17 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
             future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                String userId=snapshot.data!.substring(0,snapshot.data!.indexOf("B"));
-                String token=snapshot.data!.substring(snapshot.data!.indexOf("B"));
-                Provider.of<AppData>(context,listen: false).setToken(token);
-                Provider.of<AppData>(context,listen: false).setUserId(userId);
-                //TODO FIX THIS VIOLATION OF MVC ^
-                print(userId);
-                print(token);
+                String userId=snapshot.data!.split('B')[0];
+                String token='B'+snapshot.data!.split('B')[1];
+                //I look for the B, which is always present. This is fast
+
+                BaseCommand.setAuthAndToken(context,token,userId);
+
+
+
                 return ElevatedButton(
                     onPressed: () => BaseCommand().toClientMenuApi(context),
                     child: Text(token));
-
-
 
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');

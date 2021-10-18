@@ -29,8 +29,7 @@ class _LoginToPolarWebState extends State<LoginToPolarWeb>
             var callback='com.auth0.custompolarinterface://login-callback?code=';
             if(url!.toString().contains(callback,0)) {
               String code=url.toString().substring(callback.length);
-              BaseCommand().setCode(context,code);
-              BaseCommand().toViewAndSendAuthcode(context);
+              BaseCommand().toViewAndSendAuthcode(context,code);
             }
           }
       ),

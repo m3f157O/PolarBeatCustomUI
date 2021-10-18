@@ -10,7 +10,8 @@ const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 class BaseCommand {
   // Models
 
-  void toViewAndSendAuthcode(BuildContext context) {
+  void toViewAndSendAuthcode(BuildContext context,String code) {
+    Provider.of<AppData>(context, listen: false).setCode(code);
     Provider.of<AppState>(context,listen: false).setstate(1);
 
   }
@@ -22,10 +23,8 @@ class BaseCommand {
     Provider.of<AppState>(context,listen: false).setstate(3);
 
   }
-  void setCode(BuildContext context, String code) {
-    Provider.of<AppData>(context, listen: false).setCode(code);
-  }
-  void setAuthAndToken(BuildContext context, String token, String userId) {
+
+  static void setAuthAndToken(BuildContext context, String token, String userId) {
     Provider.of<AppData>(context,listen: false).setToken(token);
     Provider.of<AppData>(context,listen: false).setUserId(userId);
   }
