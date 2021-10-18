@@ -23,7 +23,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
 
 
 
-  Future<String> fetchAlbum(String toSend) async {
+  Future<String> fetchAccessData(String toSend) async {
     var response = await http.post(Uri.parse('https://polarremote.com/v2/oauth2/token'),
         headers:
         {
@@ -60,7 +60,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
   @override
   void initState() {
     super.initState();
-    msg=fetchAlbum(Provider.of<AppData>(context,listen: false).code);
+    msg=fetchAccessData(Provider.of<AppData>(context,listen: false).code);
   }
 
 
@@ -84,10 +84,11 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
                 String token=snapshot.data!.substring(snapshot.data!.indexOf("B"));
                 Provider.of<AppData>(context,listen: false).setToken(token);
                 Provider.of<AppData>(context,listen: false).setUserId(userId);
+                //TODO FIX THIS VIOLATION OF MVC ^
                 print(userId);
                 print(token);
                 return ElevatedButton(
-                    onPressed: () => BaseCommand().registerUser(context),
+                    onPressed: () => BaseCommand().toClientMenuApi(context),
                     child: Text(token));
 
 

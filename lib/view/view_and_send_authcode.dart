@@ -24,7 +24,7 @@ class ViewAndSendAuthCode extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             ElevatedButton(
-                              onPressed: () => BaseCommand().toViewToken(context),
+                              onPressed: () => BaseCommand().toGetTokenFromPolar(context),
                               child: Text(Provider.of<AppData>(context,listen: false).code),
                             ),
                           ],

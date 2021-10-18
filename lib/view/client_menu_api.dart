@@ -15,7 +15,7 @@ class ClientMenuAPI extends StatelessWidget {
 
 
 
-  void fetchAlbum(BuildContext context) async {
+  void registerUser(BuildContext context) async {
     String userToken=Provider.of<AppData>(context,listen: false).token;
     String userId=Provider.of<AppData>(context,listen: false).userid;
     var response = await http.post(Uri.parse('https://www.polaraccesslink.com/v3/users'),
@@ -73,7 +73,7 @@ class ClientMenuAPI extends StatelessWidget {
     return MaterialApp(
       title: 'Fetch Data Example',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: Scaffold(
           appBar: AppBar(
@@ -86,7 +86,7 @@ class ClientMenuAPI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () => fetchAlbum(context),
+                    onPressed: () => registerUser(context),
                     child: const Text("REGISTER USER"),
                   ),
                   ElevatedButton(

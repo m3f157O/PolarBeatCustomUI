@@ -29,7 +29,7 @@ class _LoginToPolarWebState extends State<LoginToPolarWeb>
             if(url!.toString().contains(callback,0)) {
               String code=url.toString().substring(callback.length);
               BaseCommand().setCode(context,code);
-              BaseCommand().toViewCode(context);
+              BaseCommand().toViewAndSendAuthcode(context);
             }
           }
       ),

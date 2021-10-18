@@ -41,14 +41,14 @@ class GetAuthCodeFromPolar extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return Display();
+    return ViewLogic();
   }
 
 }
-class Display extends State<GetAuthCodeFromPolar> {
+class ViewLogic extends State<GetAuthCodeFromPolar> {
 
 
-  Widget getWidget(BuildContext context) {
+  Widget displayState(BuildContext context) {
 
     if(context.select<AppState,int>((value) =>value.state)==0) {
       print('LOGIN');
@@ -78,7 +78,7 @@ class Display extends State<GetAuthCodeFromPolar> {
         child: Builder(
             builder: (context) {
               // No longer throws
-              return getWidget(context);
+              return displayState(context);
             }
         )
     );
