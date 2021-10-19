@@ -34,7 +34,7 @@ const POLAR_CLIENT_SECRET = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';
 const AUTH0_REDIRECT_URI = 'com.auth0.custompolarinterface://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
 
-
+const Map<PHASE,Widget> identifier = { PHASE.loginToPolar:LoginToPolarWeb(), PHASE.debugAuthCode:DebugAuthCode(), PHASE.getTokenFromPolar:getTokenFromPolar(), PHASE.viewMenu:ClientMenuAPI()};
 
 /// -----------------------------------
 ///           VIEW MINI-CONTROLLER
@@ -54,21 +54,7 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
 
   Widget displayState(BuildContext context) {
 
-    if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.loginToPolar) {
-      print('LOGIN');
-      return const LoginToPolarWeb();
-    }
-    else if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.debugAuthCode) {
-      print('VIEW CODE');
-      return const debugAuthCode();
-    }
-    else if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.getTokenFromPolar){
-      print('GET TOKEN');
-      return const getTokenFromPolar();
-    } else {
-      print('CLIENT MENU');
-      return const ClientMenuAPI();
-    }
+    return identifier[context.select<AppState,PHASE>((value) =>value.state)] ?? const ClientMenuAPI();
 
   }
   @override
