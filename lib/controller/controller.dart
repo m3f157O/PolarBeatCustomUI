@@ -2,6 +2,8 @@
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:custom_polar_beat_ui_v2/model/phases.dart';
+
 /// -----------------------------------
 ///           CONTROLLER
 /// -----------------------------------
@@ -10,17 +12,17 @@ const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 class BaseCommand {
   // Models
 
-  void toViewAndSendAuthcode(BuildContext context,String code) {
+  void toDebugAuthCode(BuildContext context,String code) {
     Provider.of<AppData>(context, listen: false).setCode(code);
-    Provider.of<AppState>(context,listen: false).setstate(1);
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.debugAuthCode);
 
   }
   void toGetTokenFromPolar(BuildContext context) {
-    Provider.of<AppState>(context,listen: false).setstate(2);
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
 
   }
-  void toClientMenuApi(BuildContext context) {
-    Provider.of<AppState>(context,listen: false).setstate(3);
+  void toViewMenu(BuildContext context) {
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.viewMenu);
 
   }
 

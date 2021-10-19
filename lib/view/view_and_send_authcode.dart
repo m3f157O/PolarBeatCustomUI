@@ -3,9 +3,9 @@ import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ViewAndSendAuthCode extends StatelessWidget {
+class debugAuthCode extends StatelessWidget {
 
-  const ViewAndSendAuthCode({Key? key}) : super(key: key);
+  const debugAuthCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

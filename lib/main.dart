@@ -2,6 +2,7 @@ import 'package:custom_polar_beat_ui_v2/view/client_menu_api.dart';
 import 'package:custom_polar_beat_ui_v2/view/get_token_from_polar.dart';
 import 'package:custom_polar_beat_ui_v2/view/login_to_polar_web.dart';
 import 'package:custom_polar_beat_ui_v2/view/view_and_send_authcode.dart';
+import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,22 +47,24 @@ class GetAuthCodeFromPolar extends StatefulWidget {
   }
 
 }
+
+
 class ViewLogic extends State<GetAuthCodeFromPolar> {
 
 
   Widget displayState(BuildContext context) {
 
-    if(context.select<AppState,int>((value) =>value.state)==0) {
+    if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.loginToPolar) {
       print('LOGIN');
       return const LoginToPolarWeb();
     }
-    else if(context.select<AppState,int>((value) =>value.state)==1) {
+    else if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.debugAuthCode) {
       print('VIEW CODE');
-      return const ViewAndSendAuthCode();
+      return const debugAuthCode();
     }
-    else if(context.select<AppState,int>((value) =>value.state)==2){
+    else if(context.select<AppState,PHASE>((value) =>value.state)==PHASE.getTokenFromPolar){
       print('GET TOKEN');
-      return const GetTokenFromPolar();
+      return const getTokenFromPolar();
     } else {
       print('CLIENT MENU');
       return const ClientMenuAPI();

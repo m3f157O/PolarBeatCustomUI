@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-class GetTokenFromPolar extends StatefulWidget {
+class getTokenFromPolar extends StatefulWidget {
 
-  const GetTokenFromPolar({Key? key}) : super(key: key);
+  const getTokenFromPolar({Key? key}) : super(key: key);
 
 
   @override
   TokenRequestToPolar createState() => TokenRequestToPolar();
 }
 
-class TokenRequestToPolar extends State<GetTokenFromPolar> {
+class TokenRequestToPolar extends State<getTokenFromPolar> {
 
   late Future<String> msg;
 
@@ -85,13 +85,14 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
                 String userId=snapshot.data!.split('B')[0];
                 String token='B'+snapshot.data!.split('B')[1];
                 //I look for the B, which is always present. This is fast
-
+                print(userId+'IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+                print(token);
                 BaseCommand.setAuthAndToken(context,token,userId);
 
 
 
                 return ElevatedButton(
-                    onPressed: () => BaseCommand().toClientMenuApi(context),
+                    onPressed: () => BaseCommand().toViewMenu(context),
                     child: Text(token));
 
               } else if (snapshot.hasError) {

@@ -1,18 +1,24 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 
 /// -----------------------------------
 ///           MODEL
 /// -----------------------------------
+
+
+
+
+
 class AppState extends ChangeNotifier {
 
 
-  int _state=0;
+  PHASE _state=PHASE.loginToPolar;
 
 
-  int get state => _state;
+  PHASE get state => _state;
 
-  void setstate(int i) {
+  void setstate(PHASE i) {
     _state = i;
     notifyListeners();
   }
