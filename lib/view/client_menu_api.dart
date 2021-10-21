@@ -1,18 +1,32 @@
 
 
 import 'dart:convert';
+import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+
+import 'deserialization.dart';
+
 
 class ClientMenuAPI extends StatelessWidget {
 
   const ClientMenuAPI({Key? key}) : super(key: key);
 
 
-
+  Future<Response> fireRegistrationRequest(String toSend,String toFetch) async {
+    var response = await http.post(Uri.parse(toFetch),
+      headers:
+      {
+        'Authorization': toSend,
+        'Accept': 'application/json'
+      },
+    );
+    return response;
+  }
 
   void registerUser(BuildContext context) async {
     String userToken=Provider.of<AppData>(context,listen: false).token;
@@ -42,7 +56,7 @@ class ClientMenuAPI extends StatelessWidget {
     }
   }
 
-  void fetchActivities() async {
+  void fetchActivities(BuildContext context) async {
     var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
       headers:
       {
@@ -54,9 +68,10 @@ class ClientMenuAPI extends StatelessWidget {
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
-      Map<String, dynamic> user = jsonDecode(response.body);
-      print(user["available-user-data"]);
-      // then parse the JSON.
+      Map<String, dynamic> userData = jsonDecode(response.body);
+      List av=userData['available-user-data'];      // then parse the JSON.
+      Controller.addAppData(context, Available.fromJson(av.elementAt(0)));
+
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -64,6 +79,7 @@ class ClientMenuAPI extends StatelessWidget {
       print(response.body);
     }
   }
+
 
 
 
@@ -89,7 +105,7 @@ class ClientMenuAPI extends StatelessWidget {
                     child: const Text("REGISTER USER"),
                   ),
                   ElevatedButton(
-                    onPressed: () => fetchActivities(),
+                    onPressed: () => fetchActivities(context),
                     child: const Text("GET NOTIFICATIONS"),
                   ),
                 ],

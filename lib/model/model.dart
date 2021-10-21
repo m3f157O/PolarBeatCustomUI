@@ -1,4 +1,5 @@
 
+import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 
@@ -33,12 +34,29 @@ class AppData extends ChangeNotifier {
   String _code='emtpy';
   String _token='emtpy';
 
+  Available userData= Available(0,'empty','empty');
   String get token => _token;
 
   void setToken(String value) {
     _token = value;
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  void addData(Available value) {
+    userData=value;
+  }
   String _userid='emtpy';
 
 

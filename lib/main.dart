@@ -1,6 +1,7 @@
 import 'package:custom_polar_beat_ui_v2/view/client_menu_api.dart';
 import 'package:custom_polar_beat_ui_v2/view/get_token_from_polar.dart';
 import 'package:custom_polar_beat_ui_v2/view/login_to_polar_web.dart';
+import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:custom_polar_beat_ui_v2/view/view_and_send_authcode.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 
@@ -34,7 +35,13 @@ const POLAR_CLIENT_SECRET = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';
 const AUTH0_REDIRECT_URI = 'com.auth0.custompolarinterface://login-callback';
 const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
 
-const Map<PHASE,Widget> identifier = { PHASE.loginToPolar:LoginToPolarWeb(), PHASE.debugAuthCode:DebugAuthCode(), PHASE.getTokenFromPolar:getTokenFromPolar(), PHASE.viewMenu:ClientMenuAPI()};
+const Map<PHASE,Widget> identifier = {
+  PHASE.loginToPolar:LoginToPolarWeb(),
+  PHASE.debugAuthCode:DebugAuthCode(),
+  PHASE.getTokenFromPolar:getTokenFromPolar(),
+  PHASE.viewMenu:ClientMenuAPI(),
+  PHASE.showData:ShowData(),
+};
 
 /// -----------------------------------
 ///           VIEW MINI-CONTROLLER

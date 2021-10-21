@@ -10,5 +10,6 @@ enum PHASE {
   debugAuthCode,
   getTokenFromPolar,
   viewMenu,
+  showData,
 }
 

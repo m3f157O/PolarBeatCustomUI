@@ -23,7 +23,7 @@ class DebugAuthCode extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             ElevatedButton(
-                              onPressed: () => BaseCommand().toGetTokenFromPolar(context),
+                              onPressed: () => Controller().toGetTokenFromPolar(context),
                               child: const Text("THIS IS A DEBUG SCREEN"),
                             ),
                           ],
