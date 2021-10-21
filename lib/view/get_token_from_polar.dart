@@ -11,9 +11,9 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-class getTokenFromPolar extends StatefulWidget {
+class GetTokenFromPolar extends StatefulWidget {
 
-  const getTokenFromPolar({Key? key}) : super(key: key);
+  const GetTokenFromPolar({Key? key}) : super(key: key);
 
 
   @override
@@ -21,7 +21,7 @@ class getTokenFromPolar extends StatefulWidget {
 }
 
 
-class TokenRequestToPolar extends State<getTokenFromPolar> {
+class TokenRequestToPolar extends State<GetTokenFromPolar> {
 
   late Future<String> msg;
 

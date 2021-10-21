@@ -17,7 +17,7 @@ void main() {
 
       initialRoute: '/',
       routes: {
-        '/': (context) =>  GetAuthCodeFromPolar(),
+        '/': (context) =>  const GetAuthCodeFromPolar(),
       },
     ),
   );
@@ -27,18 +27,18 @@ void main() {
 /// -----------------------------------
 ///           Auth0 Variables
 /// -----------------------------------
-const AUTH0_DOMAIN = 'custompolarinterface.eu.auth0.com';
-const AUTH0_CLIENT_ID = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
-const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
-const POLAR_CLIENT_SECRET = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';
+const authDomain = 'custompolarinterface.eu.auth0.com';
+const authClient = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
+const polarClient = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
+const polarSecret = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';  //TODO PROTECT THIS
 
-const AUTH0_REDIRECT_URI = 'com.auth0.custompolarinterface://login-callback';
-const AUTH0_ISSUER = 'https://$AUTH0_DOMAIN';
+const authRedirectUri = 'com.auth0.custompolarinterface://login-callback';
+const authIssuer = 'https://$authDomain';
 
 const Map<PHASE,Widget> identifier = {
   PHASE.loginToPolar:LoginToPolarWeb(),
   PHASE.debugAuthCode:DebugAuthCode(),
-  PHASE.getTokenFromPolar:getTokenFromPolar(),
+  PHASE.getTokenFromPolar:GetTokenFromPolar(),
   PHASE.viewMenu: ClientMenu(),
   PHASE.showData:ShowData(),
 };
@@ -47,6 +47,8 @@ const Map<PHASE,Widget> identifier = {
 ///           VIEW MINI-CONTROLLER
 /// -----------------------------------
 class GetAuthCodeFromPolar extends StatefulWidget {
+  const GetAuthCodeFromPolar({Key? key}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() {

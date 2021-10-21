@@ -54,9 +54,11 @@ class AppData extends ChangeNotifier {
 
 
 
-  void addData(Available value) {
+  void addData(Available value)
+  {
     userData=value;
   }
+
   String _userid='emtpy';
 
 
@@ -70,7 +72,6 @@ class AppData extends ChangeNotifier {
 
   void setCode(String i) {
     _code = i;
-    print(code);
     notifyListeners();
   }
 

@@ -15,7 +15,7 @@ import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 /// 4. ADD THE KEY-VALUE PAIR AS <PHASE:NEW_VIEW> (THAT'S THE """"STATE MACHINE"""") IN THE IDENTIFIER MAP IN main.dart
 /// 5. NOW WHEN CONDITIONS ARE MET, THE NEW ENUM INSTANCE WILL BE THE AppState.state AND THE MODEL WILL MAKE THE VIEW TRANSITION
 ///
-const POLAR_CLIENT_ID = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
+const polarClientId = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 
 class Controller {
   // Models

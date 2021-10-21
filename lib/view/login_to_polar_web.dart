@@ -24,7 +24,7 @@ class _LoginToPolarWebState extends State<LoginToPolarWeb>
       ),
       body: InAppWebView(
           initialUrlRequest:
-          URLRequest(url: Uri.parse("https://flow.polar.com/oauth2/authorization?response_type=code&client_id=$POLAR_CLIENT_ID")),
+          URLRequest(url: Uri.parse("https://flow.polar.com/oauth2/authorization?response_type=code&client_id=$polarClientId")),
           onLoadStart: (controller, url) {
             var callback='com.auth0.custompolarinterface://login-callback?code=';
             if(url!.toString().contains(callback,0)) {
