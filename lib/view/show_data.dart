@@ -23,7 +23,7 @@ class ShowData extends StatefulWidget {
 
 class RequestAndShow extends State<ShowData> {
 
-  late Future<String> msg;
+  late Future<List<dynamic>> msg;
   late String token;
 
   Future<Response> fireTransactionStartRequest(String toFetch) async {
@@ -49,8 +49,13 @@ class RequestAndShow extends State<ShowData> {
     return response;
   }
 
-    Future<String> startFetchActivityDataTransaction(String toFetch) async {
-    var response = await fireTransactionStartRequest(toFetch);
+    Future<List<dynamic>> startFetchActivityDataTransaction(String toFetch) async {
+
+    if(toFetch=='dum') {
+      return ['empty'];
+    }
+
+      var response = await fireTransactionStartRequest(toFetch);
 
 
     if (response.statusCode == 201) {
@@ -63,15 +68,15 @@ class RequestAndShow extends State<ShowData> {
       return getDailyActivities(user['resource-uri']);
     } else if(response.statusCode==204){
 
-      return 'empty';
+      return ['empty'];
     } else{
 
-      return 'not ok';
+      return ['not ok'];
     }
   }
 
 
-  Future<String> getDailyActivities(String toFetch) async {
+  Future<List<dynamic>> getDailyActivities(String toFetch) async {
 
     var response = await fireActivityDataRequest(toFetch);
 
@@ -81,12 +86,16 @@ class RequestAndShow extends State<ShowData> {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
       print(response.statusCode);
-      print(user["exercises"]);
-      return 'ok';
+      List<dynamic> list=user["exercises"];
+      print(list);
+      if(list.isEmpty) {
+        list.add('empty');
+      }
+      return list;
 
     } else {
 
-      return response.statusCode.toString();
+      return [response.statusCode.toString()];
 
     }
   }
@@ -113,7 +122,7 @@ class RequestAndShow extends State<ShowData> {
           title: const Text('THIS IS YOUR DATA'),
         ),
         body: Center(
-          child: FutureBuilder<String>(
+          child: FutureBuilder<List<dynamic>>(
             future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -121,9 +130,20 @@ class RequestAndShow extends State<ShowData> {
 
 
 
-                return ElevatedButton(
-                    onPressed: () => Controller().toViewMenu(context),
-                    child: Text(snapshot.data!));
+                return ListView.builder(
+                    itemBuilder: (BuildContext, index){
+                      return Card(
+                        child: ListTile(
+                          leading: const CircleAvatar(),
+                          title: Text(snapshot.data![index].toString()),
+                        ),
+                      );
+                    },
+                    itemCount: snapshot.data!.length,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(5),
+                    scrollDirection: Axis.vertical,
+                );
 
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');

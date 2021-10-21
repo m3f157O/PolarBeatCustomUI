@@ -75,6 +75,8 @@ class ClientMenuAPI extends StatelessWidget {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
+      Controller.addAppData(context, Available(0,'dum','dum'));
+
       print(response.statusCode);
       print(response.body);
     }
