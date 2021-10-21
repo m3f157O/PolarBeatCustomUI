@@ -68,7 +68,34 @@ class TokenRequestToPolar extends State<getTokenFromPolar> {
   }
 
 
+  Future<void> registerUser(String token, String userId) async {
 
+    var response = await http.post(Uri.parse('https://www.polaraccesslink.com/v3/users'),
+        headers:
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': token
+        },
+        body:
+        jsonEncode({"member-id": userId})
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print(user['registration-date']);
+      // then parse the JSON.
+      return ;
+
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print(response.statusCode.toString());
+      print(response.contentLength);
+
+      return;
+    }
+  }
 
 
   @override
@@ -102,7 +129,7 @@ class TokenRequestToPolar extends State<getTokenFromPolar> {
                 //I look for the B, which is always present. This is fast
                 print(userId);
                 print(token);
-
+                registerUser(token,userId);
                 Controller.setAuthAndToken(context,token,userId);
 
 

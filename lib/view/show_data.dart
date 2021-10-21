@@ -112,17 +112,7 @@ class RequestAndShow extends State<ShowData> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GET YOUR DATA',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('THIS IS YOUR DATA'),
-        ),
-        body: Center(
-          child: FutureBuilder<List<dynamic>>(
+    return FutureBuilder<List<dynamic>>(
             future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -153,10 +143,8 @@ class RequestAndShow extends State<ShowData> {
               // By default, show a loading spinner.
               return const CircularProgressIndicator();
             },
-          ),
-        ),
-      ),
-    );
+          );
+
   }
 
 }

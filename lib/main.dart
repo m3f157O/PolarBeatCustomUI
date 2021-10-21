@@ -39,7 +39,7 @@ const Map<PHASE,Widget> identifier = {
   PHASE.loginToPolar:LoginToPolarWeb(),
   PHASE.debugAuthCode:DebugAuthCode(),
   PHASE.getTokenFromPolar:getTokenFromPolar(),
-  PHASE.viewMenu:ClientMenuAPI(),
+  PHASE.viewMenu: ClientMenu(),
   PHASE.showData:ShowData(),
 };
 
@@ -61,7 +61,7 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
 
   Widget displayState(BuildContext context) {
 
-    return identifier[context.select<AppState,PHASE>((value) =>value.state)] ?? const ClientMenuAPI();
+    return identifier[context.select<AppState,PHASE>((value) =>value.state)] ?? const LoginToPolarWeb();
 
   }
   @override

@@ -13,26 +13,19 @@ class DebugAuthCode extends StatelessWidget {
         title: 'Auth0 2',
         home: Scaffold(
 
-            body: Row(
+            body: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
+
                             ElevatedButton(
                               onPressed: () => Controller().toGetTokenFromPolar(context),
                               child: const Text("THIS IS A DEBUG SCREEN"),
                             ),
                           ],
-                        )                   ]
+                        )
                   )
-                ]
-            )
-        )
-    );
+
+            );
   }
 }
 
