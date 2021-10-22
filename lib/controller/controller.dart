@@ -19,7 +19,11 @@ const polarClientId = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 
 class Controller {
   // Models
+  static final Controller _instance = Controller();
 
+  static getController(){
+  return _instance;
+}
   void toDebugAuthCode(BuildContext context,String code) {
     Provider.of<AppData>(context, listen: false).setCode(code);
     Provider.of<AppState>(context,listen: false).setstate(PHASE.debugAuthCode);
