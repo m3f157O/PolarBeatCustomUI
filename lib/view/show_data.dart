@@ -126,8 +126,9 @@ class RequestAndShow extends State<ShowData> {
       print(list);
       if(list.isEmpty) {
         list.add("NO DATA TO DISPLAY");
+        return list;
       }
-      return list;
+      return processDailyActivities(list);
 
     } else {
 
@@ -136,6 +137,42 @@ class RequestAndShow extends State<ShowData> {
     }
   }
 
+
+  Future<List<dynamic>> processDailyActivities(List<dynamic> toFetch) async {
+    List<dynamic> list= [];
+
+    if(toFetch.isNotEmpty)
+    {
+    for(int i=0; i<toFetch.length;i++) {
+      var response = await http.get(Uri.parse(toFetch.elementAt(i)),
+      headers:
+      {
+        'Authorization': token,
+        'Accept': 'application/json'
+      },
+    );
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        Map<String, dynamic> user = jsonDecode(response.body);
+        print(user);
+        list.add(user['upload-time']);
+        list.add(user['duration']);
+        list.add(user['calories']);
+        print(list);
+
+
+      }
+
+    }
+    }
+
+    print("returning");
+
+    return list;
+
+
+
+  }
 
   @override
   void initState() {

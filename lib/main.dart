@@ -12,13 +12,11 @@ import 'package:custom_polar_beat_ui_v2/model/model.dart';
 
 void main() {
   runApp(
-    MaterialApp(
+    const MaterialApp(
       title: 'Named Routes Demo',
 
-      initialRoute: '/',
-      routes: {
-        '/': (context) =>  const GetAuthCodeFromPolar(),
-      },
+      home: GetAuthCodeFromPolar(),
+
     ),
   );
 }
