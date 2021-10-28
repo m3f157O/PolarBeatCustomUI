@@ -14,7 +14,7 @@ import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 class AppState extends ChangeNotifier {
 
 
-  PHASE _state=PHASE.loginToPolar;
+  PHASE _state=PHASE.debugAuthCode;
 
 
   PHASE get state => _state;

@@ -86,9 +86,7 @@ class ClientMenuAPI extends State<ClientMenu> {
                 children: [
 
                   const ShowData(),
-                  ElevatedButton(
-                      onPressed: () => Controller.reset(),
-                      child: const Text("RESET DB")),
+
 
                   FutureBuilder<List<dynamic>>(
                       future: _msg,

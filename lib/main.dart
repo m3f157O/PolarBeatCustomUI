@@ -37,7 +37,7 @@ const authIssuer = 'https://$authDomain';
 
 const Map<PHASE,Widget> identifier = {
   PHASE.loginToPolar:LoginToPolarWeb(),
-  PHASE.debugAuthCode:DebugAuthCode(),
+  PHASE.debugAuthCode: StartingScreen(),
   PHASE.getTokenFromPolar:GetTokenFromPolar(),
   PHASE.viewMenu: ClientMenu(),
   PHASE.showData:ShowData(),

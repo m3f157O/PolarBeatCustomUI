@@ -29,7 +29,7 @@ class Controller {
   void toDebugAuthCode(BuildContext context,String code) {
     DataBase.updateTokenTable("code", code);
     Provider.of<AppData>(context, listen: false).setCode(code);
-    Provider.of<AppState>(context,listen: false).setstate(PHASE.debugAuthCode);
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
 
   }
 
@@ -42,7 +42,10 @@ class Controller {
   static Future<String> fetchToken() async {
     return await DataBase.fetchToken();
   }
-
+  static Future<String> fetchTokenOnStart() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return await DataBase.fetchToken();
+  }
   static Future<String> fetchCode() async {
     return await DataBase.fetchCode();
   }
@@ -90,6 +93,10 @@ class Controller {
     Provider.of<AppData>(context,listen: false).setUserId(userId);
   }
 
+  static void toLoginToPolar(BuildContext context) {
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.loginToPolar);
+
+  }
 
 // Services
 }
