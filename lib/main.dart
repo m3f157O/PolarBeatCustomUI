@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
 
+import 'controller/controller.dart';
+
 
 void main() {
   runApp(
@@ -62,6 +64,13 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
   Widget displayState(BuildContext context) {
 
     return identifier[context.select<AppState,PHASE>((value) =>value.state)] ?? const LoginToPolarWeb();
+
+  }
+
+  @override
+  void initState() {
+    Controller.fetchDb();
+
 
   }
   @override

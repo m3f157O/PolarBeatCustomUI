@@ -1,12 +1,11 @@
 
 
 import 'dart:convert';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
+import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 class ClientMenu extends StatefulWidget {
@@ -21,19 +20,22 @@ class ClientMenu extends StatefulWidget {
 
 class ClientMenuAPI extends State<ClientMenu> {
 
-  late String _userId;
-  late String _token;
+
   late Future<List<dynamic>> _msg;
 
 
 
 
   Future<List<dynamic>> fireUserInfoRequest() async {
-    print('https://www.polaraccesslink.com/v3/users/'+_userId.substring(8));
-    var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/users/'+_userId.substring(8)),
+    String token= await Controller.fetchToken();
+    String userId=await Controller.fetchId();
+    print('https://www.polaraccesslink.com/v3/users/'+userId.substring(8));
+
+
+    var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/users/'+userId.substring(8)),
       headers:
       {
-        'Authorization': _token,
+        'Authorization': token,
         'Accept': 'application/json'
       },
     );
@@ -42,7 +44,9 @@ class ClientMenuAPI extends State<ClientMenu> {
       Map<String, dynamic> user = jsonDecode(response.body);
       print(user['registration-date']);
       List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
+
       return userInfo;
+
       // then parse the JSON.
     } else {
       // If the server did not return a 200 OK response,
@@ -58,8 +62,6 @@ class ClientMenuAPI extends State<ClientMenu> {
   @override
   void initState() {
     super.initState();
-    _token=Provider.of<AppData>(context,listen: false).token;
-    _userId=Provider.of<AppData>(context,listen: false).userid;
     _msg=fireUserInfoRequest();
 
   }
@@ -84,6 +86,9 @@ class ClientMenuAPI extends State<ClientMenu> {
                 children: [
 
                   const ShowData(),
+                  ElevatedButton(
+                      onPressed: () => Controller.reset(),
+                      child: const Text("RESET DB")),
 
                   FutureBuilder<List<dynamic>>(
                       future: _msg,

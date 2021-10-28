@@ -1,9 +1,11 @@
 
+import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
+import 'package:sqflite/sqflite.dart';
 
 /// -----------------------------------
 ///           CONTROLLER
@@ -25,11 +27,49 @@ class Controller {
   return _instance;
 }
   void toDebugAuthCode(BuildContext context,String code) {
+    DataBase.updateTokenTable("code", code);
     Provider.of<AppData>(context, listen: false).setCode(code);
     Provider.of<AppState>(context,listen: false).setstate(PHASE.debugAuthCode);
 
   }
 
+
+  static void fetchDb() async {
+    DataBase.initDatabase();
+
+  }
+
+  static Future<String> fetchToken() async {
+    return await DataBase.fetchToken();
+  }
+
+  static Future<String> fetchCode() async {
+    return await DataBase.fetchCode();
+  }
+  static void updateToken(String token) async {
+    DataBase.updateTokenTable("bearer", token);
+  }
+
+
+  static void reset() async {
+    DataBase.reset();
+  }
+
+  static Future<String> fetchId() async {
+    return await DataBase.fetchId();
+  }
+
+  static void updateId(String id) async {
+    DataBase.updateTokenTable("id", id);
+  }
+
+
+
+  static Future<Database> fetchDbAsync() async {
+    var databasesPath = await getDatabasesPath();
+    String path = databasesPath+"/my_db";
+    return await openDatabase(path) ;
+  }
 
   void toGetTokenFromPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
@@ -50,18 +90,7 @@ class Controller {
     Provider.of<AppData>(context,listen: false).setUserId(userId);
   }
 
-  String getToken(BuildContext context) {
-    return Provider.of<AppData>(context,listen: false).token;
-  }
 
-  String getAuth(BuildContext context) {
-    return Provider.of<AppData>(context,listen: false).userid;
-  }
-
-  String getCode(BuildContext context)
-  {
-    return Provider.of<AppData>(context,listen: false).code;
-  }
 // Services
 }
 

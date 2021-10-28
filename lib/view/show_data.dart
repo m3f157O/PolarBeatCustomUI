@@ -1,13 +1,12 @@
 
 import 'dart:convert';
 
-import 'package:custom_polar_beat_ui_v2/model/model.dart'; //TODO <---this is bad
 
 
+import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import 'deserialization.dart';
@@ -53,6 +52,8 @@ class RequestAndShow extends State<ShowData> {
   }
 
   Future<List<dynamic>> fetchActivities() async {
+
+    token=await Controller.fetchToken();
     var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
       headers:
       {
@@ -177,7 +178,6 @@ class RequestAndShow extends State<ShowData> {
   void initState() {
     super.initState();
 
-    token=Provider.of<AppData>(context,listen: false).token;
     msg=fetchActivities();
   }
 
