@@ -1,7 +1,6 @@
 
 import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
-import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
@@ -28,7 +27,6 @@ class Controller {
 }
   void toDebugAuthCode(BuildContext context,String code) {
     DataBase.updateTokenTable("code", code);
-    Provider.of<AppData>(context, listen: false).setCode(code);
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
 
   }
@@ -42,10 +40,13 @@ class Controller {
   static Future<String> fetchToken() async {
     return await DataBase.fetchToken();
   }
+
+  //todo fix this abomination with synch
   static Future<String> fetchTokenOnStart() async {
     await Future.delayed(const Duration(seconds: 1));
     return await DataBase.fetchToken();
   }
+
   static Future<String> fetchCode() async {
     return await DataBase.fetchCode();
   }
@@ -58,6 +59,7 @@ class Controller {
     DataBase.reset();
   }
 
+  //todo synch this shit with token request ffs
   static Future<String> fetchId() async {
     return await DataBase.fetchId();
   }
@@ -83,15 +85,6 @@ class Controller {
 
   }
 
-  static void addAppData(BuildContext context, Available data) {
-    Provider.of<AppData>(context,listen: false).addData(data);
-    Provider.of<AppState>(context,listen: false).setstate(PHASE.showData);
-
-  }
-  static void setAuthAndToken(BuildContext context, String token, String userId) {
-    Provider.of<AppData>(context,listen: false).setToken(token);
-    Provider.of<AppData>(context,listen: false).setUserId(userId);
-  }
 
   static void toLoginToPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.loginToPolar);

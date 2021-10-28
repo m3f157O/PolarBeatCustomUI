@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 
 
 enum PHASE {
+  startingUserMenu,
   loginToPolar,
-  debugAuthCode,
   getTokenFromPolar,
   viewMenu,
   showData,

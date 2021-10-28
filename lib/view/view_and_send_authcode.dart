@@ -56,8 +56,10 @@ class DebugAuthCode extends State<StartingScreen> {
                           );
                         }
                         else {
-                          return  const Text("REQUEST NEW TOKEN");
-                        }
+                          return ElevatedButton(
+                            onPressed: () => Controller.toLoginToPolar(context),
+                            child: const Text("REQUEST TOKEN"),
+                          );                        }
 
                         }
                       else {

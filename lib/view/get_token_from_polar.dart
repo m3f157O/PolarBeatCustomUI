@@ -143,7 +143,6 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
                 String token='B'+snapshot.data!.split('B')[1];
                 //I look for the B, which is always present. This is fast
                 registerUser(token,userId);
-                Controller.setAuthAndToken(context,token,userId);
 
 
 

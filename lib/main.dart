@@ -36,8 +36,8 @@ const authRedirectUri = 'com.auth0.custompolarinterface://login-callback';
 const authIssuer = 'https://$authDomain';
 
 const Map<PHASE,Widget> identifier = {
+  PHASE.startingUserMenu: StartingScreen(),
   PHASE.loginToPolar:LoginToPolarWeb(),
-  PHASE.debugAuthCode: StartingScreen(),
   PHASE.getTokenFromPolar:GetTokenFromPolar(),
   PHASE.viewMenu: ClientMenu(),
   PHASE.showData:ShowData(),
@@ -68,7 +68,7 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
   }
 
   @override
-  void initState() {
+  void initState() {//TODO SYNCH THIS PLEASE
     Controller.fetchDb();
 
 
@@ -78,7 +78,6 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (c) => AppState()),
-          ChangeNotifierProvider(create: (c) => AppData()),
         //Provider(create: (c) => UserService()),
         ],
         child: Builder(
