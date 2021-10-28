@@ -51,9 +51,6 @@ class AppData extends ChangeNotifier {
 
 
 
-
-
-
   void addData(Available value)
   {
     userData=value;

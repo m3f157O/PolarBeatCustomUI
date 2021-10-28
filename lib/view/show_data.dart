@@ -155,9 +155,8 @@ class RequestAndShow extends State<ShowData> {
         // If the server did return a 200 OK response,
         Map<String, dynamic> user = jsonDecode(response.body);
         print(user);
-        list.add(user['upload-time']);
-        list.add(user['duration']);
-        list.add(user['calories']);
+        list.add([user['duration'],user['detailed-sport-info'],user['calories']]);
+
         print(list);
 
 
@@ -195,12 +194,20 @@ class RequestAndShow extends State<ShowData> {
 
           return ListView.builder(
             itemBuilder: (context, index){
-              return Card(
-                child: ListTile(
-                  leading: const CircleAvatar(),
-                  title: Text(snapshot.data![index].toString()),
-                ),
+              return ListTile(
+                title: Text(snapshot.data![index][0]),
+                subtitle: Text(snapshot.data![index][1]),
+                leading: Icon(Icons.hourglass_empty),
+                dense: true,
+                tileColor: Colors.grey,
+                onTap: () {
+                  setState(() {
+
+                  });
+                }
               );
+
+
             },
             itemCount: snapshot.data!.length,
             shrinkWrap: true,

@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:sqflite/sqflite.dart';
 
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart'; //TODO <---this is bad
@@ -43,9 +44,6 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
   }
 
 
-
-
-
   Future<String> fetchAccessToken(String toSend) async {
 
     var response = await fireTokenDataRequest(toSend);
@@ -54,9 +52,27 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
       Map<String, dynamic> user = jsonDecode(response.body);
 
 
+
       String token= "Bearer " + user['access_token'];
       String id="User_id_"+user['x_user_id'].toString();
+      print(user);
+      var databasesPath = await getDatabasesPath();
+      String path = databasesPath+"/my_db";
+      print(path);
 
+      var db = await openDatabase(path) ;
+
+
+      List<Map> result;
+      Map<String,String> map={ "name":token };
+     //result = await db.query("Tokens");
+
+  //TODO SAFELY CHECK WHETHER TABLE ALREADY EXISTS
+   //     await db.execute(
+    //        'CREATE TABLE Tokens (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
+      await db.insert("Tokens",map);
+      result = await db.query("Tokens");
+      result.forEach((row) => print(row));
 
       // evil string hack, the B is always there
       return id+token.toString(); //really don't want to use a list, I'd rather parse the whole string
