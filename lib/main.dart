@@ -66,11 +66,7 @@ class ViewLogic extends State<GetAuthCodeFromPolar> {
 
   }
 
-  @override
-  void initState() {//TODO SYNCH THIS PLEASE
 
-
-  }
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
