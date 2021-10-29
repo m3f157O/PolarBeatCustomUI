@@ -44,9 +44,10 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
   Future<String> fetchAccessToken() async {
 
 
-    String temp= await Controller.fetchToken();
-    String temp2= await Controller.fetchId();
-    String code=await Controller.fetchCode();
+
+    String temp= await Controller().fetchToken();
+    String temp2= await Controller().fetchId();
+    String code=await Controller().fetchCode();
 
     if(temp2.isNotEmpty) {
       print("loading data from sqflite");
@@ -67,8 +68,8 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
      // Controller.updateToken(token);
 
 
-      Controller.updateToken(token);
-      Controller.updateId(id);
+      Controller().updateToken(token);
+      Controller().updateId(id);
       print("fetching data from Polar");
 
       // evil string hack, the B is always there

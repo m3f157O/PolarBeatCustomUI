@@ -4,8 +4,7 @@ import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
-import 'package:sqflite/sqflite.dart';
-
+import 'package:synchronized/extension.dart';
 /// -----------------------------------
 ///           CONTROLLER
 /// -----------------------------------
@@ -24,57 +23,48 @@ class Controller {
 
   static getController(){
   return _instance;
-}
+  }
   void toDebugAuthCode(BuildContext context,String code) {
-    DataBase.updateTokenTable("code", code);
+    DataBase().updateTokenTable("code", code);
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
 
   }
 
-
-  static void fetchDb() async {
-    DataBase.initDatabase();
-
+   Future<String> fetchToken() async {
+    return await DataBase().fetchToken();
   }
 
-  static Future<String> fetchToken() async {
-    return await DataBase.fetchToken();
+   Future<String> fetchTokenOnStart() async {
+    synchronized(() async {
+       await DataBase().initDatabase();
+     });
+    return synchronized(() async {
+      return await DataBase().fetchToken();
+    });
   }
 
-  //todo fix this abomination with synch
-  static Future<String> fetchTokenOnStart() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return await DataBase.fetchToken();
+   Future<String> fetchCode() async {
+    return await DataBase().fetchCode();
   }
-
-  static Future<String> fetchCode() async {
-    return await DataBase.fetchCode();
-  }
-  static void updateToken(String token) async {
-    DataBase.updateTokenTable("bearer", token);
+   void updateToken(String token) async {
+    DataBase().updateTokenTable("bearer", token);
   }
 
 
-  static void reset() async {
-    DataBase.reset();
+   void reset() async {
+    DataBase().reset();
   }
 
-  //todo synch this shit with token request ffs
-  static Future<String> fetchId() async {
-    return await DataBase.fetchId();
+   Future<String> fetchId() async {
+    return await DataBase().fetchId();
   }
 
-  static void updateId(String id) async {
-    DataBase.updateTokenTable("id", id);
+   void updateId(String id) async {
+    DataBase().updateTokenTable("id", id);
   }
 
 
 
-  static Future<Database> fetchDbAsync() async {
-    var databasesPath = await getDatabasesPath();
-    String path = databasesPath+"/my_db";
-    return await openDatabase(path) ;
-  }
 
   void toGetTokenFromPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
@@ -86,7 +76,7 @@ class Controller {
   }
 
 
-  static void toLoginToPolar(BuildContext context) {
+   void toLoginToPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.loginToPolar);
 
   }

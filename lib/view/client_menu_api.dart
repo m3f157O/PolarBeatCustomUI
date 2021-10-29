@@ -27,8 +27,8 @@ class ClientMenuAPI extends State<ClientMenu> {
 
 
   Future<List<dynamic>> fireUserInfoRequest() async {
-    String token= await Controller.fetchToken();
-    String userId=await Controller.fetchId();
+    String token= await Controller().fetchToken();
+    String userId=await Controller().fetchId();
     print('https://www.polaraccesslink.com/v3/users/'+userId.substring(8));
 
 
@@ -42,7 +42,9 @@ class ClientMenuAPI extends State<ClientMenu> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      print(user['registration-date']);
+      print(user);
+      print("hello");
+
       List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
 
       return userInfo;

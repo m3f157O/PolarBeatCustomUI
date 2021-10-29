@@ -53,7 +53,7 @@ class RequestAndShow extends State<ShowData> {
 
   Future<List<dynamic>> fetchActivities() async {
 
-    token=await Controller.fetchToken();
+    token=await Controller().fetchToken();
     var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
       headers:
       {

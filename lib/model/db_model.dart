@@ -11,18 +11,19 @@ class DataBase {
     static const _databaseName = "/my_db";
 
 
-  static void initDatabase() async {
+    Future<bool> initDatabase() async {
     var databasesPath = await getDatabasesPath();
     String path = databasesPath+_databaseName;
     print(path);
-    _database = await openDatabase(path) ;
+    _database = await openDatabase(path);
+    return true;
   }
-   static Future<Database> get database async {
+    Future<Database> get database async {
     return _database;
     }
 
 
-    static void updateTokenTable(String type,String token) async {
+     void updateTokenTable(String type,String token) async {
       Map<String,String> map={ "type":type,"name":token };
       // List<Map> result = await db.query("Tokens");
 
@@ -34,21 +35,21 @@ class DataBase {
 
 
 
-    static void dropTable() async {
+     void dropTable() async {
 
       await _database.execute('DROP TABLE Tokens');
 
 
     }
 
-    static void reset() async {
+     void reset() async {
 
       dropTable();
       createTable();
 
     }
 
-    static void createTable() async {
+     void createTable() async {
 
 
            await _database.execute(
@@ -59,7 +60,7 @@ class DataBase {
 
     /// HARDCODING HERE IS NECESSARY BECAUSE
     /// I DON'T WANT TO USE SQL HELPERS
-    static Future<String> fetchToken() async {
+     Future<String> fetchToken() async {
 
       List<Map> list = await _database.rawQuery("SELECT * FROM Tokens WHERE type='bearer'");
 
@@ -72,7 +73,7 @@ class DataBase {
     }
 
 
-    static Future<String> fetchId() async {
+     Future<String> fetchId() async {
 
       List<Map> list = await _database.rawQuery("SELECT * FROM Tokens WHERE type='id'");
 
@@ -84,7 +85,7 @@ class DataBase {
       }
     }
 
-    static Future<String> fetchCode() async {
+     Future<String> fetchCode() async {
 
       List<Map> list = await _database.rawQuery("SELECT * FROM Tokens WHERE type='code'");
 

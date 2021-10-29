@@ -25,7 +25,7 @@ class DebugAuthCode extends State<StartingScreen> {
   void initState() {
     super.initState();
 
-    msg=Controller.fetchTokenOnStart();
+    msg=Controller().fetchTokenOnStart();
 
   }
 
@@ -57,7 +57,7 @@ class DebugAuthCode extends State<StartingScreen> {
                         }
                         else {
                           return ElevatedButton(
-                            onPressed: () => Controller.toLoginToPolar(context),
+                            onPressed: () => Controller().toLoginToPolar(context),
                             child: const Text("REQUEST TOKEN"),
                           );                        }
 
@@ -72,14 +72,13 @@ class DebugAuthCode extends State<StartingScreen> {
 
                       return const CircularProgressIndicator();
 
-                      // By default, show a loading spinner.
-                      return const CircularProgressIndicator();
+
                     },
                   ),
 
 
                   ElevatedButton(
-                    onPressed: () => Controller.reset(),
+                    onPressed: () => Controller().reset(),
                     child: const Text("DROP DB (restart app after this)"),
                   ),
 
