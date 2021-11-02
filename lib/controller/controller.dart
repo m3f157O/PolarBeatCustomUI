@@ -1,6 +1,7 @@
 
 import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
+import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
@@ -35,12 +36,32 @@ class Controller {
   }
 
    Future<String> fetchTokenOnStart() async {
+
+
     synchronized(() async {
        await DataBase().initDatabase();
      });
     return synchronized(() async {
       return await DataBase().fetchToken();
     });
+
+
+  }
+
+
+  Future<String> depositProfile(Profile profile) async {
+    print(profile.polaruserid);
+    print(profile.polarmemberid);
+    print(profile.firstname);
+    print(profile.lastname);
+    print(profile.recdate);
+    print(profile.birthdate);
+    print(profile.gender);
+    print(profile.weight);
+    print(profile.extrainfo);
+    return await DataBase().fetchCode();
+
+
   }
 
    Future<String> fetchCode() async {

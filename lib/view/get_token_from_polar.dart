@@ -63,7 +63,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
 
       String token= "Bearer " + user['access_token'];
       String id="User_id_"+user['x_user_id'].toString();
-      print(user);
+      //print(user);
 
      // Controller.updateToken(token);
 
@@ -97,7 +97,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      print(user['registration-date']);
+      //print(user['registration-date']);
       // then parse the JSON.
       return ;
 

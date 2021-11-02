@@ -2,10 +2,14 @@
 
 import 'dart:convert';
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
+import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'deserialization.dart';
 
 
 class ClientMenu extends StatefulWidget {
@@ -27,9 +31,11 @@ class ClientMenuAPI extends State<ClientMenu> {
 
 
   Future<List<dynamic>> fireUserInfoRequest() async {
+
     String token= await Controller().fetchToken();
     String userId=await Controller().fetchId();
-    print('https://www.polaraccesslink.com/v3/users/'+userId.substring(8));
+
+    //print('https://www.polaraccesslink.com/v3/users/'+userId.substring(8));
 
 
     var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/users/'+userId.substring(8)),
@@ -42,9 +48,10 @@ class ClientMenuAPI extends State<ClientMenu> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       Map<String, dynamic> user = jsonDecode(response.body);
-      print(user);
-      print("hello");
+      Profile cicheck=Profile.fromJson(user);
 
+
+      DataBase().createProfileTable();
       List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
 
       return userInfo;
@@ -53,8 +60,8 @@ class ClientMenuAPI extends State<ClientMenu> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      print(response.statusCode);
-      print(response.contentLength);
+      //print(response.statusCode);
+      //print(response.contentLength);
       return ["ba4d"];
     }
   }

@@ -34,6 +34,14 @@ class DataBase {
     }
 
 
+    void updateProfileTable(Map<String,Object> map) async {
+      // List<Map> result = await db.query("Tokens");
+
+      await _database.insert("Profile",map);
+      var result = await _database.query("Tokens");
+      print(result);
+      print("database after storage");
+    }
 
      void dropTable() async {
 
@@ -49,11 +57,19 @@ class DataBase {
 
     }
 
-     void createTable() async {
+    void createTable() async {
 
 
-           await _database.execute(
-             'CREATE TABLE Tokens (type TEXT, name TEXT)');
+      await _database.execute(
+          'CREATE TABLE Tokens (type TEXT, name TEXT)');
+
+    }
+
+    void createProfileTable() async {
+
+
+      await _database.execute(
+          'CREATE TABLE Profile (polaruserid INT, recdate TEXT, firstname TEXT, lastname TEXT, birthdate TEXT, gender TEXT)');
 
     }
 

@@ -70,19 +70,15 @@ class RequestAndShow extends State<ShowData> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      activities=Available(0,'dum','dum');
 
       print(response.statusCode);
       print(response.body);
-      return startFetchActivityDataTransaction(activities.url);
+      return [];
     }
   }
 
   Future<List<dynamic>> startFetchActivityDataTransaction(String toFetch) async {
 
-    if(toFetch=='dum') {
-      return ['empty'];
-    }
 
     var response = await http.post(Uri.parse(toFetch),
       headers:
@@ -124,9 +120,10 @@ class RequestAndShow extends State<ShowData> {
       Map<String, dynamic> user = jsonDecode(response.body);
       print(response.statusCode);
       List<dynamic> list=user["exercises"] ?? [];
-      print(list);
       if(list.isEmpty) {
-        list.add("NO DATA TO DISPLAY");
+        print(list);
+
+        print("list is empty");
         return list;
       }
       return processDailyActivities(list);
@@ -184,45 +181,50 @@ class RequestAndShow extends State<ShowData> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: msg,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
+    return Column(
+        children: [
+          FutureBuilder<List<dynamic>>(
+          future: msg,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
 
 
 
 
-          return ListView.builder(
-            itemBuilder: (context, index){
-              return ListTile(
-                title: Text(snapshot.data![index][0]),
-                subtitle: Text(snapshot.data![index][1]),
-                leading: const Icon(Icons.hourglass_empty),
-                dense: true,
-                tileColor: Colors.grey,
-                onTap: () {
-                  setState(() {
+              return ListView.builder(
+                itemBuilder: (context, index){
+                  return ListTile(
+                      title: Text(snapshot.data![index][0]),
+                      subtitle: Text(snapshot.data![index][1]),
+                      leading: const Icon(Icons.hourglass_empty),
+                      dense: true,
+                      tileColor: Colors.grey,
+                      onTap: () {
+                        setState(() {
 
-                  });
-                }
+                        });
+                      }
+                  );
+
+
+                },
+                itemCount: snapshot.data!.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(5),
+                scrollDirection: Axis.vertical,
               );
 
-
-            },
-            itemCount: snapshot.data!.length,
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(5),
-            scrollDirection: Axis.vertical,
-          );
-
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
 
 
-        // By default, show a loading spinner.
-        return const CircularProgressIndicator();
-      },
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
+
+        ),
+    ],
     );
 
   }
