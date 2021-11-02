@@ -51,7 +51,8 @@ class ClientMenuAPI extends State<ClientMenu> {
       Profile cicheck=Profile.fromJson(user);
 
 
-      DataBase().createProfileTable();
+      //DataBase().createProfileTable();
+      Controller().depositProfile(cicheck);
       List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
 
       return userInfo;

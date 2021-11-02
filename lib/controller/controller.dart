@@ -59,7 +59,7 @@ class Controller {
     print(profile.gender);
     print(profile.weight);
     print(profile.extrainfo);
-    return await DataBase().fetchCode();
+    return "hello";
 
 
   }
