@@ -50,15 +50,18 @@ class Controller {
 
 
   Future<String> depositProfile(Profile profile) async {
-    print(profile.polaruserid);
-    print(profile.polarmemberid);
-    print(profile.firstname);
-    print(profile.lastname);
-    print(profile.recdate);
-    print(profile.birthdate);
-    print(profile.gender);
-    print(profile.weight);
-    print(profile.extrainfo);
+
+    Map<String,Object> toPass={
+      "polaruserid":profile.polaruserid,
+      "recdate":profile.firstname,
+      "firstname":profile.firstname,
+      "lastname":profile.lastname,
+      "birthdate":profile.birthdate,
+      "gender":profile.gender,
+
+    };
+    print(toPass);
+    DataBase().updateProfileTable(toPass);
     return "hello";
 
 

@@ -1,3 +1,4 @@
+import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:sqflite/sqflite.dart';
 
 //TODO FATAL MAKE DB CHECK WETHER TABLES EXIST DURING INIT
@@ -34,11 +35,11 @@ class DataBase {
     }
 
 
-    void updateProfileTable(Map<String,Object> map) async {
+    void updateProfileTable(Map<String,Object> profile) async {
       // List<Map> result = await db.query("Tokens");
 
-      await _database.insert("Profile",map);
-      var result = await _database.query("Tokens");
+      await _database.insert("Profile",profile);
+      var result = await _database.query("Profile");
       print(result);
       print("database after storage");
     }
