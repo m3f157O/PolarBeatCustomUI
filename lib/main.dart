@@ -13,15 +13,17 @@ import 'package:custom_polar_beat_ui_v2/model/model.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
+    MaterialApp(
       title: 'Named Routes Demo',
 
-      home: GetAuthCodeFromPolar(),
-
+      initialRoute: '/',
+      routes: {
+        '/': (context) =>  const GetAuthCodeFromPolar(),
+        '/': (context) =>  const GetAuthCodeFromPolar(),
+      },
     ),
   );
 }
-
 
 /// -----------------------------------
 ///           Auth0 Variables

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class Available    {
   int userid;
@@ -42,3 +41,44 @@ class Profile    {
 
 
 }
+
+
+/*
+class Exercise    {
+  String id;
+  String upload_time;
+  String polar_user;
+  String device;
+  String start_time;
+  int start_time_utc_offset;
+  String duration;
+  double calories;
+  double distance;
+  Map<String,int> heart_rate;
+  double training_load;
+  String sport;
+  bool has_route;
+  String club_id;
+  String club_name;
+  String detailed_sport_info;
+  String fat_percentage;
+  String carbohydrate_percentage;
+  String protein_percentage;
+
+
+  Profile.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        upload_time = json['upload_time'],
+        polar_user =json['polar_user'],
+        device =json['device'],
+        lastname =json['last-name'],
+        birthdate =json['birthdate'],
+        gender =json['gender'],
+        weight =json['weight'],
+        height =json['height'],
+        extrainfo =json['field'];
+
+
+}
+
+*/

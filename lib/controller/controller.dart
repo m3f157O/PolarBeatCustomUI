@@ -1,11 +1,12 @@
 
 import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
-import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 import 'package:synchronized/extension.dart';
+import 'package:synchronized/synchronized.dart';
+
 /// -----------------------------------
 ///           CONTROLLER
 /// -----------------------------------
@@ -21,7 +22,7 @@ const polarClientId = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 class Controller {
   // Models
   static final Controller _instance = Controller();
-
+  var lock = Lock();
   static getController(){
   return _instance;
   }
@@ -31,41 +32,33 @@ class Controller {
 
   }
 
-   Future<String> fetchToken() async {
-    return await DataBase().fetchToken();
+  Future<String> fetchToken() async {
+    return await DataBase().fetchAccessToken();
+  }
+
+  Future<Map<String,Object>> fetchProfile() async {
+    return await lock.synchronized(() async {
+      return Map.from(await DataBase().fireUserInfoRequest());
+    });
   }
 
    Future<String> fetchTokenOnStart() async {
 
+     await lock.synchronized(() async {
+     // Only this block can run (once) until done
 
-    synchronized(() async {
        await DataBase().initDatabase();
+       });
+
+     return await lock.synchronized(() async {
+       // Only this block can run (once) until done
+       return await DataBase().fetchToken();
      });
-    return synchronized(() async {
-      return await DataBase().fetchToken();
-    });
 
 
   }
 
 
-  Future<String> depositProfile(Profile profile) async {
-
-    Map<String,Object> toPass={
-      "polaruserid":profile.polaruserid,
-      "recdate":profile.firstname,
-      "firstname":profile.firstname,
-      "lastname":profile.lastname,
-      "birthdate":profile.birthdate,
-      "gender":profile.gender,
-
-    };
-    print(toPass);
-    DataBase().updateProfileTable(toPass);
-    return "hello";
-
-
-  }
 
    Future<String> fetchCode() async {
     return await DataBase().fetchCode();
@@ -95,6 +88,7 @@ class Controller {
 
   }
   void toViewMenu(BuildContext context) {
+
     Provider.of<AppState>(context,listen: false).setstate(PHASE.viewMenu);
 
   }
@@ -103,6 +97,19 @@ class Controller {
    void toLoginToPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.loginToPolar);
 
+  }
+
+  Future<void> registerUser() async {
+    await lock.synchronized(() async {
+      // Only this block can run (once) until done
+      await DataBase().registerUser();
+
+    });
+
+  }
+
+  Future<List<Map<String,Object>>> fetchActivities() {
+    return DataBase().fetchActivities();
   }
 
 // Services
