@@ -348,10 +348,10 @@ class DataBase {
         return getDailyActivities(user['resource-uri']);
       } else if(response.statusCode==204){
 
-        return [{}];
+        return [];
       } else{
 
-        return [{}];
+        return [];
       }
     }
 
@@ -375,13 +375,13 @@ class DataBase {
         List<dynamic> list=user["exercises"] ?? [];
         if(list.isEmpty) {
           print("returning empty list");
-          return [{}];
+          return [];
         }
         return processDailyActivities(list);
 
       } else {
 
-        return [{}];
+        return [];
 
       }
     }

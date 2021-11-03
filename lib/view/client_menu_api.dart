@@ -71,7 +71,6 @@ class ClientMenuAPI extends State<ClientMenu> {
                             itemBuilder: (context, index){
                               return Card(
                                 child: ListTile(
-                                  leading: const CircleAvatar(),
                                   title: Text(snapshot.data!.values.elementAt(index).toString()),
                                 ),
                               );

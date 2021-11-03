@@ -3,6 +3,7 @@
 
 
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
+import 'package:custom_polar_beat_ui_v2/view/exercise_view.dart';
 import 'package:custom_polar_beat_ui_v2/view/starting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class RequestAndShow extends State<ShowData> {
                       onTap: () {
                         setState(() {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const StartingScreen()));
+                              MaterialPageRoute(builder: (context) => const ExerciseView()));
 
                         },
                         );
