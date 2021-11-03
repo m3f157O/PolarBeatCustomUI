@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:synchronized/extension.dart';
 
 //TODO FATAL MAKE DB CHECK WETHER TABLES EXIST DURING INIT
-
+//TODO SYNCHRONIZE PROPERLY
 
 
 class DataBase {

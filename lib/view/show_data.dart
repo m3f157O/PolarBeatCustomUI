@@ -8,6 +8,7 @@ import 'package:custom_polar_beat_ui_v2/view/starting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+//TODO NULL CHECK PROPERLY
 
 class ShowData extends StatefulWidget {
 
