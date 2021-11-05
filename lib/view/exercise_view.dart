@@ -2,24 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ExerciseView extends StatefulWidget {
-  const ExerciseView({Key? key}) : super(key: key);
+class ExerciseView extends StatelessWidget {
 
-  @override
-  State<StatefulWidget> createState() {
-    return StandardView();
-  }
-
-
-
-
-}
-
-
-
-class StandardView extends State<ExerciseView> {
-
-
+  Map data;
+  dynamic ci;
+  ExerciseView(this.data, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +19,18 @@ class StandardView extends State<ExerciseView> {
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
+                  children:  [
 
-                    Text("YOU WILL SEE DATA HERE"),
+                    Text("Duration "+data["duration"]),
+                    Text("Calories "+data["calories"].toString()),
+                    Text("Device "+data["device"]),
+                    Text("Distance "+data["distance"].toString()),
+                    Text("Start Time "+data["starttime"]),
 
+
+                    ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("back")),
 
 
 
@@ -47,5 +42,8 @@ class StandardView extends State<ExerciseView> {
 
     );
   }
+
 }
+
+
 

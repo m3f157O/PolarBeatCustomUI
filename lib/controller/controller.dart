@@ -68,9 +68,12 @@ class Controller {
   }
 
 
-   void reset() async {
-    DataBase().reset();
-  }
+   void reset(BuildContext context) async {
+     await lock.synchronized(() async {
+       await DataBase().reset();
+     });
+
+   }
 
    Future<String> fetchId() async {
     return await DataBase().fetchId();
@@ -110,6 +113,10 @@ class Controller {
 
   Future<List<Map<String,Object>>> fetchActivities() {
     return DataBase().fetchActivities();
+  }
+
+  Future<List<Map<dynamic,dynamic>>> fetchSavedActivities() {
+    return DataBase().fetchSavedActivities();
   }
 
 // Services

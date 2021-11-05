@@ -68,14 +68,20 @@ class ClientMenuAPI extends State<ClientMenu> {
 
 
                           return ListView.builder(
+                            physics: const ScrollPhysics(),
+   
                             itemBuilder: (context, index){
-                              return Card(
-                                child: ListTile(
-                                  title: Text(snapshot.data!.values.elementAt(index).toString()),
-                                ),
+                              return Container(
+                                  height: MediaQuery.of(context).size.width * 0.14,
+                                  child: ListTile(
+                                    leading: Icon(Icons.radio_button_checked, size: 17),
+                                    title: Text(snapshot.data!.values.elementAt(index).toString(), style: TextStyle(height: 1.3),),
+                                  )
+
                               );
+
                             },
-                            itemCount: snapshot.data!.length,
+                            itemCount: 3,
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(5),
                             scrollDirection: Axis.vertical,

@@ -23,7 +23,7 @@ class ShowData extends StatefulWidget {
 class RequestAndShow extends State<ShowData> {
 
   late Future<List<Map<String,Object>>> msg;
-  late Future<List<Map<String,Object>>> msg2;
+  late Future<List<Map<dynamic,dynamic>>> msg2;
 
 
   Future<List<Map<String,Object>>> fetchActivities() async {
@@ -37,6 +37,7 @@ class RequestAndShow extends State<ShowData> {
     super.initState();
 
     msg=fetchActivities();
+    msg2=fetchSavedActivities();
   }
 
 
@@ -63,7 +64,7 @@ class RequestAndShow extends State<ShowData> {
                       onTap: () {
                         setState(() {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const ExerciseView()));
+                              MaterialPageRoute(builder: (context) =>  ExerciseView(snapshot.data!.elementAt(index))));
 
                         },
                         );
@@ -88,9 +89,58 @@ class RequestAndShow extends State<ShowData> {
           },
 
         ),
+          FutureBuilder<List<Map<dynamic,dynamic>>>(
+            future: msg2,
+            builder: (context, snapshot) {
+              if (snapshot.hasData)
+              {
+                if (snapshot.data!.isEmpty&&!snapshot.data!.isNotEmpty) {
+                  return const Text('NO DATA TO DISPLAY');
+                }
+                return ListView.builder(
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index){
+                    return ListTile(
+                        title: Text(snapshot.data!.elementAt(index)["sport"]!.toString()),
+                        subtitle: const Text("old"),
+                        leading: const Icon(Icons.hourglass_empty),
+                        dense: true,
+                        tileColor: Colors.grey,
+                        onTap: () {
+                          setState(() {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => ExerciseView(snapshot.data!.elementAt(index))));
+
+                          },
+                          );
+                        }
+                    );
+
+
+                  },
+                  itemCount: 3,
+                  padding: const EdgeInsets.all(5),
+                  scrollDirection: Axis.vertical,
+                );
+
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+
+
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+
+          ),
     ],
     );
 
+  }
+
+  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() {
+    return Controller().fetchSavedActivities();
   }
 
 }

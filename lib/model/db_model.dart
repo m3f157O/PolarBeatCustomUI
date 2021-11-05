@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:custom_polar_beat_ui_v2/view/deserialization.dart';
 import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -13,8 +13,8 @@ import 'package:synchronized/extension.dart';
 class DataBase {
 
     static late final Database _database;
-
     static const _databaseName = "/my_db";
+
 
 
     Future<bool> initDatabase() async {
@@ -22,6 +22,22 @@ class DataBase {
     String path = databasesPath+_databaseName;
     print(path);
     _database = await openDatabase(path);
+    var result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Tokens'");
+    if(result.isEmpty) {
+      print("saved");
+      createTokenTable();
+      result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Exercises'");
+      if(result.isEmpty) {
+        createExercisesTable();
+      }
+      result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Profile'");
+      if(result.isEmpty) {
+        createProfileTable();
+      }
+    }
+
+
+
     return true;
   }
     Future<Database> get database async {
@@ -40,10 +56,10 @@ class DataBase {
     }
 
 
-    void updateProfileTable(Profile profile) async {
+    void updateProfileTable(Map<String,Object> toPass) async {
       // List<Map> result = await db.query("Tokens");
 
-
+/*
       Map<String,Object> toPass={
         "polaruserid":profile.polaruserid,
         "recdate":profile.firstname,
@@ -52,11 +68,48 @@ class DataBase {
         "birthdate":profile.birthdate,
         "gender":profile.gender,
 
-      };
+      };*/
 
-      print(profile);
-      await _database.insert("Profile",toPass);
+      var transformedMap = toPass.map((k, v) {
+        return MapEntry(k.replaceAll("-", ""), v);
+      });
+
+
+
+      await _database.insert("Profile",transformedMap);
       var result = await _database.query("Profile");
+      print(result);
+      print("database after storage");
+    }
+
+
+
+
+    void updateExercisesTable(Map<String,Object> toPass) async {
+      // List<Map> result = await db.query("Tokens");
+
+/*
+      Map<String,Object> toPass={
+        "polaruserid":profile.polaruserid,
+        "recdate":profile.firstname,
+        "firstname":profile.firstname,
+        "lastname":profile.lastname,
+        "birthdate":profile.birthdate,
+        "gender":profile.gender,
+
+      };*/
+
+      toPass.remove('heart_rate');
+
+      var transformedMap = toPass.map((k, v) {
+        print(k);
+        print(v.runtimeType);
+        return MapEntry(k.replaceAll("-", ""), v);
+      });
+
+      print(transformedMap);
+      await _database.insert("Exercises",transformedMap);
+      var result = await _database.query("Exercises");
       print(result);
       print("database after storage");
     }
@@ -67,6 +120,14 @@ class DataBase {
 
 
     }
+
+    void dropExercisesTable() async {
+
+      _database.execute('DROP TABLE Exercises');
+
+
+    }
+
     void dropProfileTable() async {
 
       _database.execute('DROP TABLE Profile');
@@ -74,7 +135,7 @@ class DataBase {
 
     }
 
-     void reset() async {
+     Future<bool> reset() async {
 
        synchronized(() async {
          dropTokenTable();
@@ -88,6 +149,33 @@ class DataBase {
        synchronized(() async {
          createProfileTable();
        });
+       synchronized(() async {
+         dropExercisesTable();
+       });
+       synchronized(() async {
+         createExercisesTable();
+       });
+
+      return true;
+
+    }
+
+    Future<bool> drop() async {
+
+      synchronized(() async {
+        dropTokenTable();
+      });
+
+      synchronized(() async {
+        dropProfileTable();
+      });
+
+      synchronized(() async {
+        dropExercisesTable();
+      });
+
+      return true;
+
     }
 
     void createTokenTable() async {
@@ -103,7 +191,16 @@ class DataBase {
 
 
       _database.execute(
-          'CREATE TABLE Profile (polaruserid INT, recdate TEXT, firstname TEXT, lastname TEXT, birthdate TEXT, gender TEXT)');
+          'CREATE TABLE Profile (polaruserid TEXT, registrationdate TEXT, firstname TEXT, lastname TEXT, birthdate TEXT, gender TEXT)');
+
+    }
+
+
+    void createExercisesTable() async {
+
+
+      _database.execute(
+          'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute TEXT, detailedsportinfo TEXT)');
 
     }
 
@@ -218,6 +315,8 @@ class DataBase {
 
     Future<void> registerUser() async {
 
+
+
       String token=await fetchToken();
       String id=await fetchId();
 
@@ -252,6 +351,7 @@ class DataBase {
     Future<Map<String,Object>> fireUserInfoRequest() async {
 
 
+
       String token= await fetchToken();
       String userId=await fetchId();
       var temp=await fetchProfile();
@@ -277,12 +377,15 @@ class DataBase {
         //TODO REMOVE DESERIALIZATION CLASS ( MORE MARSHALLING)
         Map<String,Object> toRet=Map.from(user);
 
-        Profile toUpdate=Profile.fromJson(user);
-        toRet.remove('polarmemberid');
+        toRet.remove('member-id');
         toRet.remove('weight');
         toRet.remove('height');
         toRet.remove('extra-info');
-        updateProfileTable(toUpdate);
+
+
+
+        
+        updateProfileTable(toRet);
         //DataBase().createProfileTable();
 
         List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
@@ -303,6 +406,8 @@ class DataBase {
 
     Future<List<Map<String,Object>>> fetchActivities() async {
 
+
+      print("authenticating for notifications");
       var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
         headers:
         {
@@ -314,8 +419,8 @@ class DataBase {
         // If the server did return a 200 OK response,
         Map<String, dynamic> userData = jsonDecode(response.body);
         List av=userData['available-user-data'];      // then parse the JSON.
-        Available activities=Available.fromJson(av.elementAt(0));
-        return startFetchActivityDataTransaction(activities.url);
+
+        return startFetchActivityDataTransaction(av.elementAt(0)['url']);
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
@@ -327,6 +432,8 @@ class DataBase {
     }
 
     Future<List<Map<String,Object>>> startFetchActivityDataTransaction(String toFetch) async {
+
+      print("initiating transaction");
 
       String token=await fetchToken();
 
@@ -356,22 +463,28 @@ class DataBase {
     }
 
     Future<List<Map<String,Object>>> getDailyActivities(String toFetch) async {
-
+      Response response;
+      print("getting list of notifications");
       String token=await fetchToken();
+      try{
+        response = await http.get(Uri.parse(toFetch),
+          headers:
+          {
+            'Authorization': token,
+            'Accept': 'application/json'
+          },
+        );
+      }
+      on TimeoutException catch (e) {
+        print("connection timeout");
+        return [];
+      }
 
-      var response = await http.get(Uri.parse(toFetch),
-        headers:
-        {
-          'Authorization': token,
-          'Accept': 'application/json'
-        },
-      );
 
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
         Map<String, dynamic> user = jsonDecode(response.body);
         print(response.statusCode);
-        print(user["exercises"].runtimeType);
         List<dynamic> list=user["exercises"] ?? [];
         if(list.isEmpty) {
           print("returning empty list");
@@ -394,6 +507,8 @@ class DataBase {
       if(toFetch.isNotEmpty)
       {
         for(int i=0; i<toFetch.length;i++) {
+          print("processing activity number "+ i.toString());
+
           var response = await http.get(Uri.parse(toFetch.elementAt(i)),
             headers:
             {
@@ -407,8 +522,12 @@ class DataBase {
 
             Map<String,Object> map=Map.from(user);
             list.add(map);
-
+            print("deserializing map");
             print(list);
+            map.remove('heart-rate');
+            print(map);
+            updateExercisesTable(map);
+
             print("list after element");
 
 
@@ -423,6 +542,27 @@ class DataBase {
 
 
 
+    }
+
+  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() async {
+
+    List<Map> list = await _database.rawQuery("SELECT * FROM Exercises");
+
+    if(list.isEmpty) {
+      return [];
+    } else {
+
+      print("QUERY IS");
+      print(list);
+
+      List<Map<String,Object>> temp= [];
+      for(int i=0;i<list.length;i++) {
+        print(temp.runtimeType);
+        print(list.runtimeType);
+      }
+
+      return list;
+    }
     }
 
 

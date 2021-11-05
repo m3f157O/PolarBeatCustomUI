@@ -1,4 +1,5 @@
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
+import 'package:custom_polar_beat_ui_v2/model/db_model.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class DebugAuthCode extends State<StartingScreen> {
 
 
                   ElevatedButton(
-                    onPressed: () => Controller().reset(),
+                    onPressed: () => Controller().reset(context),
                     child: const Text("DROP DB (restart app after this)"),
                   ),
 
