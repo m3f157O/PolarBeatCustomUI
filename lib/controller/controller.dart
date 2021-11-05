@@ -4,7 +4,6 @@ import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
-import 'package:synchronized/extension.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// -----------------------------------

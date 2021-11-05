@@ -69,13 +69,13 @@ class ClientMenuAPI extends State<ClientMenu> {
 
                           return ListView.builder(
                             physics: const ScrollPhysics(),
-   
+
                             itemBuilder: (context, index){
                               return Container(
                                   height: MediaQuery.of(context).size.width * 0.14,
                                   child: ListTile(
-                                    leading: Icon(Icons.radio_button_checked, size: 17),
-                                    title: Text(snapshot.data!.values.elementAt(index).toString(), style: TextStyle(height: 1.3),),
+                                    leading: const Icon(Icons.radio_button_checked, size: 17),
+                                    title: Text(snapshot.data!.values.elementAt(index).toString(), style: const TextStyle(height: 1.3),),
                                   )
 
                               );

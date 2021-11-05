@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 
 class ExerciseView extends StatelessWidget {
 
-  Map data;
-  dynamic ci;
-  ExerciseView(this.data, {Key? key}) : super(key: key);
+  final Map data;
+  const ExerciseView(this.data, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

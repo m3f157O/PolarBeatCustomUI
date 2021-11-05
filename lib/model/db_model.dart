@@ -20,11 +20,10 @@ class DataBase {
     Future<bool> initDatabase() async {
     var databasesPath = await getDatabasesPath();
     String path = databasesPath+_databaseName;
-    print(path);
     _database = await openDatabase(path);
     var result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Tokens'");
     if(result.isEmpty) {
-      print("saved");
+      print("Crash Saved");
       createTokenTable();
       result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Exercises'");
       if(result.isEmpty) {
@@ -50,9 +49,7 @@ class DataBase {
       // List<Map> result = await db.query("Tokens");
 
       await _database.insert("Tokens",map);
-      var result = await _database.query("Tokens");
-      print(result);
-      print("database after "+type+" storage");
+      print(type+" stored");
     }
 
 
@@ -78,8 +75,7 @@ class DataBase {
 
       await _database.insert("Profile",transformedMap);
       var result = await _database.query("Profile");
-      print(result);
-      print("database after storage");
+      print("Profile stored");
     }
 
 
@@ -102,16 +98,14 @@ class DataBase {
       toPass.remove('heart_rate');
 
       var transformedMap = toPass.map((k, v) {
-        print(k);
-        print(v.runtimeType);
+
         return MapEntry(k.replaceAll("-", ""), v);
       });
 
-      print(transformedMap);
       await _database.insert("Exercises",transformedMap);
       var result = await _database.query("Exercises");
       print(result);
-      print("database after storage");
+      print("Exercises stored");
     }
 
     void dropTokenTable() async {
@@ -227,8 +221,6 @@ class DataBase {
         return {};
       } else {
 
-        print(list.length);
-
         return list.elementAt(0);
       }
     }
@@ -276,14 +268,14 @@ class DataBase {
 
     Future<String> fetchAccessToken() async {
 
-      print("called");
+      print("Fetching token");
 
       String temp= await fetchToken();
       String temp2= await fetchId();
       String code=await fetchCode();
 
       if(temp2.isNotEmpty) {
-        print("loading token from sqflite");
+        print("Loading saved token");
         return temp2+temp;
       }
 
@@ -332,7 +324,6 @@ class DataBase {
       );
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
-        Map<String, dynamic> user = jsonDecode(response.body);
         //print(user['registration-date']);
         // then parse the JSON.
         return ;
@@ -356,7 +347,7 @@ class DataBase {
       String userId=await fetchId();
       var temp=await fetchProfile();
       if(temp.isNotEmpty) {
-        print("loading profile from sqflite");
+        print("Loading Profile from sqflite");
         return Map.from(temp);
       }
 
@@ -388,7 +379,6 @@ class DataBase {
         updateProfileTable(toRet);
         //DataBase().createProfileTable();
 
-        List<dynamic> userInfo=[user['registration-date'],user["first-name"],user["last-name"]];
 
         return toRet;
 
@@ -407,7 +397,7 @@ class DataBase {
     Future<List<Map<String,Object>>> fetchActivities() async {
 
 
-      print("authenticating for notifications");
+      print("Authenticating for notifications");
       var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
         headers:
         {
@@ -433,7 +423,7 @@ class DataBase {
 
     Future<List<Map<String,Object>>> startFetchActivityDataTransaction(String toFetch) async {
 
-      print("initiating transaction");
+      print("Initiating Transaction");
 
       String token=await fetchToken();
 
@@ -450,8 +440,6 @@ class DataBase {
 
 
         Map<String, dynamic> user = jsonDecode(response.body);
-        print(user);
-
         return getDailyActivities(user['resource-uri']);
       } else if(response.statusCode==204){
 
@@ -464,7 +452,7 @@ class DataBase {
 
     Future<List<Map<String,Object>>> getDailyActivities(String toFetch) async {
       Response response;
-      print("getting list of notifications");
+      print("Getting list of notifications");
       String token=await fetchToken();
       try{
         response = await http.get(Uri.parse(toFetch),
@@ -476,7 +464,7 @@ class DataBase {
         );
       }
       on TimeoutException catch (e) {
-        print("connection timeout");
+        print("Connection timeout");
         return [];
       }
 
