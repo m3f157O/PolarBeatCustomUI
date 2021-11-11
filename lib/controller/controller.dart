@@ -31,7 +31,7 @@ class Controller {
 
   }
 
-  Future<String> fetchToken() async {
+  Future<bool> fetchToken() async {
     return await DataBase().fetchAccessToken();
   }
 
@@ -51,17 +51,13 @@ class Controller {
 
      return await lock.synchronized(() async {
        // Only this block can run (once) until done
-       return await DataBase().fetchToken();
+       return await DataBase().fetchFromTokenTable('bearer');
      });
 
 
   }
 
 
-
-   Future<String> fetchCode() async {
-    return await DataBase().fetchCode();
-  }
    void updateToken(String token) async {
     DataBase().updateTokenTable("bearer", token);
   }
@@ -75,7 +71,7 @@ class Controller {
    }
 
    Future<String> fetchId() async {
-    return await DataBase().fetchId();
+    return await DataBase().fetchFromTokenTable('id');
   }
 
    void updateId(String id) async {

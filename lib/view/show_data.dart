@@ -30,6 +30,9 @@ class RequestAndShow extends State<ShowData> {
     return Controller().fetchActivities();
   }
 
+  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() {
+    return Controller().fetchSavedActivities();
+  }
 
   @override
   void initState() {
@@ -88,6 +91,7 @@ class RequestAndShow extends State<ShowData> {
           },
 
         ),
+
           FutureBuilder<List<Map<dynamic,dynamic>>>(
             future: msg2,
             builder: (context, snapshot) {
@@ -96,12 +100,12 @@ class RequestAndShow extends State<ShowData> {
                 if (snapshot.data!.isEmpty&&!snapshot.data!.isNotEmpty) {
                   return const Text('NO DATA TO DISPLAY');
                 }
+                print(snapshot.data!.length);
                 return ListView.builder(
-                  physics: const ScrollPhysics(),
                   shrinkWrap: true,
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, index2){
                     return ListTile(
-                        title: Text(snapshot.data!.elementAt(index)["sport"]!.toString()),
+                        title: Text(snapshot.data!.elementAt(index2)["sport"]!.toString()),
                         subtitle: const Text("old"),
                         leading: const Icon(Icons.hourglass_empty),
                         dense: true,
@@ -109,7 +113,7 @@ class RequestAndShow extends State<ShowData> {
                         onTap: () {
                           setState(() {
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => ExerciseView(snapshot.data!.elementAt(index))));
+                                MaterialPageRoute(builder: (context) => ExerciseView(snapshot.data!.elementAt(index2))));
 
                           },
                           );
@@ -118,7 +122,7 @@ class RequestAndShow extends State<ShowData> {
 
 
                   },
-                  itemCount: 3,
+                  itemCount: snapshot.data!.length>3 ? 3 : snapshot.data!.length,
                   padding: const EdgeInsets.all(5),
                   scrollDirection: Axis.vertical,
                 );
@@ -138,9 +142,7 @@ class RequestAndShow extends State<ShowData> {
 
   }
 
-  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() {
-    return Controller().fetchSavedActivities();
-  }
+
 
 }
 

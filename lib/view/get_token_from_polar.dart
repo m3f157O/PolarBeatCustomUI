@@ -17,9 +17,9 @@ class GetTokenFromPolar extends StatefulWidget {
 
 class TokenRequestToPolar extends State<GetTokenFromPolar> {
 
-  late Future<String> msg;
+  late Future<bool> msg;
 
-  Future<String> fetchAccessToken() async {
+  Future<bool> fetchAccessToken() async {
 
     return await Controller().fetchToken();
 
@@ -56,7 +56,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
           title: const Text('THIS IS YOUR TOKEN'),
         ),
         body: Center(
-          child: FutureBuilder<String>(
+          child: FutureBuilder<bool>(
             future: msg,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
