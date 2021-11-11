@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:custom_polar_beat_ui_v2/controller/net_controller.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/extension.dart';
+
+import 'model.dart';
 
 //TODO FATAL MAKE DB CHECK WETHER TABLES EXIST DURING INIT
 //TODO SYNCHRONIZE PROPERLY
 
 
-class DataBase {
+class DataBase extends ChangeNotifier{
 
     static late final Database _database;
     static const _databaseName = "/my_db";
@@ -53,6 +57,7 @@ class DataBase {
       var transformedMap = toPass.map((k, v) {return MapEntry(k.replaceAll("-", ""), v);});
 
       await _database.insert("Profile",transformedMap);
+
       print("Profile stored");
     }
 
@@ -185,7 +190,7 @@ class DataBase {
     }
 
 
-    Future<Map<String,Object>> fireUserInfoRequest() async {
+    Future<Map<String,Object>> fireUserInfoRequest(BuildContext context) async {
 
 
 
@@ -194,6 +199,7 @@ class DataBase {
       var temp=await fetchProfile();
       if(temp.isNotEmpty) {
         print("Loading Profile from sqflite");
+        Provider.of<AppState>(context,listen: false).setProfile(temp);
         return Map.from(temp);
       }
 
@@ -205,7 +211,7 @@ class DataBase {
 
 
 
-    Future<List<Map<String,Object>>> fetchActivities() async {
+    Future<List<Map<String,Object>>> fetchActivities(BuildContext context) async {
 
       String token= await fetchFromTokenTable('bearer');
 
@@ -214,6 +220,8 @@ class DataBase {
       for(int i=0;i<response.length;i++) {
         updateExercisesTable(response.elementAt(i));
       }
+      Provider.of<AppState>(context,listen: false).setNewActivities(response);
+
       return response;
 
     }
@@ -221,19 +229,21 @@ class DataBase {
 
 
 
-  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() async {
+  Future<bool> fetchSavedActivities(BuildContext context) async {
 
     List<Map> list = await _database.rawQuery("SELECT * FROM Exercises");
 
     if(list.isEmpty) {
-      return [];
+      return false;
     } else {
 
 
       List<Map<String,Object>> temp= [];
 
 
-      return list;
+      Provider.of<AppState>(context,listen: false).setActivities(list);
+
+      return true;
     }
     }
 

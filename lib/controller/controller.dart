@@ -35,9 +35,9 @@ class Controller {
     return await DataBase().fetchAccessToken();
   }
 
-  Future<Map<String,Object>> fetchProfile() async {
+  Future<Map<String,Object>> fetchProfile(BuildContext context) async {
     return await lock.synchronized(() async {
-      return Map.from(await DataBase().fireUserInfoRequest());
+      return Map.from(await DataBase().fireUserInfoRequest(context));
     });
   }
 
@@ -87,6 +87,8 @@ class Controller {
   }
   void toViewMenu(BuildContext context) {
 
+
+
     Provider.of<AppState>(context,listen: false).setstate(PHASE.viewMenu);
 
   }
@@ -106,12 +108,12 @@ class Controller {
 
   }
 
-  Future<List<Map<String,Object>>> fetchActivities() {
-    return DataBase().fetchActivities();
+  Future<List<Map<String,Object>>> fetchActivities(BuildContext context) {
+    return DataBase().fetchActivities(context);
   }
 
-  Future<List<Map<dynamic,dynamic>>> fetchSavedActivities() {
-    return DataBase().fetchSavedActivities();
+  Future<bool> fetchSavedActivities(BuildContext context) {
+    return DataBase().fetchSavedActivities(context);
   }
 
 // Services

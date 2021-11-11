@@ -3,9 +3,11 @@
 
 
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
+import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:custom_polar_beat_ui_v2/view/exercise_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 //TODO NULL CHECK PROPERLY
 
@@ -21,122 +23,97 @@ class ShowData extends StatefulWidget {
 
 class RequestAndShow extends State<ShowData> {
 
-  late Future<List<Map<String,Object>>> msg;
-  late Future<List<Map<dynamic,dynamic>>> msg2;
+  late List<Map<dynamic,dynamic>> msg;
+  late List<Map<dynamic,dynamic>> msg2;
 
 
   Future<List<Map<String,Object>>> fetchActivities() async {
 
-    return Controller().fetchActivities();
+    return Controller().fetchActivities(context);
   }
 
-  Future<List<Map<dynamic, dynamic>>> fetchSavedActivities() {
-    return Controller().fetchSavedActivities();
+  Future<bool> fetchSavedActivities() {
+    return Controller().fetchSavedActivities(context);
   }
 
   @override
   void initState() {
     super.initState();
 
-    msg=fetchActivities();
-    msg2=fetchSavedActivities();
+    fetchSavedActivities();
+    fetchActivities();
   }
 
 
   @override
   Widget build(BuildContext context) {
+    msg2 = Provider.of<AppState>(context).savedActivities;
+    msg = Provider.of<AppState>(context).newActivities;
+
     return Column(
         children: [
-          FutureBuilder<List<Map<String,Object>>>(
-          future: msg,
-          builder: (context, snapshot) {
-            if (snapshot.hasData)
-              {
-                if (snapshot.data!.isEmpty&&!snapshot.data!.isNotEmpty) {
-                  return const Text('NO NEW DATA TO DISPLAY');
-                }
-              return ListView.builder(
-                itemBuilder: (context, index){
-                  return ListTile(
-                      title: Text(snapshot.data!.elementAt(index)["sport"]!.toString()),
-                      subtitle: const Text("new"),
-                      leading: const Icon(Icons.hourglass_empty),
-                      dense: true,
-                      tileColor: Colors.grey,
-                      onTap: () {
-                        setState(() {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>  ExerciseView(snapshot.data!.elementAt(index))));
+          //todo add cool spinner
 
-                        },
-                        );
-                      }
-                  );
+          msg.isNotEmpty
+          ? ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(5),
+            scrollDirection: Axis.vertical,
+            itemCount: msg.length>3 ? 3 : msg.length,
+            itemBuilder: (context, index) {
+              return Builder(builder: (context) {
+                String temp=msg.elementAt(index).entries.first.value.toString();
+                return ListTile(
+                    title: Text(temp),
+                    subtitle: const Text("new"),
+                    tileColor: Colors.yellow,
+                    dense: true,
 
+                    onTap: () {
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => ExerciseView(msg.elementAt(index))));
 
-                },
-                itemCount: snapshot.data!.length,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(5),
-                scrollDirection: Axis.vertical,
-              );
-
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-
-
-            // By default, show a loading spinner.
-            return const CircularProgressIndicator();
-          },
-
-        ),
-
-          FutureBuilder<List<Map<dynamic,dynamic>>>(
-            future: msg2,
-            builder: (context, snapshot) {
-              if (snapshot.hasData)
-              {
-                if (snapshot.data!.isEmpty&&!snapshot.data!.isNotEmpty) {
-                  return const Text('NO DATA TO DISPLAY');
-                }
-                print(snapshot.data!.length);
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index2){
-                    return ListTile(
-                        title: Text(snapshot.data!.elementAt(index2)["sport"]!.toString()),
-                        subtitle: const Text("old"),
-                        leading: const Icon(Icons.hourglass_empty),
-                        dense: true,
-                        tileColor: Colors.grey,
-                        onTap: () {
-                          setState(() {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => ExerciseView(snapshot.data!.elementAt(index2))));
-
-                          },
-                          );
-                        }
-                    );
-
-
-                  },
-                  itemCount: snapshot.data!.length>3 ? 3 : snapshot.data!.length,
-                  padding: const EdgeInsets.all(5),
-                  scrollDirection: Axis.vertical,
+                      },
+                      );
+                    }
                 );
-
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-
-
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
+              });
             },
+          )
+          : const Text('No new notifications'),
 
-          ),
+
+          msg2.isNotEmpty
+          ? ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(5),
+            scrollDirection: Axis.vertical,
+            itemCount: msg2.length>3 ? 3 : msg2.length,
+            itemBuilder: (context, index) {
+              return Builder(builder: (context) {
+                String temp=msg2.elementAt(index).entries.first.value.toString();
+                return ListTile(
+                  title: Text(temp),
+                    subtitle: const Text("old"),
+                    tileColor: Colors.grey,
+                    dense: true,
+
+                    onTap: () {
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => ExerciseView(msg2.elementAt(index))));
+
+                      },
+                      );
+                    }
+                );
+              });
+            },
+          )
+          : const Text('null'),
+
+
     ],
     );
 

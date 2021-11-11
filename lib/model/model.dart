@@ -14,6 +14,9 @@ class AppState extends ChangeNotifier {
 
 
   PHASE _state=PHASE.startingUserMenu;
+  List<Map<dynamic,dynamic>> savedActivities=[];
+  List<Map<dynamic,dynamic>> newActivities=[];
+  Map<dynamic,dynamic> profile={};
 
 
   PHASE get state => _state;
@@ -22,6 +25,22 @@ class AppState extends ChangeNotifier {
     _state = i;
     notifyListeners();
   }
+
+  void setActivities(List<Map<dynamic,dynamic>> i) {
+    savedActivities = i;
+    notifyListeners();
+  }
+
+  void setNewActivities(List<Map<String,Object>> i) {
+    newActivities = i;
+    notifyListeners();
+  }
+
+  void setProfile(Map<dynamic,dynamic> i) {
+    profile = i;
+    notifyListeners();
+  }
+
 
 
 // Eventually other stuff would go here, appSettings, premiumUser flags, currentTheme, etc...

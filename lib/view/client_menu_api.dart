@@ -27,7 +27,7 @@ class ClientMenuAPI extends State<ClientMenu> {
 
   Future<Map<String,Object>> fireUserInfoRequest() async {
 
-    return Controller().fetchProfile();
+    return Controller().fetchProfile(context);
   }
 
 
