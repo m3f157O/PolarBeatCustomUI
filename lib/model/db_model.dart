@@ -210,7 +210,7 @@ class DataBase {
       String token= await fetchFromTokenTable('bearer');
 
       print("Authenticating for notifications");
-      List<Map<String,Object>> response = await NetController().fetchNotifications(token);
+      List<Map<String,Object>> response = await NetController().exerciseCoordinator(token);
       for(int i=0;i<response.length;i++) {
         updateExercisesTable(response.elementAt(i));
       }
@@ -229,14 +229,9 @@ class DataBase {
       return [];
     } else {
 
-      print("QUERY IS");
-      print(list);
 
       List<Map<String,Object>> temp= [];
-      for(int i=0;i<list.length;i++) {
-        print(temp.runtimeType);
-        print(list.runtimeType);
-      }
+
 
       return list;
     }
