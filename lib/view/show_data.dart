@@ -54,8 +54,7 @@ class RequestAndShow extends State<ShowData> {
         children: [
           //todo add cool spinner
 
-          msg.isNotEmpty
-          ? ListView.builder(
+          ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(5),
             scrollDirection: Axis.vertical,
@@ -80,12 +79,9 @@ class RequestAndShow extends State<ShowData> {
                 );
               });
             },
-          )
-          : const Text('No new notifications'),
+          ),
 
-
-          msg2.isNotEmpty
-          ? ListView.builder(
+          ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(5),
             scrollDirection: Axis.vertical,
@@ -110,8 +106,7 @@ class RequestAndShow extends State<ShowData> {
                 );
               });
             },
-          )
-          : const Text('null'),
+          ),
 
 
     ],

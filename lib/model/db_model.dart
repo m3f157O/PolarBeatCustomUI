@@ -120,7 +120,7 @@ class DataBase extends ChangeNotifier{
 
     void createExercisesTable() async {
       _database.execute(
-          'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute TEXT, detailedsportinfo TEXT)');
+          'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute TEXT, detailedsportinfo TEXT, zones TEXT)');
     }
 
      Future<String> fetchFromTokenTable(String type) async {
