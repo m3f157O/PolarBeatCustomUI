@@ -7,7 +7,7 @@ import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:custom_polar_beat_ui_v2/view/exercise_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 //TODO NULL CHECK PROPERLY
 
@@ -27,7 +27,7 @@ class RequestAndShow extends State<ShowData> {
   late List<Map<dynamic,dynamic>> msg2;
 
 
-  Future<List<Map<String,Object>>> fetchActivities() async {
+  Future<bool> fetchActivities() async {
 
     return Controller().fetchActivities(context);
   }

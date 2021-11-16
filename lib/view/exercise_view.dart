@@ -23,7 +23,9 @@ class ExerciseView extends StatelessWidget {
                   children:  [
 
                     Text("Duration "+data["duration"]),
-                    Text("Route "+data["hasroute"].toString()),
+                    if(data["hasroute"])
+                      Text("Route "+data["gpx"].toString()),
+
                     Text("Calories "+data["calories"].toString()),
                     Text("Device "+data["device"]),
                     Text("Distance "+data["distance"].toString()),
@@ -32,6 +34,7 @@ class ExerciseView extends StatelessWidget {
                     Text(data["maximum"].toString()=='null' ? "" : "top HR: "+data["maximum"].toString()),
                     //todo hazard
                     Text(jsonDecode(utf8.decode(base64.decode(data["zones"]))).toString().substring(0,35)),
+                    Text(jsonDecode(utf8.decode(base64.decode(data["samples"]))).toString().substring(0,35)),
 
 
 

@@ -166,8 +166,6 @@ class NetController {
   Future<List<Map<String,Object>>> getDailyActivities(String toFetch,String token) async {
 
     if(toFetch.isEmpty) {
-      print("Killing call");
-
       return [];
     }
     Response response;
@@ -182,7 +180,6 @@ class NetController {
       );
     }
     on TimeoutException catch (e) {
-      print("Connection timeout");
       return [];
     }
 
@@ -226,14 +223,14 @@ class NetController {
           Map<String, dynamic> user = jsonDecode(response.body);
 
           Map<String,Object> map=Map.from(user);
-          print("deserializing map");
+          print("Deserializing map");
           print(list);
           print(map);
           if(map.isEmpty) {
             return list;
           }
           Map<String, dynamic> dynamicMap=(map['heart-rate'] ?? {}) as Map<String, dynamic>;
-          print("questo è il tuo heart rate");
+          print("Deserializing heart rate");
           map.remove('heart-rate');
           //todo hazard
           if(dynamicMap.isNotEmpty) {
@@ -241,24 +238,29 @@ class NetController {
           }
 
           print(map['has-route']);
-          print("this is the fucking key");
+          print("Checking for GPX existence");
           bool temp=map['has-route']==true ? true : false;
           if(temp) {
-            print("this one has gps");
-            getExerciseGPX(toFetch.elementAt(i)+"/gpx", token);
+            print("This one has gps");
+            String gpx=await getExerciseGPX(toFetch.elementAt(i)+"/gpx", token);
+            map.addAll({"gpx":gpx});
           }
           String toPut=await getExerciseZones(toFetch.elementAt(i)+"/heart-rate-zones", token);
           map.addAll({"zones":toPut});
+          print("Getting samples from activity"+i.toString());
+          toPut=await getExerciseSamples(toFetch.elementAt(i)+"/samples", token);
 
           Map<String,Object> transformedMap = map.map((k, v) {
           return MapEntry(k.replaceAll("-", ""), v);
           });
 
 
-          print(transformedMap);
+
           list.add(transformedMap);
 
-          print("list after element");
+          print("thats the new map");
+          transformedMap.addAll({"samples":toPut});
+          print(transformedMap);
 
 
         }
@@ -266,7 +268,7 @@ class NetController {
       }
     }
 
-    print("returning");
+    print("Ending activity processing");
 
     return list;
 
@@ -276,9 +278,92 @@ class NetController {
 
 
 
+  Future<String> getExerciseSamples(String toFetch,String token) async {
+    List<Map<String,Object>> list= [];
+    List<Map<String,Object>> temp= [];
+    var response = await http.get(Uri.parse(toFetch),
+      headers:
+      {
+        'Authorization': token,
+        'Accept': 'application/json'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("Acquiring sample list");
+      Map<String, dynamic> user = jsonDecode(response.body);
+
+      List<dynamic> data=user["samples"] ?? [];
 
 
-  Future<List<Map<String,Object>>> getExerciseGPX(String toFetch,String token) async {
+
+      return await processExercisesSample(data,token);
+
+
+    }
+    else {
+      print("No sample");
+      print(response.statusCode);
+
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print(user);
+
+    }
+
+
+
+    return '';
+
+
+
+  }
+
+
+
+  Future<String> processExercisesSample(List<dynamic> toFetch,String token) async {
+    List<Map<String,Object>> list= [];
+
+    print("Processing samples");
+    print(toFetch);
+
+    if(toFetch.isNotEmpty)
+    {
+      for(int i=0; i<toFetch.length;i++) {
+        print("Processing sample number "+ i.toString());
+
+        var response = await http.get(Uri.parse(toFetch.elementAt(i)),
+          headers:
+          {
+            'Authorization': token,
+            'Accept': 'application/json'
+          },
+        );
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          Map<String, dynamic> user = jsonDecode(response.body);
+          list.add(Map.from(user));
+
+        }
+        else {
+          Map<String, dynamic> user = jsonDecode(response.body);
+          print(user);
+
+        }
+
+      }
+    }
+
+    print("returning");
+
+    return base64.encode(utf8.encode(jsonEncode(list)));
+
+
+
+  }
+
+
+
+  Future<String> getExerciseGPX(String toFetch,String token) async {
     List<Map<String,Object>> list= [];
 
     var response = await http.get(Uri.parse(toFetch),
@@ -292,7 +377,6 @@ class NetController {
         if (response.statusCode == 200) {
           print("gpx");
 
-          print(response.body);
 
         }
         else {
@@ -306,7 +390,7 @@ class NetController {
 
 
 
-    return list;
+    return base64.encode(utf8.encode(jsonEncode(list)));
 
 
 
@@ -328,7 +412,7 @@ class NetController {
     );
 
     if (response.statusCode == 200) {
-      print("zones");
+      print("Acquiring heart rate zones");
 
       Map<String, dynamic> user = jsonDecode(response.body);
       List<dynamic> list=user["zone"] ?? [];

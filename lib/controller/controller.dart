@@ -35,9 +35,9 @@ class Controller {
     return await DataBase().fetchAccessToken();
   }
 
-  Future<Map<String,Object>> fetchProfile(BuildContext context) async {
+  Future<bool> fetchProfile(BuildContext context) async {
     return await lock.synchronized(() async {
-      return Map.from(await DataBase().fireUserInfoRequest(context));
+      return await DataBase().fireUserInfoRequest(context);
     });
   }
 
@@ -108,7 +108,7 @@ class Controller {
 
   }
 
-  Future<List<Map<String,Object>>> fetchActivities(BuildContext context) {
+  Future<bool> fetchActivities(BuildContext context) {
     return DataBase().fetchActivities(context);
   }
 

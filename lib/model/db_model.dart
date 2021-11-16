@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:custom_polar_beat_ui_v2/controller/net_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -120,7 +119,7 @@ class DataBase extends ChangeNotifier{
 
     void createExercisesTable() async {
       _database.execute(
-          'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute TEXT, detailedsportinfo TEXT, zones TEXT)');
+          'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute TEXT, detailedsportinfo TEXT, zones TEXT, samples TEXT, gpx TEXT)');
     }
 
      Future<String> fetchFromTokenTable(String type) async {
@@ -190,28 +189,32 @@ class DataBase extends ChangeNotifier{
     }
 
 
-    Future<Map<String,Object>> fireUserInfoRequest(BuildContext context) async {
+    Future<bool> fireUserInfoRequest(BuildContext context) async {
 
 
-
+      Map<String,Object> response;
       String token= await fetchFromTokenTable('bearer');
       String userId=await fetchFromTokenTable('id');
       var temp=await fetchProfile();
       if(temp.isNotEmpty) {
         print("Loading Profile from sqflite");
         Provider.of<AppState>(context,listen: false).setProfile(temp);
-        return Map.from(temp);
+        return true;
       }
+      else
+      {
+        response = await NetController().userProfileRequest(token, userId);
+        updateProfileTable(response);
+        Provider.of<AppState>(context,listen: false).setProfile(response);
+        return false;
 
-      Map<String,Object> response = await NetController().userProfileRequest(token, userId);
-      updateProfileTable(response);
-      return response;
+      }
 
     }
 
 
 
-    Future<List<Map<String,Object>>> fetchActivities(BuildContext context) async {
+    Future<bool> fetchActivities(BuildContext context) async {
 
       String token= await fetchFromTokenTable('bearer');
 
@@ -222,7 +225,24 @@ class DataBase extends ChangeNotifier{
       }
       Provider.of<AppState>(context,listen: false).setNewActivities(response);
 
-      return response;
+      return true;
+
+    }
+
+
+
+    Future<bool> fetch(BuildContext context) async {
+
+      String token= await fetchFromTokenTable('bearer');
+
+      print("Authenticating for notifications");
+      List<Map<String,Object>> response = await NetController().exerciseCoordinator(token);
+      for(int i=0;i<response.length;i++) {
+        updateExercisesTable(response.elementAt(i));
+      }
+      Provider.of<AppState>(context,listen: false).setNewActivities(response);
+
+      return true;
 
     }
 
@@ -238,7 +258,6 @@ class DataBase extends ChangeNotifier{
     } else {
 
 
-      List<Map<String,Object>> temp= [];
 
 
       Provider.of<AppState>(context,listen: false).setActivities(list);
