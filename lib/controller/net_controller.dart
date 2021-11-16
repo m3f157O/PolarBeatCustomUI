@@ -221,14 +221,12 @@ class NetController {
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response,
           Map<String, dynamic> user = jsonDecode(response.body);
-
           Map<String,Object> map=Map.from(user);
           print("Deserializing map");
-          print(list);
-          print(map);
           if(map.isEmpty) {
             return list;
           }
+
           Map<String, dynamic> dynamicMap=(map['heart-rate'] ?? {}) as Map<String, dynamic>;
           print("Deserializing heart rate");
           map.remove('heart-rate');
@@ -240,11 +238,18 @@ class NetController {
           print(map['has-route']);
           print("Checking for GPX existence");
           bool temp=map['has-route']==true ? true : false;
+          map.remove(["has-route"]);
           if(temp) {
             print("This one has gps");
             String gpx=await getExerciseGPX(toFetch.elementAt(i)+"/gpx", token);
             map.addAll({"gpx":gpx});
+            map.addAll({"hasroute":1});
+
           }
+          else {
+            map.addAll({"hasroute":0});
+          }
+
           String toPut=await getExerciseZones(toFetch.elementAt(i)+"/heart-rate-zones", token);
           map.addAll({"zones":toPut});
           print("Getting samples from activity"+i.toString());

@@ -23,8 +23,7 @@ class ExerciseView extends StatelessWidget {
                   children:  [
 
                     Text("Duration "+data["duration"]),
-                    if(data["hasroute"])
-                      Text("Route "+data["gpx"].toString()),
+                    Text(data["gpx"] ?? "No gps data"),
 
                     Text("Calories "+data["calories"].toString()),
                     Text("Device "+data["device"]),
