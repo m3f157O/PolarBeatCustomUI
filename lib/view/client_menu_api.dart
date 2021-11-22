@@ -22,7 +22,6 @@ class ClientMenu extends StatefulWidget {
 class ClientMenuAPI extends State<ClientMenu> {
 
 
-  late Map<dynamic,dynamic> msg;
 
 
 
@@ -44,56 +43,10 @@ class ClientMenuAPI extends State<ClientMenu> {
 
   @override
   Widget build(BuildContext context) {
-    msg = Provider.of<AppState>(context).profile;
 
-    return MaterialApp(
-      title: 'BASIC CLIENT MENU',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('BASIC CLIENT MENU'),
-          ),
-          body: Center(
-
-              child:
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-
-                  const ShowData(),
+    return const ShowData();
 
 
-                  ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(5),
-                    scrollDirection: Axis.vertical,
-                    itemCount: msg.length>3 ? 3 : msg.length,
-                    itemBuilder: (context, index) {
-                      return Builder(builder: (context) {
-                        String temp=msg.entries.elementAt(index).value.toString();
-                        return ListTile(
-                            title: Text(temp),
-                            tileColor: Colors.amber,
-                            dense: true,
-
-                            onTap: () {
-
-                            }
-                        );
-                      });
-                    },
-                  ),
-
-
-
-                ],
-              )
-          )
-      ),
-
-    );
   }
 }
 
