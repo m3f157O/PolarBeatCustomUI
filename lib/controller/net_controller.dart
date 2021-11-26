@@ -153,9 +153,12 @@ class NetController {
       Map<String, dynamic> user = jsonDecode(response.body);
       return user['resource-uri'];
     } else if(response.statusCode==204){
+      print(response.statusCode);
 
+      print(response.body);
       return '';
     } else{
+      print(response.statusCode);
 
       return '';
     }

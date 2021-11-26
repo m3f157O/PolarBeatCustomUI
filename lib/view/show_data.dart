@@ -34,21 +34,16 @@ class RequestAndShow extends State<ShowData> {
   final ScrollController _scrollController = ScrollController();
   final ScrollController _scrollController2 = ScrollController();
 
-  Future<bool> fetchActivities() async {
-
-    return Controller().fetchActivities(context);
+  void onItemTapped() {
+    return;
   }
 
-  Future<bool> fetchSavedActivities() {
-    return Controller().fetchSavedActivities(context);
-  }
+  final int _selectedIndex=1;
 
   @override
   void initState() {
     super.initState();
 
-    fetchSavedActivities();
-    fetchActivities();
   }
 
 
@@ -67,11 +62,11 @@ class RequestAndShow extends State<ShowData> {
                 gradient: LinearGradient(
                   colors: [
                     Color(0xFFFAA6EF),
-                    Color(0xFFCECECE),
+                    Color(0x00B30000),
                   ],
                   begin: FractionalOffset(0.0, 1.0),
                   end: FractionalOffset(1.0, 0.0),
-                  stops: [0.0, 1.0],
+                  stops: [0.6, 2],
                   tileMode: TileMode.clamp,
                 ),
               ),
@@ -81,56 +76,11 @@ class RequestAndShow extends State<ShowData> {
 
 
             Container(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 70),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Container(
-                        // color: Colors.red,
-                        height: 50,
-                        child: Row(
-                              children: [
-                                const Spacer(),
-                                const Text(
-                                  "SORT",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.5),
-
-                                ),
-                                Spacer(),
-                                ElevatedButton(
-                                    onPressed: () => {
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShowProfile(msg3)),
-                                )},
-                                    child:  const Text(
-                                      "PROFILE",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.5),
-                                    ),
-                                ),
-                                const Text(
-                                  "PROFILE",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.5),
-                                ),
-                                const Spacer(),
-                                Spacer(),
-
-
-                              ],
-                            )),
-
-
                       LiquidPullToRefresh(
                         color: Colors.transparent,
                         backgroundColor: Colors.black54,
@@ -138,7 +88,7 @@ class RequestAndShow extends State<ShowData> {
                         showChildOpacityTransition: false,
                         onRefresh: () async {
                           setState(() {
-                            waiting=true;
+                            print("bamboccione");
                           });
                         },
                         child: Column(
@@ -156,11 +106,6 @@ class RequestAndShow extends State<ShowData> {
                                   }
                                   return Bounceable(
                                     onTap: () {
-                                      print("${msg2.elementAt(i).entries.first}");
-                                      // ScaffoldMessenger.of(context)
-                                      //     .showSnackBar(SnackBar(
-                                      //         content: Text(
-                                      //             "${msg2[i]['id']} is tapped")));
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
@@ -169,9 +114,9 @@ class RequestAndShow extends State<ShowData> {
                                     child: Container(
                                       // color: Colors.blue,
                                       height: 75,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 5, horizontal: 10),
-                                      margin: EdgeInsets.symmetric(
+                                      margin: const EdgeInsets.symmetric(
                                           vertical: 2),
                                       child: Row(
                                         children: [
@@ -212,8 +157,7 @@ class RequestAndShow extends State<ShowData> {
                                                     CrossAxisAlignment
                                                         .start,
                                                     children: [
-                                                      Text(
-                                                          "${msg2.elementAt(i).entries.first}/USD"),
+                                                      Text(msg2.elementAt(i).entries.elementAt(5).value),
                                                     ],
                                                   ),
                                                   const Spacer(),
@@ -227,10 +171,10 @@ class RequestAndShow extends State<ShowData> {
                                                       CrossAxisAlignment
                                                           .start,
                                                       children: [
-                                                        const Flexible(
+                                                        Flexible(
                                                           child: Text(
-                                                            "tacchino",
-                                                            style: TextStyle(
+                                                            "Calories:" +msg2.elementAt(i)['calories'].toString(),
+                                                            style: const TextStyle(
                                                                 fontSize:
                                                                 13.5),
                                                           ),
@@ -245,7 +189,7 @@ class RequestAndShow extends State<ShowData> {
                                                                     8)),
                                                             Spacer(),
                                                             Text(
-                                                              "\$${msg2.elementAt(i)['high_24h']}",
+                                                              msg2.elementAt(i)['maximum'].toString(),
                                                               style: TextStyle(
                                                                   fontSize:
                                                                   9,
@@ -256,13 +200,13 @@ class RequestAndShow extends State<ShowData> {
                                                         ),
                                                         Row(
                                                           children: [
-                                                            Text("Low",
+                                                            Text("Average",
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                     8)),
                                                             Spacer(),
                                                             Text(
-                                                              "\$${msg2.elementAt(i)['low_24h']}",
+                                                              msg2.elementAt(i)['average'].toString(),
                                                               style: TextStyle(
                                                                   fontSize:
                                                                   9,
@@ -316,19 +260,6 @@ class RequestAndShow extends State<ShowData> {
                                             vertical: 2),
                                         child: Row(
                                           children: [
-                                            Container(
-                                              width: 30,
-                                              color: Colors.black38,
-                                              child: Center(
-                                                child: Text(
-                                                  "${i + 1}",
-                                                  style: TextStyle(
-                                                      color: Colors.white70,
-                                                      fontWeight:
-                                                      FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
                                             Expanded(
                                               child: Container(
                                                 // height: 50,
@@ -339,84 +270,6 @@ class RequestAndShow extends State<ShowData> {
                                                 // margin: EdgeInsets.symmetric(vertical: 5),
                                                 decoration: BoxDecoration(
                                                     color: Colors.white24),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    const SizedBox(width: 5),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .center,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        Text(
-                                                            "${msg.elementAt(i).entries.first}/USD"),
-                                                      ],
-                                                    ),
-                                                    const Spacer(),
-                                                    SizedBox(
-                                                      width: 80,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          const Flexible(
-                                                            child: Text(
-                                                              "tacchino",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                  13.5),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 3),
-                                                          Row(
-                                                            children: [
-                                                              const Text("High",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                      8)),
-                                                              Spacer(),
-                                                              Text(
-                                                                "\$${msg.elementAt(i)['high_24h']}",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                    9,
-                                                                    color: Colors
-                                                                        .green),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Text("Low",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                      8)),
-                                                              Spacer(),
-                                                              Text(
-                                                                "\$${msg.elementAt(i)['low_24h']}",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                    9,
-                                                                    color: Colors
-                                                                        .red),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
                                               ),
                                             ),
                                           ],
@@ -438,14 +291,15 @@ class RequestAndShow extends State<ShowData> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Developed by Kevin Lauren",
+
+                        children: const [
+                          Text("Developed by Gianmarco Lodari",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12)),
                           Text(
-                            "Powered by CoinGecko API",
+                            "Powered by Polar API",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -455,6 +309,7 @@ class RequestAndShow extends State<ShowData> {
                       ),
                     ),
                   ),
+
                 ],
               ),
             )
@@ -467,6 +322,7 @@ class RequestAndShow extends State<ShowData> {
 
 
 }
+
 
 
 

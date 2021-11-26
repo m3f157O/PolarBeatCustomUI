@@ -51,6 +51,10 @@ class DataBase extends ChangeNotifier{
     }
 
 
+
+
+
+
     void updateProfileTable(Map<String,Object> toPass) async {
 
       var transformedMap = toPass.map((k, v) {return MapEntry(k.replaceAll("-", ""), v);});
@@ -231,23 +235,6 @@ class DataBase extends ChangeNotifier{
 
 
 
-    Future<bool> fetch(BuildContext context) async {
-
-      String token= await fetchFromTokenTable('bearer');
-
-      print("Authenticating for notifications");
-      List<Map<String,Object>> response = await NetController().exerciseCoordinator(token);
-      for(int i=0;i<response.length;i++) {
-        updateExercisesTable(response.elementAt(i));
-      }
-      Provider.of<AppState>(context,listen: false).setNewActivities(response);
-
-      return true;
-
-    }
-
-
-
 
   Future<bool> fetchSavedActivities(BuildContext context) async {
 
@@ -259,13 +246,29 @@ class DataBase extends ChangeNotifier{
 
 
 
+      Provider.of<AppState>(context,listen: false).setActivities(list);
+
+      return true;
+    }
+  }
+
+
+
+    Future<bool> fetchActivitiesBy(BuildContext context,String toOrder) async {
+
+
+    List<Map> list = await _database.query('Exercises', orderBy: toOrder);
+
+    if(list.isEmpty) {
+      return false;
+    } else {
+
+
 
       Provider.of<AppState>(context,listen: false).setActivities(list);
 
       return true;
     }
-    }
-
-
+  }
 
 }

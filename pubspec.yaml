@@ -43,7 +43,8 @@ dependencies:
   intl: ^0.17.0
   liquid_pull_to_refresh: ^3.0.0
   shimmer: ^2.0.0
-
+  sliver_tools: ^0.2.5
+  syncfusion_flutter_charts: ^19.1.67
 
 dev_dependencies:
 

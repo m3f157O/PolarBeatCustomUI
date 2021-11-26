@@ -56,6 +56,15 @@ class Controller {
 
   }
 
+  void toggleAsc(BuildContext context) {
+    Provider.of<AppState>(context,listen: false).toogleAsc();
+
+  }
+  void toInitial(BuildContext context) {
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.startingUserMenu);
+
+  }
+
   Future<bool> fetchToken() async {
     return await DataBase().fetchAccessToken();
   }
@@ -132,6 +141,26 @@ class Controller {
 
   Future<bool> fetchActivities(BuildContext context) {
     return DataBase().fetchActivities(context);
+  }
+
+  Future<bool> fetchActivitiesByDate(BuildContext context) {
+    return DataBase().fetchActivitiesBy(context,"uploadtime");
+  }
+
+  Future<bool> fetchActivitiesByDuration(BuildContext context) {
+    return DataBase().fetchActivitiesBy(context,"duration");
+  }
+
+  Future<bool> fetchActivitiesByCalories(BuildContext context) {
+    return DataBase().fetchActivitiesBy(context,"calories");
+  }
+
+  Future<bool> fetchActivitiesByMaximum(BuildContext context) {
+    return DataBase().fetchActivitiesBy(context,"maximum");
+  }
+
+  Future<bool> fetchActivitiesByAverage(BuildContext context) {
+    return DataBase().fetchActivitiesBy(context,"average");
   }
 
   Future<bool> fetchSavedActivities(BuildContext context) {

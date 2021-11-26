@@ -1,12 +1,7 @@
 
 
-import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
-import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 
 class ShowProfile extends StatelessWidget {
 
@@ -15,46 +10,35 @@ class ShowProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Auth0 2',
-        home: Scaffold(
-
-            body: Column(
+    return Column(
 
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+              ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(5),
+                  scrollDirection: Axis.vertical,
+                  itemCount: data.length,//>3 ? 3 : data.length,
+                  itemBuilder: (context, index) {
+                    return Builder(builder: (context) {
+                      String temp=data.entries.elementAt(index).value.toString();
+                      return ListTile(
+                          title: Text(temp),
+                          tileColor: Colors.amber,
+                          dense: true,
+
+                          onTap: () {
+
+                          }
+                    );
+                  });
+            },
+            ),
 
 
-                Text(data["firstname"],
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5),
-                ),
-                Text(data["lastname"],
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5),
-                ),
-                Text(data["birthdate"],
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5),
-                ),
+              ],
 
-
-          ],
-
-            )
-
-        )
-
-    );
+            );
   }
 
 }

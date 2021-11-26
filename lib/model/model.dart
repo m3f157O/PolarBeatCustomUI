@@ -17,7 +17,7 @@ class AppState extends ChangeNotifier {
   List<Map<dynamic,dynamic>> savedActivities=[];
   List<Map<dynamic,dynamic>> newActivities=[];
   Map<dynamic,dynamic> profile={};
-
+  bool asc=false;
 
   PHASE get state => _state;
 
@@ -25,6 +25,13 @@ class AppState extends ChangeNotifier {
     _state = i;
     notifyListeners();
   }
+
+  void toogleAsc() {
+    asc=!asc;
+    savedActivities=List.from(savedActivities.reversed);
+    notifyListeners();
+  }
+
 
   void setActivities(List<Map<dynamic,dynamic>> i) {
     savedActivities = i;
