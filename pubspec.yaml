@@ -45,6 +45,7 @@ dependencies:
   shimmer: ^2.0.0
   sliver_tools: ^0.2.5
   syncfusion_flutter_charts: ^19.1.67
+  flutter_toggle_tab: ^1.1.7
 
 dev_dependencies:
 

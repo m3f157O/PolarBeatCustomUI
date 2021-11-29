@@ -31,7 +31,7 @@ class ClientMenuAPI extends State<ClientMenu> {
   }
 
   Future<bool> fetchSavedActivities() {
-    return Controller().fetchSavedActivities(context);
+    return Controller().fetchActivitiesByDate(context);
   }
 
 
@@ -64,9 +64,9 @@ class ClientMenuAPI extends State<ClientMenu> {
     if(_selectedIndex==1) {
       return const ShowData();
     } else if(_selectedIndex==2){
-      return ShowProfile(Provider.of<AppState>(context).profile);
+      return DetailPage();
     } else {
-      return const SelectSort();
+      return CrazySort();
 
     }
 

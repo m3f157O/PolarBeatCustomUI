@@ -12,7 +12,7 @@ import 'model.dart';
 //TODO SYNCHRONIZE PROPERLY
 
 
-class DataBase extends ChangeNotifier{
+class DataBase {
 
     static late final Database _database;
     static const _databaseName = "/my_db";
@@ -227,8 +227,27 @@ class DataBase extends ChangeNotifier{
       for(int i=0;i<response.length;i++) {
         updateExercisesTable(response.elementAt(i));
       }
-      Provider.of<AppState>(context,listen: false).setNewActivities(response);
+      //Provider.of<AppState>(context,listen: false).setNewActivities(response);
 
+      //TODO FIX THIS: AFTER NEW ACTIVITIES ARE SHOWN DB IS UPDATED, WHEN USER REFRESHES THEY ARE CLEARED FROM NEW
+      return true;
+
+    }
+
+
+    Future<bool> editActivities(Map<dynamic,dynamic> toEdit, dynamic field, dynamic value) async {
+
+
+
+
+      Map<String,Object> toAdd=Map.from(toEdit);
+      toAdd[field]=value;
+      await _database.update(
+        "Exercises",
+        toAdd,
+        where: "starttime = ?",
+        whereArgs: [toAdd["starttime"]],
+      );
       return true;
 
     }
@@ -236,7 +255,7 @@ class DataBase extends ChangeNotifier{
 
 
 
-  Future<bool> fetchSavedActivities(BuildContext context) async {
+    Future<bool> fetchSavedActivities(BuildContext context) async {
 
     List<Map> list = await _database.rawQuery("SELECT * FROM Exercises");
 
@@ -245,9 +264,13 @@ class DataBase extends ChangeNotifier{
     } else {
 
 
-
+      print("Loading saved activites from db");
       Provider.of<AppState>(context,listen: false).setActivities(list);
+      Provider.of<AppState>(context,listen: false).clearNewBuffer();
 
+      Map<String,Object> temp=Map.from(list.elementAt(0));
+
+      print(temp);
       return true;
     }
   }

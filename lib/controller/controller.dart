@@ -162,6 +162,12 @@ class Controller {
   Future<bool> fetchActivitiesByAverage(BuildContext context) {
     return DataBase().fetchActivitiesBy(context,"average");
   }
+  Future<bool> fetchActivitiesBy(BuildContext context, String field) {
+    Provider.of<AppState>(context,listen: false).setSort(field);
+
+    return DataBase().fetchActivitiesBy(context,field);
+
+  }
 
   Future<bool> fetchSavedActivities(BuildContext context) {
     return DataBase().fetchSavedActivities(context);

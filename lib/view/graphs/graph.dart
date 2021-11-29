@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 class ChartData {
@@ -19,8 +21,12 @@ class ShowHeartbeat extends StatefulWidget {
   ShowHeartbeat({
     Key? key,
     required this.data,
-    required this.color, required this.title,
+    required this.color,
+    required this.title,
   }) : super(key: key);
+
+
+
 
   @override
   RequestAndShow createState() => RequestAndShow(data: data,color: color,title: title);
@@ -37,10 +43,11 @@ class RequestAndShow extends State<ShowHeartbeat> {
   });
 
 
-  final List<ChartData> data;
+  final Map data;
   final Color color;
   final String title;
 
+  List<ChartData> heartBeat=[];
   final ScrollController _scrollController = ScrollController();
   final ScrollController _scrollController2 = ScrollController();
 
@@ -50,6 +57,13 @@ class RequestAndShow extends State<ShowHeartbeat> {
     return;
   }
 
+  void processHeartbeat(Map toProcess) {
+    List can=jsonDecode(utf8.decode(base64.decode(toProcess["samples"])));
+    List<String> temp=can[0]['data'].toString().split(',');
+    for(int i=0;i<temp.length;i++) {
+      heartBeat.add(ChartData(int.parse(temp.elementAt(i)),i));
+    }
+  }
   final int _selectedIndex=1;
 
   void initState(){
@@ -59,6 +73,7 @@ class RequestAndShow extends State<ShowHeartbeat> {
         tooltipDisplayMode: TrackballDisplayMode.floatAllPoints
     );
 
+    processHeartbeat(data);
     super.initState();
   }
 
@@ -104,7 +119,7 @@ class RequestAndShow extends State<ShowHeartbeat> {
                 title: ChartTitle(text: title),
                 series: <ChartSeries<ChartData, num>>[
                   LineSeries<ChartData, num>(
-                    dataSource: data,
+                    dataSource: heartBeat,
 
 
                     xValueMapper: (ChartData sales, _) => sales.year,

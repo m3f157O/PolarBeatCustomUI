@@ -16,11 +16,7 @@ class ExerciseView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     print(jsonDecode(utf8.decode(base64.decode(data["zones"]))).toString());
-    List can=jsonDecode(utf8.decode(base64.decode(data["samples"])));
-    List<String> temp=can[0]['data'].toString().split(',');
-      for(int i=0;i<temp.length;i++) {
-        heartBeat.add(ChartData(int.parse(temp.elementAt(i)),i));
-      }
+
     List<dynamic> cane=jsonDecode(utf8.decode(base64.decode(data["zones"])));
     for(int i=0;i<cane.length;i++) {
       print(cane.elementAt(i));
@@ -49,7 +45,7 @@ class ExerciseView extends StatelessWidget {
                     Text(data["average"].toString()=='null' ? "" : "avg HR: "+data["average"].toString()),
                     Text(data["maximum"].toString()=='null' ? "" : "top HR: "+data["maximum"].toString()),
                     //todo hazard
-                    Expanded(child: ShowHeartbeat(data: heartBeat, color: Colors.green, title: can[0]['sample-type'].toString())),
+                    Expanded(child: ShowHeartbeat(data: data, color: Colors.green, title: "ciao")),
 
                     ElevatedButton(
                         onPressed: () => Navigator.pop(context),
@@ -67,7 +63,7 @@ class ExerciseView extends StatelessWidget {
                     Text("Start Time "+data["starttime"]),
                     //todo hazard
 
-                    Expanded(child: ShowHeartbeat(data: heartZones, color: Colors.green, title: can[0]['sample-type'].toString())),
+                    Expanded(child: ShowHeartbeat(data: data, color: Colors.green, title: "bruh")),
 
                     ElevatedButton(
                         onPressed: () => Navigator.pop(context),
