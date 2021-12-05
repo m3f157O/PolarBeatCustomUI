@@ -42,6 +42,11 @@ class ClientMenuAPI extends State<ClientMenu> {
     return Controller().fetchProfile(context);
   }
 
+  Future<bool> statsRoutine() async {
+
+    return Controller().statsRoutine(context);
+  }
+
 
 
   @override
@@ -50,6 +55,8 @@ class ClientMenuAPI extends State<ClientMenu> {
     fireUserInfoRequest();
     fetchSavedActivities();
     fetchActivities();
+    statsRoutine();
+
 
   }
 

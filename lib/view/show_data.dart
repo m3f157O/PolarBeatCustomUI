@@ -9,6 +9,9 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
+import 'graphs/fast_iso.dart';
+import 'graphs/graph.dart';
+
 //TODO NULL CHECK PROPERLY
 
 class ShowData extends StatefulWidget {
@@ -43,127 +46,136 @@ class RequestAndShow extends State<ShowData> {
 
   }
 
-
   @override
   Widget build(BuildContext context) {
-    msg3 = Provider.of<AppState>(context).profile;
     msg2 = Provider.of<AppState>(context).savedActivities;
     msg = Provider.of<AppState>(context).newActivities;
-
+    Color main=Provider.of<AppState>(context).main;
+    Color second=Provider.of<AppState>(context).second;
+    Color text=Provider.of<AppState>(context).text;
 
     print(msg.length);
     var _selectedIndex=0;
     return Scaffold(
+      backgroundColor: main,
       body: Container(
+        color: main,
         child: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0x00000000),
-                    Color(0xFFFFFFFF),
-                  ],
-                  begin: FractionalOffset(0.0, 1.0),
-                  end: FractionalOffset(1.0, 0.0),
-                  stops: [0.6, 2],
-                  tileMode: TileMode.clamp,
-                ),
-              ),
-            ),
+
 
 
 
 
             Container(
-              padding: const EdgeInsets.only(top: 70),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate([
                       LiquidPullToRefresh(
-                        color: Colors.transparent,
+                        color: Colors.black54,
                         backgroundColor: Colors.black54,
                         springAnimationDurationInMilliseconds: 500,
                         showChildOpacityTransition: false,
                         onRefresh: () async {
                           setState(() {
-
+                            Controller().refreshActivities(context);
+                            Controller().statsRoutine(context);
                           });
                         },
                         child: Column(
                           children: [
+                            SizedBox(height: 20,),
                             SizedBox(
-                            // color: Colors.red,
-                            height: 300,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                controller: _scrollController2,
-                                itemCount: msg2.length,
-                                itemBuilder: (context, i) {
-                                  if (i == msg2.length) {
-                                    return const CupertinoActivityIndicator();
-                                  }
-                                  return Bounceable(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ExerciseView(msg2.elementAt(i))));
-                                    },
-                                    child: Container(
-                                      height: 160.0,
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 16.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.lightBlue,
-                                        borderRadius: BorderRadius.circular(16.0),
-                                      ),
-                                      child: Row(
+                              // color: Colors.red,
+                              height: 300,
 
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const SizedBox(width: 5),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  controller: _scrollController2,
+                                  itemCount: msg2.length,
+                                  itemBuilder: (context, i) {
+                                    if (i == msg2.length) {
+                                      return  CupertinoActivityIndicator();
+                                    }
+                                    return Bounceable(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ExerciseView(msg2.elementAt(i))));
+                                      },
+                                      child: Container(
+                                        height: 80,
+                                        width: double.infinity,
+                                        padding:  EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
+                                        margin:  EdgeInsets.symmetric(
+                                            vertical: 4.0, horizontal: 8.0),
+                                        decoration: BoxDecoration(
+                                          color: second,
+                                        ),
+                                        child: Row(
 
-                                          Expanded(child :Text(
-                                            msg2.elementAt(i).entries.elementAt(5).value,
-                                            style: const TextStyle(color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          )),
-                                          Expanded(child :Text(
-                                            msg2.elementAt(i).entries.elementAt(5).value,
-                                            style: const TextStyle(color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          )),
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                             SizedBox(width: 5),
 
 
-                                      Expanded(child :Column(
+                                            Expanded(child :Text(
+                                              DateTime.parse(msg2.elementAt(i).entries.elementAt(5).value).toString().substring(0,22),
+                                              style:  TextStyle(color: text,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+
+
+
+                                            Expanded(child :Column(
+                                              children: [
+                                                Text(
+                                                  toDuration(msg2.elementAt(i)["duration"]).toString().substring(0,10),
+                                                  style:  TextStyle(
+                                                      color: text,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w600),
+                                                ),
+
+                                                Expanded(child :Text(
+                                                  "   " + msg2.elementAt(i)['sport'].toString(),
+                                                  style:  TextStyle(color: text,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w600),
+                                                )),
+
+
+
+                                              ],
+                                            )),
+
+                                            Expanded(child :Column(
                                               children: [
                                                 Text(
                                                   "Average:" +msg2.elementAt(i)['average'].toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
+                                                  style:  TextStyle(
+                                                      color: text,
                                                       fontSize: 18,
                                                       fontWeight: FontWeight.w600),
                                                 ),
                                                 Spacer(),
                                                 Text(
                                                   "High:" + msg2.elementAt(i)['maximum'].toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
+                                                  style:  TextStyle(
+                                                      color: text,
                                                       fontSize: 18,
                                                       fontWeight: FontWeight.w600),
                                                 ),
                                                 Spacer(),
                                                 Text(
                                                   "Calories:" +msg2.elementAt(i)['calories'].toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
+                                                  style:  TextStyle(
+                                                      color: text,
                                                       fontSize: 18,
                                                       fontWeight: FontWeight.w600),
                                                 ),
@@ -176,108 +188,6 @@ class RequestAndShow extends State<ShowData> {
 
 
 
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                            ),
-                            SizedBox(
-                              // color: Colors.red,
-                              height: 300,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  controller: _scrollController,
-                                  itemCount: msg.length,
-                                  itemBuilder: (context, i) {
-                                    if (i == msg.length) {
-                                      return const CupertinoActivityIndicator();
-                                    }
-                                    return Bounceable(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ExerciseView(msg2.elementAt(i))));
-                                      },
-                                      child: Container(
-                                         color: Colors.blue,
-                                        height: 300,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 2),
-                                        child: Row(
-                                          children: [
-                                              Container(
-                                                // height: 50,
-                                                padding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 5,
-                                                    horizontal: 10),
-                                                // margin: EdgeInsets.symmetric(vertical: 5),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white24),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    const SizedBox(width: 5),
-                                                    Text(msg2.elementAt(i).entries.elementAt(5).value),
-                                                    SizedBox(
-                                                      width: 200,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Text(
-                                                              "Calories:" +msg2.elementAt(i)['calories'].toString(),
-                                                              style: const TextStyle(
-                                                                  fontSize:
-                                                                  13.5),
-                                                            ),
-                                                          ),
-                                                          const Text("High",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                  8)),
-                                                          Spacer(),
-                                                          Text(
-                                                            msg2.elementAt(i)['maximum'].toString(),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                20,
-                                                                color: Colors
-                                                                    .green),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 3),
-                                                          Text("Average",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                  8)),
-                                                          Spacer(),
-                                                          Text(
-                                                            msg2.elementAt(i)['average'].toString(),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                20,
-                                                                color: Colors
-                                                                    .red),
-                                                          ),
-
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
                                           ],
                                         ),
                                       ),
@@ -285,44 +195,157 @@ class RequestAndShow extends State<ShowData> {
                                   }),
                             ),
 
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 30,
+                                  margin:  EdgeInsets.symmetric(
+                                      vertical: 0.0, horizontal: 8.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        second,
+                                        main,
+                                      ]),
+
+                                    )
+                                ),
+
+                              ),
+
+
+                        SizedBox(
+                          // color: Colors.red,
+                          height: 300,
+
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              controller: _scrollController2,
+                              itemCount: msg.length,
+                              itemBuilder: (context, i) {
+                                if (i == msg.length) {
+                                  return  CupertinoActivityIndicator();
+                                }
+                                return Bounceable(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExerciseView(msg.elementAt(i))));
+                                  },
+                                  child: Container(
+                                    height: 80,
+                                    width: double.infinity,
+                                    padding:  EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
+                                    margin:  EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: main,
+                                    ),
+                                    child: Row(
+
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                         SizedBox(width: 5),
+
+                                        Expanded(child :Text(
+                                          msg.elementAt(i).entries.elementAt(5).value,
+                                          style:  TextStyle(color: second,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        )),
+
+                                        Expanded(child :Text(
+                                          "   " + msg.elementAt(i)['sport'].toString(),
+                                          style:  TextStyle(color: second,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        )),
+
+
+
+                                        Expanded(child :Column(
+                                          children: [
+                                            Text(
+                                              "Average:" +msg.elementAt(i)['average'].toString(),
+                                              style:  TextStyle(
+                                                  color: second,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              "High:" + msg.elementAt(i)['maximum'].toString(),
+                                              style:  TextStyle(
+                                                  color: second,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              "Calories:" +msg.elementAt(i)['calories'].toString(),
+                                              style:  TextStyle(
+                                                  color: second,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Spacer(),
+
+
+
+                                          ],
+                                        )),
+
+
+
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+
+
                           ],
                         )
 
                       ),
                     ]),
                   ),
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-
-                        children: const [
-                          Text("Developed by Gianmarco Lodari",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12)),
-                          Text(
-                            "Powered by Polar API",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
 
                 ],
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 10,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    gradient: LinearGradient(
+                        stops: [0,1],
+                        colors: [
+                          second,
+                          main
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter
+                    )
+                ),
+
+              ),
+            ),
           ],
         ),
       ),
+
     );
+
   }
 
 

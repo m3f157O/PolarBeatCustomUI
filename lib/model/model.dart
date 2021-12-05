@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'db_model.dart';
@@ -27,12 +28,20 @@ class AppState extends ChangeNotifier {
   };
 
   int sort=0;
+  int totalCalories=0;
+  int localCalories=0;
+  int localDistance=0;
+  Duration totalTime=Duration.zero;
+  Color main=Colors.white;
+  Color text=Colors.white;
+  Color second=Colors.lightBlue;
+  int totalDistance=0;
   bool asc=false;
 
   PHASE _state=PHASE.startingUserMenu;
   List<Map<dynamic,dynamic>> savedActivities=[];
   List<Map<dynamic,dynamic>> newActivities=[];
-  Map<dynamic,dynamic> profile={};
+  Map<dynamic,dynamic> profile={"firstname":"empty","lastname":"empty"};
 
 
 
@@ -43,11 +52,59 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  void setColor(Color i) {
+    main=i;
+    notifyListeners();
+  }
+
+  void setSecond(Color i) {
+    second=i;
+    notifyListeners();
+  }
+
   void setSort(String i) {
     print("setting sort to");
     print(FastSortAdapter[i]);
 
     sort=FastSortAdapter[i];
+    notifyListeners();
+  }
+
+  void setCalories(int i) {
+    print("setting calories to");
+    print(i);
+    totalCalories=i;
+    notifyListeners();
+  }
+
+  void setLocalCalories(int i) {
+    print("setting calories to");
+    print(i);
+    localCalories=i;
+    notifyListeners();
+  }
+
+  void setLocalDistance(int i) {
+    print("setting calories to");
+    print(i);
+    localDistance=i;
+    notifyListeners();
+  }
+
+  void setDistance(int i) {
+    print("setting distance to");
+    print(i);
+
+    totalDistance=i;
+    notifyListeners();
+  }
+
+  void setTime(Duration i) {
+    print("setting calories to");
+    print(i);
+
+    totalTime=i;
     notifyListeners();
   }
 

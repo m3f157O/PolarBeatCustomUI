@@ -59,10 +59,22 @@ class RequestAndShow extends State<ShowHeartbeat> {
 
   void processHeartbeat(Map toProcess) {
     List can=jsonDecode(utf8.decode(base64.decode(toProcess["samples"])));
-    List<String> temp=can[0]['data'].toString().split(',');
-    for(int i=0;i<temp.length;i++) {
-      heartBeat.add(ChartData(int.parse(temp.elementAt(i)),i));
+    for(int k=0;k<1;k++) {
+      List<String> temp=can[k]['data'].toString().split(',');
+      for(int i=0;i<temp.length;i++) {
+        heartBeat.add(ChartData(int.parse(temp.elementAt(i)),i));
+      }
     }
+
+
+    if(can.length>1) {
+      List<String> temp=can[1]['data'].toString().split(',');
+      for(int i=0;i<temp.length;i++) {
+        print(temp.elementAt(i));
+        // TODO CORRECT DATA TYPE
+      }
+    }
+
   }
   final int _selectedIndex=1;
 

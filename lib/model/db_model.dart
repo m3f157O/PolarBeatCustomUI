@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:custom_polar_beat_ui_v2/controller/net_controller.dart';
+import 'package:custom_polar_beat_ui_v2/view/graphs/fast_iso.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -120,7 +121,6 @@ class DataBase {
           'CREATE TABLE Profile (polaruserid TEXT, registrationdate TEXT, firstname TEXT, lastname TEXT, birthdate TEXT, gender TEXT)');
     }
 
-
     void createExercisesTable() async {
       _database.execute(
           'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute INT, detailedsportinfo TEXT, zones TEXT, samples TEXT, gpx TEXT)');
@@ -226,8 +226,10 @@ class DataBase {
       List<Map<String,Object>> response = await NetController().exerciseCoordinator(token);
       for(int i=0;i<response.length;i++) {
         updateExercisesTable(response.elementAt(i));
+        print("Updating exercises table");
+
       }
-      //Provider.of<AppState>(context,listen: false).setNewActivities(response);
+      Provider.of<AppState>(context,listen: false).setNewActivities(response);
 
       //TODO FIX THIS: AFTER NEW ACTIVITIES ARE SHOWN DB IS UPDATED, WHEN USER REFRESHES THEY ARE CLEARED FROM NEW
       return true;
@@ -280,18 +282,143 @@ class DataBase {
     Future<bool> fetchActivitiesBy(BuildContext context,String toOrder) async {
 
 
-    List<Map> list = await _database.query('Exercises', orderBy: toOrder);
+      List<Map> list = await _database.query('Exercises', orderBy: toOrder);
 
-    if(list.isEmpty) {
-      return false;
-    } else {
+      if(list.isEmpty) {
+        return false;
+      } else {
 
 
 
-      Provider.of<AppState>(context,listen: false).setActivities(list);
+        Provider.of<AppState>(context,listen: false).setActivities(list);
 
-      return true;
+        return true;
+      }
+
+
     }
-  }
+
+    Future<bool> setTotalCalories(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select sum(calories) as C from Exercises');
+      if(list.elementAt(0)["C"]=="null") {
+        Provider.of<AppState>(context,listen: false).setCalories(0);
+        return false;
+      } else {
+        print(list);
+        print("CALORIEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+
+        Provider.of<AppState>(context,listen: false).setCalories(list.elementAt(0)["C"]);
+
+        return true;
+      }
+
+
+    }
+
+    Future<bool> setTotalDistance(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select sum(distance) as C from Exercises');
+      if(list.elementAt(0)["C"]=="null") {
+        Provider.of<AppState>(context,listen: false).setDistance(0);
+
+        return false;
+      } else {
+
+        Provider.of<AppState>(context,listen: false).setDistance(list.elementAt(0)["C"]);
+
+        return true;
+      }
+
+
+    }
+
+    Future<bool> setTotalTime(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select duration C from Exercises');
+      if(list.elementAt(0)["C"]=="null") {
+        Provider.of<AppState>(context,listen: false).setTime(Duration.zero);
+        return false;
+      } else {
+
+        Duration duration=Duration.zero;
+        for(int i=0;i<list.length;i++) {
+          duration=duration+toDuration(list.elementAt(i)["C"]);
+        }
+
+        Provider.of<AppState>(context,listen: false).setTime(duration);
+
+        return true;
+      }
+
+
+
+
+    }
+
+    bool compareDateTime(DateTime one,DateTime two) {
+      return one.day==two.day&&one.month==two.month&&one.year==two.year;
+    }
+    Future<bool> setTodayCalories(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select calories,uploadtime from Exercises');
+      if(list.isEmpty) {
+        return false;
+      } else {
+
+        num total=0;
+
+        for(int i=0;i<list.length;i++) {
+          if(compareDateTime(DateTime.parse(list.elementAt(i)["uploadtime"]),DateTime.now())) {
+            total= total+list.elementAt(i)["calories"];
+          }
+        }
+        Provider.of<AppState>(context,listen: false).setLocalCalories(total.toInt());
+
+
+        return true;
+      }
+
+
+
+
+    }
+
+    Future<bool> setTodayDistance(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select distance,uploadtime from Exercises');
+      if(list.isEmpty) {
+        return false;
+      } else {
+
+        num total=0;
+        for(int i=0;i<list.length;i++) {
+          if(compareDateTime(DateTime.parse(list.elementAt(i)["uploadtime"]),DateTime.now())) {
+            total= total+list.elementAt(i)["distance"];
+          }
+          print("TOTAL DISTANCE IS "+ total.toString());
+        }
+        Provider.of<AppState>(context,listen: false).setLocalDistance(total.toInt());
+
+
+        return true;
+      }
+
+
+
+
+    }
+
+
 
 }

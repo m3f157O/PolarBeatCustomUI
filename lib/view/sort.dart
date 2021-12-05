@@ -18,27 +18,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   var _tabIconIndexSelected = 0;
+  var _tabIconIndexSelected2 = 0;
 
   var _listTextTabToggle = ["uploadtime", "calories", "average", "duration", "maximum"];
 
   var _listIconTabToggle = [
     Colors.red,
     Colors.green,
+    Colors.lightBlue,
+    Colors.black,
+    Colors.white,
   ];
   var _listGenderText = ["Ascendant", "Descendant"];
-  var _listGenderEmpty = ["", ""];
+  var _listGenderEmpty = ["Red", "Green" , "Blue", "Black","White"];
+  var _listGenderEmpty2 = ["Red", "Green" , "Blue", "Black","White"];
 
   @override
   Widget build(BuildContext context) {
     var _tabTextIndexSelected = Provider.of<AppState>(context).sort;
     var _tabTextIconIndexSelected = Provider.of<AppState>(context).asc ? 1 : 0;
+    Color main= Provider.of<AppState>(context,listen: false).main;
+    Color second= Provider.of<AppState>(context,listen: false).second;
+    Color text= Provider.of<AppState>(context,listen: false).text;
 
     print(_tabTextIndexSelected);
     return Expanded(child:Scaffold(
-      appBar: AppBar(
-        title: Text("Flutter Tab Toggle"),
-        elevation: 0,
-      ),
+      backgroundColor: main,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,11 +51,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
             /// Basic Toggle Sample
             SizedBox(
-              height: heightInPercent(3, context),
+              height: heightInPercent(7, context),
             ),
             Text(
               "Select which order",
-              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic,color: second),
             ),
             SizedBox(
               height: heightInPercent(3, context),
@@ -60,14 +65,15 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 90,
               borderRadius: 30,
               height: 50,
+              unSelectedBackgroundColors: [main],
               selectedIndex: _tabTextIndexSelected,
-              selectedBackgroundColors: [Colors.blue, Colors.blueAccent],
+              selectedBackgroundColors: [main, second],
               selectedTextStyle: TextStyle(
-                  color: Colors.white,
+                  color: main.withBlue(100),
                   fontSize: 18,
                   fontWeight: FontWeight.w700),
               unSelectedTextStyle: TextStyle(
-                  color: Colors.black87,
+                  color: second,
                   fontSize: 14,
                   fontWeight: FontWeight.w500),
               labels: _listTextTabToggle,
@@ -101,19 +107,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Text(
                     "Select view order: ",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20,color: second),
                   ),
-                  FlutterToggleTab(
-                    width: 50,
-                    borderRadius: 15,
+                 FlutterToggleTab(
+                    width: widthInPercent(12,context),
+                    unSelectedBackgroundColors: [main],
+                    selectedBackgroundColors: [main, second],
                     selectedTextStyle: TextStyle(
-                        color: Colors.white,
+                        color: main.withBlue(100),
                         fontSize: 18,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w700),
                     unSelectedTextStyle: TextStyle(
-                        color: Colors.blue,
+                        color: second,
                         fontSize: 14,
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.w500),
                     labels: _listGenderText,
                     selectedIndex: _tabTextIconIndexSelected,
                     selectedLabelIndex: (index) {
@@ -131,10 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: heightInPercent(3, context),
             ),
-            Text(
-              "Selected order : ${_listGenderText[_tabTextIconIndexSelected]} ",
-              style: TextStyle(fontSize: 20),
-            ),
+
             SizedBox(
               height: heightInPercent(3, context),
             ),
@@ -149,20 +153,19 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               "Select your color",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: second),
             ),
             Padding(
               padding: EdgeInsets.all(16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Select your sex : ",
-                    style: TextStyle(fontSize: 20),
+                    "Main : ",
+                    style: TextStyle(fontSize: 20,color: second),
                   ),
                   FlutterToggleTab(
-                    width: 40,
-                    borderRadius: 15,
+                    width: 70,
                     selectedIndex: _tabIconIndexSelected,
                     selectedTextStyle: TextStyle(
                         color: Colors.white,
@@ -176,6 +179,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     selectedLabelIndex: (index) {
                       setState(() {
                         _tabIconIndexSelected = index;
+                        Provider.of<AppState>(context, listen: false).setColor(_listIconTabToggle.elementAt(index));
+                      });
+                    },
+                    marginSelected:
+                    EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Second : ",
+                    style: TextStyle(fontSize: 20,color: second),
+                  ),
+                  FlutterToggleTab(
+                    width: 60,
+                    borderRadius: 15,
+                    selectedIndex: _tabIconIndexSelected2,
+                    selectedTextStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                    unSelectedTextStyle: TextStyle(
+                        color: Colors.cyan,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                    labels: _listGenderEmpty2,
+                    selectedLabelIndex: (index) {
+                      setState(() {
+                        _tabIconIndexSelected2 = index;
+                        Provider.of<AppState>(context, listen: false).setSecond(_listIconTabToggle.elementAt(index));
                       });
                     },
                     marginSelected:
@@ -187,12 +225,24 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: heightInPercent(3, context),
             ),
-            Text(
-              "Selected sex index: $_tabIconIndexSelected ",
-              style: TextStyle(fontSize: 20),
-            ),
-            Divider(
-              thickness: 2,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 10,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    gradient: LinearGradient(
+                        stops: [0,1],
+                        colors: [
+                          second,
+                          main
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter
+                    )
+                ),
+
+              ),
             ),
 
 

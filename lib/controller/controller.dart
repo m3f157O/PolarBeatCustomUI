@@ -72,9 +72,29 @@ class Controller {
   Future<bool> fetchProfile(BuildContext context) async {
     return await lock.synchronized(() async {
       return await DataBase().fireUserInfoRequest(context);
+
     });
   }
 
+
+  Future<bool> refreshActivities(BuildContext context) async {
+    Provider.of<AppState>(context,listen: false).clearNewBuffer();
+    return await fetchActivitiesByDate(context);
+  }
+
+  //TODO SYNCH AFTER UPDATE OR CRASH ON FIRST START CARFEUL!!
+  Future<bool> statsRoutine(BuildContext context) async {
+    return await lock.synchronized(() async {
+      DataBase().setTotalCalories(context);
+      DataBase().setTotalTime(context);
+      DataBase().setTotalDistance(context);
+      DataBase().setTodayCalories(context);
+      DataBase().setTodayDistance(context);
+      return true;
+    });
+
+
+  }
    Future<String> fetchTokenOnStart() async {
 
      await lock.synchronized(() async {
