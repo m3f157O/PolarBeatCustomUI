@@ -1,13 +1,11 @@
 
 
 import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
-import 'package:custom_polar_beat_ui_v2/model/model.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_profile.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_sort.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 
@@ -71,9 +69,9 @@ class ClientMenuAPI extends State<ClientMenu> {
     if(_selectedIndex==1) {
       return const ShowData();
     } else if(_selectedIndex==2){
-      return DetailPage();
+      return const ShowProfile();
     } else {
-      return CrazySort();
+      return const SortScreen();
 
     }
 

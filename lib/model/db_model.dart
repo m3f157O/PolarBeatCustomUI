@@ -20,11 +20,13 @@ class DataBase {
     final NetController net=NetController();
 
 
+
     Future<bool> initDatabase() async {
     var databasesPath = await getDatabasesPath();
     String path = databasesPath+_databaseName;
     _database = await openDatabase(path);
     var result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Tokens'");
+    //this is to create tables on first start
     if(result.isEmpty) {
 
       print("Crash Saved");
@@ -196,6 +198,7 @@ class DataBase {
     Future<bool> fireUserInfoRequest(BuildContext context) async {
 
 
+      //if not present, the POLAR APIs are called
       Map<String,Object> response;
       String token= await fetchFromTokenTable('bearer');
       String userId=await fetchFromTokenTable('id');
@@ -220,8 +223,9 @@ class DataBase {
 
     Future<bool> fetchActivities(BuildContext context) async {
 
-      String token= await fetchFromTokenTable('bearer');
+      //if not present, the POLAR APIs are called
 
+      String token= await fetchFromTokenTable('bearer');
       print("Authenticating for notifications");
       List<Map<String,Object>> response = await NetController().exerciseCoordinator(token);
       for(int i=0;i<response.length;i++) {
@@ -240,6 +244,7 @@ class DataBase {
     Future<bool> editActivities(Map<dynamic,dynamic> toEdit, dynamic field, dynamic value) async {
 
 
+      //this is necessary for db compatibility
 
 
       Map<String,Object> toAdd=Map.from(toEdit);
@@ -259,7 +264,9 @@ class DataBase {
 
     Future<bool> fetchSavedActivities(BuildContext context) async {
 
-    List<Map> list = await _database.rawQuery("SELECT * FROM Exercises");
+      //if not present, the POLAR APIs are called
+
+      List<Map> list = await _database.rawQuery("SELECT * FROM Exercises");
 
     if(list.isEmpty) {
       return false;
@@ -309,7 +316,6 @@ class DataBase {
       } else {
         print(list);
         print("CALORIEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-
         Provider.of<AppState>(context,listen: false).setCalories(list.elementAt(0)["C"]);
 
         return true;
@@ -393,6 +399,56 @@ class DataBase {
     }
 
     Future<bool> setTodayDistance(BuildContext context) async {
+
+
+      List<Map> list = await _database.rawQuery(
+          'select distance,uploadtime from Exercises');
+      if(list.isEmpty) {
+        return false;
+      } else {
+
+        num total=0;
+        for(int i=0;i<list.length;i++) {
+          if(compareDateTime(DateTime.parse(list.elementAt(i)["uploadtime"]),DateTime.now())) {
+            total= total+list.elementAt(i)["distance"];
+          }
+          print("TOTAL DISTANCE IS "+ total.toString());
+        }
+        Provider.of<AppState>(context,listen: false).setLocalDistance(total.toInt());
+
+
+        return true;
+      }
+
+
+
+
+    }
+
+
+    Future<bool> setTops(BuildContext context) async {
+
+
+      List<Map> list = await _database.query('Exercises', orderBy: "distance",limit: 3);
+
+      Provider.of<AppState>(context,listen: false).setDistanceActivities(list);
+
+      list = await _database.query('Exercises', orderBy: "duration",limit: 3);
+
+      Provider.of<AppState>(context,listen: false).setDurationActivities(list);
+
+      list = await _database.query('Exercises', orderBy: "calories",limit: 3);
+
+      Provider.of<AppState>(context,listen: false).setCaloriesActivities(list);
+
+      return true;
+
+
+
+
+    }
+
+    Future<bool> fetchTopBy(BuildContext context) async {
 
 
       List<Map> list = await _database.rawQuery(

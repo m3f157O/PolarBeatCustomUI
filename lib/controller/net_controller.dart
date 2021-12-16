@@ -3,13 +3,16 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+
+
 
 class NetController {
 
 
+  //TODO USE THIS IF YOU WANT
+  // most of API calls are hardcoded because expandability would be very low anyway
   late final String _token;
   late final String _id;
   void setToken(String value) {_token = value;}
@@ -277,6 +280,7 @@ class NetController {
     }
 
     print("Ending activity processing");
+
 
     return list;
 

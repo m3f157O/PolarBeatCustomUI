@@ -1,16 +1,13 @@
 
 
-import 'package:custom_polar_beat_ui_v2/controller/controller.dart';
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
-import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:custom_polar_beat_ui_v2/view/sort.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
-class CrazySort extends StatefulWidget {
-  const CrazySort({Key? key}) : super(key: key);
+class SortScreen extends StatefulWidget {
+  const SortScreen({Key? key}) : super(key: key);
 
 
   @override
@@ -18,38 +15,58 @@ class CrazySort extends StatefulWidget {
 }
 
 
-class SelectSort extends State<CrazySort> {
+class SelectSort extends State<SortScreen> {
 
 
   @override
   Widget build(BuildContext context) {
-    bool ciccia = Provider.of<AppState>(context).asc;
-    var _selectedIndex= 0; // you can change selected with update this
-    var _tabTextIndexSelected = 1;
-    var _tabTextIconIndexSelected = 0;
-    var _tabIconIndexSelected = 0;
-    var _tabSelectedIndexSelected = 0;
+    Color second = Provider.of<AppState>(context).second;
 
-    var _listTextTabToggle = ["Tab A (10)", "Tab B (6)", "Tab C (9)"];
-    var _listTextSelectedToggle = [
-      "Select A (10)",
-      "Select B (6)",
-      "Select C (9)"
-    ];
-    var _listIconTabToggle = [
-      Icons.person,
-      Icons.pregnant_woman,
-    ];
-    var _listGenderText = ["Male", "Female"];
-    var _listGenderEmpty = ["", ""];
+
 
     return Center( child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
-// Here default theme colors are used for activeBgColor, activeFgColor, inactiveBgColor and inactiveFgColor
+                Align(alignment: Alignment.topCenter,
+                    child:   Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: second,
+                          gradient: LinearGradient(
+                              stops: [0,1],
+                              colors: [
+                                second,
+                                Colors.transparent,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter
+                          )
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 22,
+                            right: 22,
+                            top: 20,
+                            bottom: 10
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
 
 
-                MyHomePage(),
+
+
+
+
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                ),
+                const Sort(),
 
               ],
 

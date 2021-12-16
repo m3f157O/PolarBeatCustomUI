@@ -1,22 +1,32 @@
 import 'package:custom_polar_beat_ui_v2/model/model.dart';
+import 'package:custom_polar_beat_ui_v2/view/exercise_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:provider/provider.dart';
 
+import 'graphs/fast_iso.dart';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
+
+class ShowProfile extends StatefulWidget {
+  const ShowProfile({Key? key}) : super(key: key);
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _ShowProfileState createState() => _ShowProfileState();
 }
 
-class _DetailPageState extends State<DetailPage> {
-  bool? isHeartIconTapped = false;
+class _ShowProfileState extends State<ShowProfile> {
+
+  late List<Map<dynamic,dynamic>> topDistanceActivities;
+  late List<Map<dynamic,dynamic>> topCaloriesActivities;
+  late List<Map<dynamic,dynamic>> topDurationActivities;
 
   @override
   Widget build(BuildContext context) {
-    Map msg3 = Provider.of<AppState>(context).profile;
+    Map profile = Provider.of<AppState>(context).profile;
+    topDistanceActivities = Provider.of<AppState>(context).topDistance;
+    topDurationActivities = Provider.of<AppState>(context).topDuration;
+    topCaloriesActivities = Provider.of<AppState>(context).topCalories;
     int cal=Provider.of<AppState>(context).totalCalories;
     int dis=Provider.of<AppState>(context).totalDistance;
     Duration dur=Provider.of<AppState>(context).totalTime;
@@ -25,6 +35,8 @@ class _DetailPageState extends State<DetailPage> {
     int localCalories=Provider.of<AppState>(context).localCalories;
     int localDistance=Provider.of<AppState>(context).localDistance;
     Color text=Provider.of<AppState>(context).text;
+
+    String realname=profile["firstname"] ?? "";
 
     return Scaffold(
       backgroundColor: const Color(0xff121421),
@@ -42,26 +54,27 @@ class _DetailPageState extends State<DetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
+
+                        const SizedBox(
                           height: 60,
                         ),
-                        Text(
+                        const Text(
                           "Hello! ",
                           style: TextStyle(fontSize: 24, color: Colors.black),
                         ),
                         Text(
-                          msg3["firstname"].toString()=='empty' ? msg3["firstname"].toString() : " " + " "+ msg3["lastname"].toString()=='empty' ? msg3["lastname"].toString() : " ",
-                          style: TextStyle(
+                          realname,
+                          style: const TextStyle(
                             fontSize: 26,
                             color: Colors.black,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                         Center(
-                          child: Container(
+                          child: SizedBox(
                             height: 300,
 
                             child: Column(
@@ -83,7 +96,7 @@ class _DetailPageState extends State<DetailPage> {
                                     horizontal: 16.0,
                                   ),
                                   child: Text(
-                                    cal.toString()+" cal",
+                                    cal.toString()+" kcal",
                                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: second),
                                   ),
                                 ),
@@ -138,13 +151,13 @@ class _DetailPageState extends State<DetailPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: 180,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
+                                  const Padding(
+                                    padding: EdgeInsets.only(
                                       left: 16.0,
                                       right: 16,
                                       top: 16,
@@ -164,14 +177,14 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     child: Text(
                                       localCalories.toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w900,
                                         color: Colors.black45,
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Container(
                                     margin: const EdgeInsets.only(
                                       bottom: 16,
@@ -187,13 +200,13 @@ class _DetailPageState extends State<DetailPage> {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               height: 180,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
+                                  const Padding(
+                                    padding: EdgeInsets.only(
                                       left: 16.0,
                                       right: 16,
                                       top: 16,
@@ -213,7 +226,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     child: Text(
                                       localDistance.toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w900,
                                         color: Colors.black45,
@@ -231,136 +244,363 @@ class _DetailPageState extends State<DetailPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
+                            children: const <Widget>[
                               Text(
-                                "March 2020",
+                                "Most calories exercises",
                                 style: TextStyle(
                                   color: Colors.black45,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
-                              Text(
-                                "-52,30£",
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              )
                             ],
                           ),
                         ),
-                        Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: Container(
-                                width: 40,
-                                height: 40,
-                                child: ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-                                      second,
-                                      main
-                                    ]).createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcATop,
-                                  child: Icon(
-                                    Icons.local_pizza,
-                                    color: Colors.red,
-                                    size: 30,
+
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: topCaloriesActivities.length,
+                            itemBuilder: (context, i) {
+                              if (i == topCaloriesActivities.length) {
+                                return  const CupertinoActivityIndicator();
+                              }
+                              return Bounceable(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
+                                },
+                                child: Container(
+                                  height: 80,
+                                  width: double.infinity,
+                                  padding:  const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  margin:  const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                    color: second,
+                                  ),
+                                  child: Row(
+
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(width: 5),
+
+
+                                      Expanded(child :Column(
+                                          children: [
+
+                                            Expanded(child :Text(
+                                              DateTime.parse(topCaloriesActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                              style:  TextStyle(color: text,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                          ]
+                                      )),
+
+
+
+
+                                      Expanded(child :Column(
+                                        children: [
+
+                                          Text(
+                                            toDuration(topCaloriesActivities.elementAt(i)["duration"]).toString().substring(0,7),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+                                          Text(
+                                            topCaloriesActivities.elementAt(i)['sport'].toString(),
+                                            style:  TextStyle(color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+
+                                          const Spacer(),
+
+
+                                        ],
+                                      )),
+
+                                      Expanded(child :Column(
+                                        children: [
+                                          Text(
+                                            "Avg HR:" +topCaloriesActivities.elementAt(i)['average'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "kCal:" +topCaloriesActivities.elementAt(i)['calories'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+
+
+                                        ],
+                                      )),
+
+
+
+                                    ],
                                   ),
                                 ),
-                              ),
-                              title: Text(
-                                "Sc Boul Andre",
+                              );
+                            }),
+
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const <Widget>[
+                              Text(
+                                "Longest distance exercises",
                                 style: TextStyle(
+                                  color: Colors.black45,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
-                              subtitle: Text(
-                                "12 March 13:43",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              trailing: Text("-9.20£",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                  )),
-                            ),
-                            ListTile(
-                              leading: Container(
-                                width: 40,
-                                height: 40,
-                                child: ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-                                      second,
-                                      main
-                                    ]).createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcATop,
-                                  child: Icon(
-                                    Icons.local_pizza,
-                                    color: Colors.red,
-                                    size: 30,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                "Sc Boul Andre",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "12 March 13:43",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              trailing: Text("-9.20£",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                  )),
-                            ),
-                            ListTile(
-                              leading: Container(
-                                width: 40,
-                                height: 40,
-                                child: ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-                                      second,
-                                      main
-                                    ]).createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcATop,
-                                  child: Icon(
-                                    Icons.local_pizza,
-                                    color: Colors.red,
-                                    size: 30,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                "Sc Boul Andre",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "12 March 13:43",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              trailing: Text("-9.20£",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                  )),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: topDistanceActivities.length,
+                            itemBuilder: (context, i) {
+                              if (i == topDistanceActivities.length) {
+                                return  const CupertinoActivityIndicator();
+                              }
+                              return Bounceable(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExerciseDetails(data: topDistanceActivities.elementAt(i), color: main, second: second)));
+                                },
+                                child: Container(
+                                  height: 80,
+                                  width: double.infinity,
+                                  padding:  const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  margin:  const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                    color: second,
+                                  ),
+                                  child: Row(
+
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(width: 5),
+
+
+                                      Expanded(child :Column(
+                                          children: [
+
+                                            Expanded(child :Text(
+                                              DateTime.parse(topDistanceActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                              style:  TextStyle(color: text,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                          ]
+                                      )),
+
+
+
+
+                                      Expanded(child :Column(
+                                        children: [
+
+                                          Text(
+                                            toDuration(topDistanceActivities.elementAt(i)["duration"]).toString().substring(0,7),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+                                          Text(
+                                            topDistanceActivities.elementAt(i)['sport'].toString(),
+                                            style:  TextStyle(color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+
+                                          const Spacer(),
+
+
+                                        ],
+                                      )),
+
+                                      Expanded(child :Column(
+                                        children: [
+                                          Text(
+                                            "Avg HR:" +topDistanceActivities.elementAt(i)['average'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "kCal:" +topDistanceActivities.elementAt(i)['calories'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+
+
+                                        ],
+                                      )),
+
+
+
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const <Widget>[
+                              Text(
+                                "Longest duration exercises",
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: topDurationActivities.length,
+                            itemBuilder: (context, i) {
+                              if (i == topDurationActivities.length) {
+                                return  const CupertinoActivityIndicator();
+                              }
+                              return Bounceable(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExerciseDetails(data: topDurationActivities.elementAt(i), color: main, second: second)));
+                                },
+                                child: Container(
+                                  height: 80,
+                                  width: double.infinity,
+                                  padding:  const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  margin:  const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                    color: second,
+                                  ),
+                                  child: Row(
+
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(width: 5),
+
+
+                                      Expanded(child :Column(
+                                          children: [
+
+                                            Expanded(child :Text(
+                                              DateTime.parse(topDurationActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                              style:  TextStyle(color: text,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                          ]
+                                      )),
+
+
+
+
+                                      Expanded(child :Column(
+                                        children: [
+
+                                          Text(
+                                            toDuration(topDurationActivities.elementAt(i)["duration"]).toString().substring(0,7),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+                                          Text(
+                                            topDurationActivities.elementAt(i)['sport'].toString(),
+                                            style:  TextStyle(color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+
+                                          const Spacer(),
+
+
+                                        ],
+                                      )),
+
+                                      Expanded(child :Column(
+                                        children: [
+                                          Text(
+                                            "Avg HR:" +topDurationActivities.elementAt(i)['average'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "kCal:" +topDurationActivities.elementAt(i)['calories'].toString(),
+                                            style:  TextStyle(
+                                                color: text,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const Spacer(),
+
+
+
+                                        ],
+                                      )),
+
+
+
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
                       ],
                     ),
                   ),
@@ -376,7 +616,7 @@ class _DetailPageState extends State<DetailPage> {
                 decoration: BoxDecoration(
                     color: Colors.black,
                     gradient: LinearGradient(
-                        stops: [0,1],
+                        stops: const [0,1],
                         colors: [
                           second,
                           main
@@ -400,9 +640,5 @@ class _DetailPageState extends State<DetailPage> {
 
   }
 
-  void onHeartIconTapped() {
-    setState(() {
-      isHeartIconTapped = !isHeartIconTapped!;
-    });
-  }
+
 }

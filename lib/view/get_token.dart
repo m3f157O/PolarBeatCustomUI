@@ -5,19 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
-class GetTokenFromPolar extends StatefulWidget {
+class GetToken extends StatefulWidget {
 
-  const GetTokenFromPolar({Key? key}) : super(key: key);
+  const GetToken({Key? key}) : super(key: key);
 
 
   @override
-  TokenRequestToPolar createState() => TokenRequestToPolar();
+  TokenRequest createState() => TokenRequest();
 }
 
 
-class TokenRequestToPolar extends State<GetTokenFromPolar> {
+class TokenRequest extends State<GetToken> {
 
-  late Future<bool> msg;
+  late Future<bool> token;
 
   Future<bool> fetchAccessToken() async {
 
@@ -36,7 +36,7 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
   void initState() {
     super.initState();
 
-    msg=fetchAccessToken();
+    token=fetchAccessToken();
 
   }
 
@@ -49,25 +49,20 @@ class TokenRequestToPolar extends State<GetTokenFromPolar> {
     return MaterialApp(
       title: 'GET YOUR TOKEN',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.lightBlue,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('THIS IS YOUR TOKEN'),
-        ),
+
         body: Center(
           child: FutureBuilder<bool>(
-            future: msg,
+            future: token,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 //todo remove temp screen
                 registerUser();
-
-
-
                 return ElevatedButton(
                     onPressed: () => Controller().toViewMenu(context),
-                    child: const Text("TOKEN REQUEST SUCCESSFULL, PROCEED"));
+                    child: const Text("TOKEN VALID, LOGIN TO POLAR"));
 
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');

@@ -6,32 +6,32 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter_toggle_tab/helper.dart';
 import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class Sort extends StatefulWidget {
+  const Sort({Key? key}) : super(key: key);
 
 
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _SortState createState() => _SortState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SortState extends State<Sort> {
 
   var _tabIconIndexSelected = 0;
   var _tabIconIndexSelected2 = 0;
 
-  var _listTextTabToggle = ["uploadtime", "calories", "average", "duration", "maximum"];
+  final _listTextTabToggle = ["uploadtime", "calories", "average", "duration", "maximum"];
 
-  var _listIconTabToggle = [
+  final _listIconTabToggle = [
     Colors.red,
     Colors.green,
     Colors.lightBlue,
     Colors.black,
     Colors.white,
   ];
-  var _listGenderText = ["Ascendant", "Descendant"];
-  var _listGenderEmpty = ["Red", "Green" , "Blue", "Black","White"];
-  var _listGenderEmpty2 = ["Red", "Green" , "Blue", "Black","White"];
+  final _listGenderText = ["Ascendant", "Descendant"];
+  final _listGenderEmpty = ["Red", "Green" , "Blue", "Black","White"];
+  final _listGenderEmpty2 = ["Red", "Green" , "Blue", "Black","White"];
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var _tabTextIconIndexSelected = Provider.of<AppState>(context).asc ? 1 : 0;
     Color main= Provider.of<AppState>(context,listen: false).main;
     Color second= Provider.of<AppState>(context,listen: false).second;
-    Color text= Provider.of<AppState>(context,listen: false).text;
 
-    print(_tabTextIndexSelected);
     return Expanded(child:Scaffold(
       backgroundColor: main,
       body: SingleChildScrollView(
@@ -80,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
               selectedLabelIndex: (index) {
                 setState(() {
                   _tabTextIndexSelected = index;
-                  print(_listTextTabToggle[index]);
                   Controller().fetchActivitiesBy(context, _listTextTabToggle[index]);
                 });
               },
@@ -92,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: heightInPercent(3, context),
             ),
-            Divider(
+            const Divider(
               thickness: 2,
             ),
 
@@ -101,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: heightInPercent(3, context),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -142,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: heightInPercent(3, context),
             ),
-            Divider(
+            const Divider(
               thickness: 2,
             ),
             SizedBox(
@@ -156,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: second),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -167,11 +164,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   FlutterToggleTab(
                     width: 70,
                     selectedIndex: _tabIconIndexSelected,
-                    selectedTextStyle: TextStyle(
+                    selectedTextStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600),
-                    unSelectedTextStyle: TextStyle(
+                    unSelectedTextStyle: const TextStyle(
                         color: Colors.cyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
@@ -183,13 +180,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     marginSelected:
-                    EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -201,11 +198,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 60,
                     borderRadius: 15,
                     selectedIndex: _tabIconIndexSelected2,
-                    selectedTextStyle: TextStyle(
+                    selectedTextStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600),
-                    unSelectedTextStyle: TextStyle(
+                    unSelectedTextStyle: const TextStyle(
                         color: Colors.cyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
@@ -217,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     marginSelected:
-                    EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   ),
                 ],
               ),
@@ -232,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: BoxDecoration(
                     color: Colors.black,
                     gradient: LinearGradient(
-                        stops: [0,1],
+                        stops: const [0,1],
                         colors: [
                           second,
                           main

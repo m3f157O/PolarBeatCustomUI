@@ -2,8 +2,7 @@
 enum PHASE {
   startingUserMenu,
   loginToPolar,
-  getTokenFromPolar,
+  getToken,
   viewMenu,
-  showData,
 }
 

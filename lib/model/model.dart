@@ -2,16 +2,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:custom_polar_beat_ui_v2/model/phases.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'db_model.dart';
-import 'fast_sort_enum.dart';
 
 /// -----------------------------------
 ///           MODEL
 /// -----------------------------------
 
 
+enum SORT {
+  date,
+  calories,
+  average,
+  duration,
+  maximum,
+}
 
 
 
@@ -37,10 +42,13 @@ class AppState extends ChangeNotifier {
   Color second=Colors.lightBlue;
   int totalDistance=0;
   bool asc=false;
-
   PHASE _state=PHASE.startingUserMenu;
+
   List<Map<dynamic,dynamic>> savedActivities=[];
   List<Map<dynamic,dynamic>> newActivities=[];
+  List<Map<dynamic,dynamic>> topCalories=[];
+  List<Map<dynamic,dynamic>> topDuration=[];
+  List<Map<dynamic,dynamic>> topDistance=[];
   Map<dynamic,dynamic> profile={"firstname":"empty","lastname":"empty"};
 
 
@@ -120,6 +128,33 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDurationActivities(List<Map<dynamic,dynamic>> i) {
+    topDuration = i;
+
+    print(topDuration);
+    print("JUST SET DURATION");
+
+    notifyListeners();
+  }
+
+  void setCaloriesActivities(List<Map<dynamic,dynamic>> i) {
+    topCalories = i;
+    print(topCalories);
+    print("JUST SET cALORIES");
+
+    notifyListeners();
+  }
+
+  void setDistanceActivities(List<Map<dynamic,dynamic>> i) {
+    topDistance = i;
+    print(topDistance);
+
+    print("JUST SET DISTANCE");
+    notifyListeners();
+  }
+
+
+  //not complete
   void editActivity(int i, dynamic field, dynamic value) {
     DataBase().editActivities(savedActivities.elementAt(0),field,value);
     notifyListeners();

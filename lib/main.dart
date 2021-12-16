@@ -1,5 +1,5 @@
 import 'package:custom_polar_beat_ui_v2/view/client_menu_api.dart';
-import 'package:custom_polar_beat_ui_v2/view/get_token_from_polar.dart';
+import 'package:custom_polar_beat_ui_v2/view/get_token.dart';
 import 'package:custom_polar_beat_ui_v2/view/login_to_polar_web.dart';
 import 'package:custom_polar_beat_ui_v2/view/show_data.dart';
 import 'package:custom_polar_beat_ui_v2/view/starting_screen.dart';
@@ -18,7 +18,6 @@ void main() {
 
       initialRoute: '/',
       routes: {
-        '/': (context) =>  const GetAuthCodeFromPolar(),
         '/': (context) =>  const GetAuthCodeFromPolar(),
       },
     ),
@@ -39,9 +38,8 @@ const authIssuer = 'https://$authDomain';
 const Map<PHASE,Widget> identifier = {
   PHASE.startingUserMenu: StartingScreen(),
   PHASE.loginToPolar:LoginToPolarWeb(),
-  PHASE.getTokenFromPolar:GetTokenFromPolar(),
+  PHASE.getToken:GetToken(),
   PHASE.viewMenu: ClientMenu(),
-  PHASE.showData:ShowData(),
 };
 
 /// -----------------------------------

@@ -1,0 +1,2 @@
+const polarClientId = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
+const clientdotdotsecretbase64 = 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==';

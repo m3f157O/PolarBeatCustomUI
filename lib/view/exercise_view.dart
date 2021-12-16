@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:custom_polar_beat_ui_v2/view/graphs/graph.dart';
+import 'package:custom_polar_beat_ui_v2/view/graphs/heartbeat_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class ExerciseView extends StatelessWidget {
     }
     
     return MaterialApp(
-        title: 'Auth0 2',
+        title: 'Exercise view',
         home: Scaffold(
 
             body: Row(

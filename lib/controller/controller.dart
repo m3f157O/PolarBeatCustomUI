@@ -41,18 +41,20 @@ import 'package:synchronized/synchronized.dart';
 ///          4. NOW, WHEN WITHIN THE VIEW get_token_from_polar, A CERTAIN USER ACTION CAUSES THE TRANSITION TO HAPPEN AND THE DATA TO BE SHOWN, IN THIS CASE FASTER BECAUSE IT WAS OBSERVED DATA
 ///
 ///
-const polarClientId = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
 
 class Controller {
   // Models
   static final Controller _instance = Controller();
+
   var lock = Lock();
+
   static getController(){
   return _instance;
   }
+
   void toDebugAuthCode(BuildContext context,String code) {
     DataBase().updateTokenTable("code", code);
-    Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.getToken);
 
   }
 
@@ -90,6 +92,7 @@ class Controller {
       DataBase().setTotalDistance(context);
       DataBase().setTodayCalories(context);
       DataBase().setTodayDistance(context);
+      DataBase().setTops(context);
       return true;
     });
 
@@ -133,7 +136,7 @@ class Controller {
   }
 
   void toGetTokenFromPolar(BuildContext context) {
-    Provider.of<AppState>(context,listen: false).setstate(PHASE.getTokenFromPolar);
+    Provider.of<AppState>(context,listen: false).setstate(PHASE.getToken);
 
   }
   void toViewMenu(BuildContext context) {
