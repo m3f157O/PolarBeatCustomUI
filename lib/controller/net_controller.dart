@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:custom_polar_beat_ui_v2/controller/net_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -48,7 +49,7 @@ class NetController {
     var response= await http.post(Uri.parse('https://polarremote.com/v2/oauth2/token'),
         headers:
         {
-          'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
+          'Authorization': clientdotdotsecretbase64,
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json;charset=UTF-8'
         },
@@ -115,7 +116,7 @@ class NetController {
     var response = await http.get(Uri.parse('https://www.polaraccesslink.com/v3/notifications'),
       headers:
       {
-        'Authorization': 'Basic MjFlMmY3MjAtMzgzMi00MmQ0LWI4YWQtM2Q4ZWYwMDY3MDIzOmI5ZWE3M2Q3LTAxODktNGRjZS1iYTBhLWZjZTk1YzdlYmQ3NA==',
+        'Authorization': clientdotdotsecretbase64,
         'Accept': 'application/json',
       },
     );
