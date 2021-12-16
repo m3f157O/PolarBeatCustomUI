@@ -44,6 +44,8 @@ class NetController {
     }
   }
 
+
+  //TODO old String return fix
   Future<String> fireTokenDataRequest(String toSend) async {
 
     var response= await http.post(Uri.parse('https://polarremote.com/v2/oauth2/token'),
@@ -72,10 +74,11 @@ class NetController {
       setToken(token);
       setId(id);
 
-      return id+token.toString(); //really don't want to use a list, I'd rather parse the whole string
+      return id+token.toString(); //this is faster than anything else to pass the parameter
     } else {
 
 
+      print(response.body);
       return response.statusCode.toString();
     }
 
@@ -94,10 +97,10 @@ class NetController {
     );
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      Map<String, dynamic> user = jsonDecode(response.body);
-      Map<String,Object> toRet=Map.from(user);
+      Map<String, dynamic> profileData = jsonDecode(response.body);
+      Map<String,Object> toRet=Map.from(profileData);
 
+      //don't care for this info
       toRet.remove('member-id');
       toRet.remove('weight');
       toRet.remove('height');
@@ -125,7 +128,7 @@ class NetController {
     if (response.statusCode == 200) {
 
       Map<String, dynamic> userData = jsonDecode(response.body);
-      List av=userData['available-user-data'];      // then parse the JSON.
+      List av=userData['available-user-data'];
       return av.elementAt(0)['url'];
     } else {
       print(response.statusCode);
@@ -155,7 +158,11 @@ class NetController {
     if (response.statusCode == 201) {
 
       Map<String, dynamic> user = jsonDecode(response.body);
+      //TODO COMMIT TRANSACTION http.put(Uri.parse(toFetch));
       return user['resource-uri'];
+
+
+
     } else if(response.statusCode==204){
       print(response.statusCode);
 
@@ -262,6 +269,7 @@ class NetController {
           print("Getting samples from activity"+i.toString());
           toPut=await getExerciseSamples(toFetch.elementAt(i)+"/samples", token);
 
+          //db compatibility
           Map<String,Object> transformedMap = map.map((k, v) {
           return MapEntry(k.replaceAll("-", ""), v);
           });
@@ -292,8 +300,7 @@ class NetController {
 
 
   Future<String> getExerciseSamples(String toFetch,String token) async {
-    List<Map<String,Object>> list= [];
-    List<Map<String,Object>> temp= [];
+
     var response = await http.get(Uri.parse(toFetch),
       headers:
       {
@@ -414,7 +421,6 @@ class NetController {
 
 
   Future<String> getExerciseZones(String toFetch,String token) async {
-    List<Map<String,Object>> list= [];
     var stringBytes;
     var response = await http.get(Uri.parse(toFetch),
       headers:
@@ -431,9 +437,9 @@ class NetController {
       List<dynamic> list=user["zone"] ?? [];
 
       print(list);
+      //faster storage
       stringBytes = base64.encode(utf8.encode(jsonEncode(list)));
 
-    //  Map<String,dynamic> cane=jsonDecode(utf8.decode(base64.decode(stringBytes)));
 
       print(stringBytes);
     }
@@ -450,7 +456,8 @@ class NetController {
   Future<List<Map<String,Object>>> exerciseCoordinator(String token) async {
 
 
-    return await getDailyActivities(await startFetchActivityDataTransaction(await fetchNotifications(token),token),token);
+
+    return await getDailyActivities(await startFetchActivityDataTransaction(await fetchNotifications(token),token),token); //really awkward but it's not bad
 
   }
 

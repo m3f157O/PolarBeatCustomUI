@@ -53,7 +53,7 @@ class Controller {
   }
 
   void toDebugAuthCode(BuildContext context,String code) {
-    DataBase().updateTokenTable("code", code);
+    DataBase().updateTokenTable("code", code, DateTime.now().toString());
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getToken);
 
   }
@@ -108,16 +108,13 @@ class Controller {
 
      return await lock.synchronized(() async {
        // Only this block can run (once) until done
-       return await DataBase().fetchFromTokenTable('bearer');
+       return await DataBase().fetchFromTokenTableDate();
      });
 
 
   }
 
 
-   void updateToken(String token) async {
-    DataBase().updateTokenTable("bearer", token);
-  }
 
 
    void reset(BuildContext context) async {
@@ -131,9 +128,6 @@ class Controller {
     return await DataBase().fetchFromTokenTable('id');
   }
 
-   void updateId(String id) async {
-    DataBase().updateTokenTable("id", id);
-  }
 
   void toGetTokenFromPolar(BuildContext context) {
     Provider.of<AppState>(context,listen: false).setstate(PHASE.getToken);

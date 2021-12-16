@@ -23,6 +23,7 @@ enum SORT {
 class AppState extends ChangeNotifier {
 
 
+  //CAREFUL, using setters gives me problems
   Map FastSortAdapter=
   {
     "uploadtime":0,
@@ -131,7 +132,6 @@ class AppState extends ChangeNotifier {
   void setDurationActivities(List<Map<dynamic,dynamic>> i) {
     topDuration = i;
 
-    print(topDuration);
     print("JUST SET DURATION");
 
     notifyListeners();
@@ -139,15 +139,14 @@ class AppState extends ChangeNotifier {
 
   void setCaloriesActivities(List<Map<dynamic,dynamic>> i) {
     topCalories = i;
-    print(topCalories);
     print("JUST SET cALORIES");
-
+    for(int i=0;i<topCalories.length;i++)
+      print(topCalories.elementAt(i)["calories"]);
     notifyListeners();
   }
 
   void setDistanceActivities(List<Map<dynamic,dynamic>> i) {
     topDistance = i;
-    print(topDistance);
 
     print("JUST SET DISTANCE");
     notifyListeners();

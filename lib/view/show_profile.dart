@@ -270,92 +270,41 @@ class _ShowProfileState extends State<ShowProfile> {
                                           builder: (context) =>
                                               ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
                                 },
-                                child: Container(
-                                  height: 80,
-                                  width: double.infinity,
-                                  padding:  const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  margin:  const EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 8.0),
-                                  decoration: BoxDecoration(
-                                    color: second,
+                                child: ListTile(
+                                  leading: Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: ShaderMask(
+                                      shaderCallback: (Rect bounds) {
+                                        return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+                                          second,
+                                          main
+                                        ]).createShader(bounds);
+                                      },
+                                      blendMode: BlendMode.srcATop,
+                                      child: Icon(
+                                        Icons.accessibility,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ),
-                                  child: Row(
-
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 5),
-
-
-                                      Expanded(child :Column(
-                                          children: [
-
-                                            Expanded(child :Text(
-                                              DateTime.parse(topCaloriesActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
-                                              style:  TextStyle(color: text,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600),
-                                            )),
-                                          ]
-                                      )),
-
-
-
-
-                                      Expanded(child :Column(
-                                        children: [
-
-                                          Text(
-                                            toDuration(topCaloriesActivities.elementAt(i)["duration"]).toString().substring(0,7),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-                                          Text(
-                                            topCaloriesActivities.elementAt(i)['sport'].toString(),
-                                            style:  TextStyle(color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-
-                                          const Spacer(),
-
-
-                                        ],
-                                      )),
-
-                                      Expanded(child :Column(
-                                        children: [
-                                          Text(
-                                            "Avg HR:" +topCaloriesActivities.elementAt(i)['average'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "kCal:" +topCaloriesActivities.elementAt(i)['calories'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-
-
-                                        ],
-                                      )),
-
-
-
-                                    ],
+                                  title: Text(
+                                    topCaloriesActivities.elementAt(i)['sport'].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
+                                  subtitle: Text(
+                                    DateTime.parse(topCaloriesActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  trailing: Text((topCaloriesActivities.elementAt(i)["calories"]).toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                      )),
                                 ),
                               );
                             }),
@@ -376,6 +325,12 @@ class _ShowProfileState extends State<ShowProfile> {
                             ],
                           ),
                         ),
+                      /*  onTap: () {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
+                        },*/
 
                         ListView.builder(
                             shrinkWrap: true,
@@ -391,96 +346,44 @@ class _ShowProfileState extends State<ShowProfile> {
                                           builder: (context) =>
                                               ExerciseDetails(data: topDistanceActivities.elementAt(i), color: main, second: second)));
                                 },
-                                child: Container(
-                                  height: 80,
-                                  width: double.infinity,
-                                  padding:  const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  margin:  const EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 8.0),
-                                  decoration: BoxDecoration(
-                                    color: second,
+                                child: ListTile(
+                                  leading: Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: ShaderMask(
+                                      shaderCallback: (Rect bounds) {
+                                        return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+                                          second,
+                                          main
+                                        ]).createShader(bounds);
+                                      },
+                                      blendMode: BlendMode.srcATop,
+                                      child: Icon(
+                                        Icons.accessibility,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ),
-                                  child: Row(
-
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 5),
-
-
-                                      Expanded(child :Column(
-                                          children: [
-
-                                            Expanded(child :Text(
-                                              DateTime.parse(topDistanceActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
-                                              style:  TextStyle(color: text,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600),
-                                            )),
-                                          ]
-                                      )),
-
-
-
-
-                                      Expanded(child :Column(
-                                        children: [
-
-                                          Text(
-                                            toDuration(topDistanceActivities.elementAt(i)["duration"]).toString().substring(0,7),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-                                          Text(
-                                            topDistanceActivities.elementAt(i)['sport'].toString(),
-                                            style:  TextStyle(color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-
-                                          const Spacer(),
-
-
-                                        ],
-                                      )),
-
-                                      Expanded(child :Column(
-                                        children: [
-                                          Text(
-                                            "Avg HR:" +topDistanceActivities.elementAt(i)['average'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "kCal:" +topDistanceActivities.elementAt(i)['calories'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-
-
-                                        ],
-                                      )),
-
-
-
-                                    ],
+                                  title: Text(
+                                    topDistanceActivities.elementAt(i)['sport'].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
+                                  subtitle: Text(
+                                    DateTime.parse(topDistanceActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  trailing: Text((topDistanceActivities.elementAt(i)["distance"]).toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                      )),
                                 ),
                               );
                             }),
-
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -500,9 +403,9 @@ class _ShowProfileState extends State<ShowProfile> {
 
                         ListView.builder(
                             shrinkWrap: true,
-                            itemCount: topDurationActivities.length,
+                            itemCount: topCaloriesActivities.length,
                             itemBuilder: (context, i) {
-                              if (i == topDurationActivities.length) {
+                              if (i == topCaloriesActivities.length) {
                                 return  const CupertinoActivityIndicator();
                               }
                               return Bounceable(
@@ -510,94 +413,43 @@ class _ShowProfileState extends State<ShowProfile> {
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              ExerciseDetails(data: topDurationActivities.elementAt(i), color: main, second: second)));
+                                              ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
                                 },
-                                child: Container(
-                                  height: 80,
-                                  width: double.infinity,
-                                  padding:  const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  margin:  const EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 8.0),
-                                  decoration: BoxDecoration(
-                                    color: second,
+                                child: ListTile(
+                                  leading: Container(
+                                    width: 40,
+                                    height: 40,
+                                    child: ShaderMask(
+                                      shaderCallback: (Rect bounds) {
+                                        return LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+                                          second,
+                                          main
+                                        ]).createShader(bounds);
+                                      },
+                                      blendMode: BlendMode.srcATop,
+                                      child: Icon(
+                                        Icons.accessibility,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ),
-                                  child: Row(
-
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 5),
-
-
-                                      Expanded(child :Column(
-                                          children: [
-
-                                            Expanded(child :Text(
-                                              DateTime.parse(topDurationActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
-                                              style:  TextStyle(color: text,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600),
-                                            )),
-                                          ]
-                                      )),
-
-
-
-
-                                      Expanded(child :Column(
-                                        children: [
-
-                                          Text(
-                                            toDuration(topDurationActivities.elementAt(i)["duration"]).toString().substring(0,7),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-                                          Text(
-                                            topDurationActivities.elementAt(i)['sport'].toString(),
-                                            style:  TextStyle(color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-
-                                          const Spacer(),
-
-
-                                        ],
-                                      )),
-
-                                      Expanded(child :Column(
-                                        children: [
-                                          Text(
-                                            "Avg HR:" +topDurationActivities.elementAt(i)['average'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "kCal:" +topDurationActivities.elementAt(i)['calories'].toString(),
-                                            style:  TextStyle(
-                                                color: text,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          const Spacer(),
-
-
-
-                                        ],
-                                      )),
-
-
-
-                                    ],
+                                  title: Text(
+                                    topCaloriesActivities.elementAt(i)['sport'].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
+                                  subtitle: Text(
+                                    DateTime.parse(topCaloriesActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  trailing: Text( toDuration(topDurationActivities.elementAt(i)["duration"]).toString().substring(0,7),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                      )),
                                 ),
                               );
                             }),
@@ -607,7 +459,7 @@ class _ShowProfileState extends State<ShowProfile> {
                 ),
     ),
     ),
-
+        //
 
             Align(
               alignment: Alignment.bottomCenter,

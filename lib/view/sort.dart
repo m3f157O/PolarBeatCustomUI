@@ -20,18 +20,18 @@ class _SortState extends State<Sort> {
   var _tabIconIndexSelected = 0;
   var _tabIconIndexSelected2 = 0;
 
-  final _listTextTabToggle = ["uploadtime", "calories", "average", "duration", "maximum"];
+  final _sortTabToggle = ["time", "calories", "average", "duration", "max"];
 
-  final _listIconTabToggle = [
+  final _colorTabToggle = [
     Colors.red,
     Colors.green,
     Colors.lightBlue,
     Colors.black,
     Colors.white,
   ];
-  final _listGenderText = ["Ascendant", "Descendant"];
-  final _listGenderEmpty = ["Red", "Green" , "Blue", "Black","White"];
-  final _listGenderEmpty2 = ["Red", "Green" , "Blue", "Black","White"];
+  final _listOrder = ["Ascendant", "Descendant"];
+  final _listColorMain = ["Red", "Green" , "Blue", "Black","White"];
+  final _listColorSecond = ["Red", "Green" , "Blue", "Black","White"];
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +74,11 @@ class _SortState extends State<Sort> {
                   color: second,
                   fontSize: 14,
                   fontWeight: FontWeight.w500),
-              labels: _listTextTabToggle,
+              labels: _sortTabToggle,
               selectedLabelIndex: (index) {
                 setState(() {
                   _tabTextIndexSelected = index;
-                  Controller().fetchActivitiesBy(context, _listTextTabToggle[index]);
+                  Controller().fetchActivitiesBy(context, _sortTabToggle[index]);
                 });
               },
               isScroll: false,
@@ -118,7 +118,7 @@ class _SortState extends State<Sort> {
                         color: second,
                         fontSize: 14,
                         fontWeight: FontWeight.w500),
-                    labels: _listGenderText,
+                    labels: _listOrder,
                     selectedIndex: _tabTextIconIndexSelected,
                     selectedLabelIndex: (index) {
                       setState(() {
@@ -172,11 +172,11 @@ class _SortState extends State<Sort> {
                         color: Colors.cyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
-                    labels: _listGenderEmpty,
+                    labels: _listColorMain,
                     selectedLabelIndex: (index) {
                       setState(() {
                         _tabIconIndexSelected = index;
-                        Provider.of<AppState>(context, listen: false).setColor(_listIconTabToggle.elementAt(index));
+                        Provider.of<AppState>(context, listen: false).setColor(_colorTabToggle.elementAt(index));
                       });
                     },
                     marginSelected:
@@ -206,11 +206,11 @@ class _SortState extends State<Sort> {
                         color: Colors.cyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
-                    labels: _listGenderEmpty2,
+                    labels: _listColorSecond,
                     selectedLabelIndex: (index) {
                       setState(() {
                         _tabIconIndexSelected2 = index;
-                        Provider.of<AppState>(context, listen: false).setSecond(_listIconTabToggle.elementAt(index));
+                        Provider.of<AppState>(context, listen: false).setSecond(_colorTabToggle.elementAt(index));
                       });
                     },
                     marginSelected:

@@ -60,9 +60,17 @@ class TokenRequest extends State<GetToken> {
               if (snapshot.hasData) {
                 //todo remove temp screen
                 registerUser();
-                return ElevatedButton(
+                if(snapshot.data!) {
+                  return ElevatedButton(
                     onPressed: () => Controller().toViewMenu(context),
                     child: const Text("TOKEN VALID, LOGIN TO POLAR"));
+                }
+                else
+                {
+                  return ElevatedButton(
+                      onPressed: () => Controller().toViewMenu(context),
+                      child: const Text("LOGIN WITH NEW TOKEN"));
+                }
 
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');

@@ -31,6 +31,7 @@ class _LoginToPolarWebState extends State<LoginToPolarWeb>
               String code=url.toString().substring(callback.length);
 
 
+              print(code);
               Controller().toDebugAuthCode(context,code);
               deactivate();
             }

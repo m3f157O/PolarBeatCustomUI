@@ -50,12 +50,19 @@ class DebugAuthCode extends State<StartingScreen> {
                     future: msg,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-
                         if (snapshot.data!.isNotEmpty) {
-                          return ElevatedButton(
+                          if(DateTime.parse(snapshot.data!).isAfter(DateTime.now())) {
+                            return ElevatedButton(
                             onPressed: () => Controller().toGetTokenFromPolar(context),
                             child: const Text("LOGIN WITH \nEXISTING TOKEN"),
                           );
+                          }
+                          else {
+                            return ElevatedButton(
+                            onPressed: () => Controller().toLoginToPolar(context),
+                            child: const Text("TOKEN EXPIRED"),
+                          );
+                          }
                         }
                         else {
                           return ElevatedButton(

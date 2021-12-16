@@ -9,7 +9,6 @@ import 'package:synchronized/extension.dart';
 
 import 'model.dart';
 
-//TODO FATAL MAKE DB CHECK WETHER TABLES EXIST DURING INIT
 //TODO SYNCHRONIZE PROPERLY
 
 
@@ -29,7 +28,7 @@ class DataBase {
     //this is to create tables on first start
     if(result.isEmpty) {
 
-      print("Crash Saved");
+      print("First start");
       createTokenTable();
       result =await _database.rawQuery("SELECT * FROM sqlite_master WHERE name='Exercises'");
       if(result.isEmpty) {
@@ -47,8 +46,8 @@ class DataBase {
   }
 
 
-    void updateTokenTable(String type,String token) async {
-      Map<String,String> map={ "type":type,"name":token };
+    void updateTokenTable(String type,String token,String expiredate) async {
+      Map<String,String> map={ "type":type,"name":token, "expiredate":expiredate };
       await _database.insert("Tokens",map);
       print(type+" stored");
     }
@@ -58,12 +57,11 @@ class DataBase {
 
 
 
+
     void updateProfileTable(Map<String,Object> toPass) async {
 
       var transformedMap = toPass.map((k, v) {return MapEntry(k.replaceAll("-", ""), v);});
-
       await _database.insert("Profile",transformedMap);
-
       print("Profile stored");
     }
 
@@ -115,7 +113,7 @@ class DataBase {
 
     void createTokenTable() async {
       _database.execute(
-          'CREATE TABLE Tokens (type TEXT, name TEXT)');
+          'CREATE TABLE Tokens (type TEXT, name TEXT, expiredate TEXT)');
     }
 
     void createProfileTable() async {
@@ -128,7 +126,7 @@ class DataBase {
           'CREATE TABLE Exercises (id INT, uploadtime TEXT, polaruser TEXT, transactionid TEXT, device TEXT, starttime TEXT, starttimeutcoffset INT, duration TEXT, calories INT, distance INT, maximum INT ,average INT, sport TEXT, hasroute INT, detailedsportinfo TEXT, zones TEXT, samples TEXT, gpx TEXT)');
     }
 
-     Future<String> fetchFromTokenTable(String type) async {
+    Future<String> fetchFromTokenTable(String type) async {
 
       List<Map> list = await _database.rawQuery("SELECT * FROM Tokens WHERE type='$type'");
 
@@ -136,7 +134,20 @@ class DataBase {
         return "";
       } else {
 
+        print(DateTime.parse(list.elementAt(0)["expiredate"]));
         return list.elementAt(0)["name"];
+      }
+    }
+
+    Future<String> fetchFromTokenTableDate() async {
+
+      List<Map> list = await _database.rawQuery("SELECT * FROM Tokens WHERE type='bearer'");
+
+      if(list.isEmpty) {
+        return "";
+      } else {
+
+        return list.elementAt(0)["expiredate"];
       }
     }
 
@@ -178,8 +189,8 @@ class DataBase {
       String id=response.split('B')[0];
       String token='B'+response.split('B')[1];
 
-      updateTokenTable("bearer",token);
-      updateTokenTable("id",id);
+      updateTokenTable("bearer",token,(DateTime.now().add(const Duration(days: 10))).toString());
+      updateTokenTable("id",id,DateTime.now().toString());
       return false;
     }
 
@@ -429,16 +440,20 @@ class DataBase {
     Future<bool> setTops(BuildContext context) async {
 
 
-      List<Map> list = await _database.query('Exercises', orderBy: "distance",limit: 3);
-
+      List<Map> list = List.from(await _database.query('Exercises', orderBy: "distance",));
+      list=List.from(list.reversed);
+      list=list.sublist(0,3);
       Provider.of<AppState>(context,listen: false).setDistanceActivities(list);
 
-      list = await _database.query('Exercises', orderBy: "duration",limit: 3);
+      list = List.from(await _database.query('Exercises', orderBy: "duration",));
+      list=List.from(list.reversed);
+      list=list.sublist(0,3);
 
       Provider.of<AppState>(context,listen: false).setDurationActivities(list);
 
-      list = await _database.query('Exercises', orderBy: "calories",limit: 3);
-
+      list = List.from(await _database.query('Exercises', orderBy: "calories",));
+      list=List.from(list.reversed);
+      list=list.sublist(0,3);
       Provider.of<AppState>(context,listen: false).setCaloriesActivities(list);
 
       return true;
