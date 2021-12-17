@@ -13,8 +13,8 @@
         </intent>
     </queries>
    <application
-        android:label="custom_polar_beat_ui_v2"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Polar Beat Custom"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

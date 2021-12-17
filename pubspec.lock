@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "30.0.0"
+    version: "32.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0"
+    version: "3.0.0"
   archive:
     dependency: "direct main"
     description:
@@ -126,7 +126,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   file:
     dependency: transitive
     description:
@@ -153,6 +153,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.2"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -209,6 +216,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   incrementally_loading_listview:
     dependency: "direct main"
     description:
@@ -306,7 +320,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.8.1"
   petitparser:
     dependency: transitive
     description:
@@ -423,7 +437,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0+4"
+    version: "2.0.1"
   sqflite_common:
     dependency: transitive
     description:
@@ -458,14 +472,14 @@ packages:
       name: syncfusion_flutter_charts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.3.55"
+    version: "19.3.59"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.3.55"
+    version: "19.3.59"
   synchronized:
     dependency: "direct main"
     description:
@@ -486,21 +500,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.19.3"
+    version: "1.20.0"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.7"
+    version: "0.4.9"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8"
+    version: "0.4.10"
   typed_data:
     dependency: transitive
     description:

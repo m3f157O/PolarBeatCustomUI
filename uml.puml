@@ -1,0 +1,387 @@
+@startuml
+set namespaceSeparator ::
+
+class "custom_polar_beat_ui_v2::controller::controller.dart::Controller" {
+  {static} -Controller _instance
+  +Lock lock
+  {static} +dynamic getController()
+  +void toDebugAuthCode()
+  +void toggleAsc()
+  +void toInitial()
+  +Future<bool> fetchToken()
+  +Future<bool> fetchProfile()
+  +Future<bool> refreshActivities()
+  +Future<bool> statsRoutine()
+  +Future<String> fetchTokenOnStart()
+  +void updateToken()
+  +void reset()
+  +Future<String> fetchId()
+  +void updateId()
+  +void toGetTokenFromPolar()
+  +void toViewMenu()
+  +void toLoginToPolar()
+  +Future<void> registerUser()
+  +Future<bool> fetchActivities()
+  +Future<bool> fetchActivitiesByDate()
+  +Future<bool> fetchActivitiesByDuration()
+  +Future<bool> fetchActivitiesByCalories()
+  +Future<bool> fetchActivitiesByMaximum()
+  +Future<bool> fetchActivitiesByAverage()
+  +Future<bool> fetchActivitiesBy()
+  +Future<bool> fetchSavedActivities()
+}
+
+"custom_polar_beat_ui_v2::controller::controller.dart::Controller" o-- "custom_polar_beat_ui_v2::controller::controller.dart::Controller"
+"custom_polar_beat_ui_v2::controller::controller.dart::Controller" o-- "synchronized::synchronized.dart::Lock"
+
+class "custom_polar_beat_ui_v2::controller::net_controller.dart::NetController" {
+  -String _token
+  -String _id
+  +void setToken()
+  +void setId()
+  +Future<bool> registerUser()
+  +Future<String> fireTokenDataRequest()
+  +Future<Map<String, Object>> userProfileRequest()
+  +Future<String> fetchNotifications()
+  +Future<String> startFetchActivityDataTransaction()
+  +Future<List<Map<String, Object>>> getDailyActivities()
+  +Future<List<Map<String, Object>>> processDailyActivities()
+  +Future<String> getExerciseSamples()
+  +Future<String> processExercisesSample()
+  +Future<String> getExerciseGPX()
+  +Future<String> getExerciseZones()
+  +Future<List<Map<String, Object>>> exerciseCoordinator()
+}
+
+class "custom_polar_beat_ui_v2::main.dart::GetAuthCodeFromPolar" {
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::main.dart::GetAuthCodeFromPolar"
+
+class "custom_polar_beat_ui_v2::main.dart::ViewLogic" {
+  +Widget displayState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::main.dart::ViewLogic"
+
+class "custom_polar_beat_ui_v2::model::db_model.dart::DataBase" {
+  {static} -Database _database
+  {static} -String _databaseName
+  +NetController net
+  +Future<bool> initDatabase()
+  +void updateTokenTable()
+  +void updateProfileTable()
+  +void updateExercisesTable()
+  +void dropTokenTable()
+  +void dropExercisesTable()
+  +void dropProfileTable()
+  +Future<bool> reset()
+  +void createTokenTable()
+  +void createProfileTable()
+  +void createExercisesTable()
+  +Future<String> fetchFromTokenTable()
+  +Future<Map<dynamic, dynamic>> fetchProfile()
+  +Future<bool> fetchAccessToken()
+  +Future<bool> registerUser()
+  +Future<bool> fireUserInfoRequest()
+  +Future<bool> fetchActivities()
+  +Future<bool> editActivities()
+  +Future<bool> fetchSavedActivities()
+  +Future<bool> fetchActivitiesBy()
+  +Future<bool> setTotalCalories()
+  +Future<bool> setTotalDistance()
+  +Future<bool> setTotalTime()
+  +bool compareDateTime()
+  +Future<bool> setTodayCalories()
+  +Future<bool> setTodayDistance()
+  +Future<bool> setTops()
+  +Future<bool> fetchTopBy()
+}
+
+"custom_polar_beat_ui_v2::model::db_model.dart::DataBase" o-- "sqflite_common::sqlite_api.dart::Database"
+"custom_polar_beat_ui_v2::model::db_model.dart::DataBase" o-- "custom_polar_beat_ui_v2::controller::net_controller.dart::NetController"
+
+class "custom_polar_beat_ui_v2::model::model.dart::AppState" {
+  +Map<dynamic, dynamic> FastSortAdapter
+  +int sort
+  +int totalCalories
+  +int localCalories
+  +int localDistance
+  +Duration totalTime
+  +Color main
+  +Color text
+  +Color second
+  +int totalDistance
+  +bool asc
+  -PHASE _state
+  +List<Map<dynamic, dynamic>> savedActivities
+  +List<Map<dynamic, dynamic>> newActivities
+  +List<Map<dynamic, dynamic>> topCalories
+  +List<Map<dynamic, dynamic>> topDuration
+  +List<Map<dynamic, dynamic>> topDistance
+  +Map<dynamic, dynamic> profile
+  +PHASE state
+  +void setstate()
+  +void setColor()
+  +void setSecond()
+  +void setSort()
+  +void setCalories()
+  +void setLocalCalories()
+  +void setLocalDistance()
+  +void setDistance()
+  +void setTime()
+  +void toogleAsc()
+  +void setActivities()
+  +void setDurationActivities()
+  +void setCaloriesActivities()
+  +void setDistanceActivities()
+  +void editActivity()
+  +void clearNewBuffer()
+  +void setNewActivities()
+  +void setProfile()
+}
+
+"custom_polar_beat_ui_v2::model::model.dart::AppState" o-- "dart::ui::Color"
+"custom_polar_beat_ui_v2::model::model.dart::AppState" o-- "custom_polar_beat_ui_v2::model::phases.dart::PHASE"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "custom_polar_beat_ui_v2::model::model.dart::AppState"
+
+class "custom_polar_beat_ui_v2::model::model.dart::SORT" {
+  +int index
+  {static} +List<SORT> values
+  {static} +SORT date
+  {static} +SORT calories
+  {static} +SORT average
+  {static} +SORT duration
+  {static} +SORT maximum
+}
+
+"custom_polar_beat_ui_v2::model::model.dart::SORT" o-- "custom_polar_beat_ui_v2::model::model.dart::SORT"
+"dart::core::Enum" <|-- "custom_polar_beat_ui_v2::model::model.dart::SORT"
+
+class "custom_polar_beat_ui_v2::model::phases.dart::PHASE" {
+  +int index
+  {static} +List<PHASE> values
+  {static} +PHASE startingUserMenu
+  {static} +PHASE loginToPolar
+  {static} +PHASE getTokenFromPolar
+  {static} +PHASE viewMenu
+}
+
+"custom_polar_beat_ui_v2::model::phases.dart::PHASE" o-- "custom_polar_beat_ui_v2::model::phases.dart::PHASE"
+"dart::core::Enum" <|-- "custom_polar_beat_ui_v2::model::phases.dart::PHASE"
+
+class "custom_polar_beat_ui_v2::view::client_menu_api.dart::ClientMenu" {
+  +ClientMenuAPI createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::client_menu_api.dart::ClientMenu"
+
+class "custom_polar_beat_ui_v2::view::client_menu_api.dart::ClientMenuAPI" {
+  +int selected
+  -int _selectedIndex
+  +Future<bool> fetchActivities()
+  +Future<bool> fetchSavedActivities()
+  +Future<bool> fireUserInfoRequest()
+  +Future<bool> statsRoutine()
+  +void initState()
+  -void _onItemTapped()
+  +Widget getWidget()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::client_menu_api.dart::ClientMenuAPI"
+
+class "custom_polar_beat_ui_v2::view::exercise_details.dart::ExerciseDetails" {
+  +Map<dynamic, dynamic> data
+  +Color color
+  +Color second
+  +Widget build()
+  +void onStartButtonPressed()
+  +void onBackIconTapped()
+}
+
+"custom_polar_beat_ui_v2::view::exercise_details.dart::ExerciseDetails" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "custom_polar_beat_ui_v2::view::exercise_details.dart::ExerciseDetails"
+
+class "custom_polar_beat_ui_v2::view::exercise_view.dart::ExerciseView" {
+  +Map<dynamic, dynamic> data
+  +List<ChartData> heartBeat
+  +List<ChartData> heartZones
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "custom_polar_beat_ui_v2::view::exercise_view.dart::ExerciseView"
+
+class "custom_polar_beat_ui_v2::view::get_token.dart::GetToken" {
+  +TokenRequest createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::get_token.dart::GetToken"
+
+class "custom_polar_beat_ui_v2::view::get_token.dart::TokenRequest" {
+  +Future<bool> token
+  +Future<bool> fetchAccessToken()
+  +Future<void> registerUser()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::get_token.dart::TokenRequest"
+
+class "custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::ChartData" {
+  +num value
+  +num year
+}
+
+class "custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::ShowHeartbeat" {
+  +dynamic color
+  +dynamic data
+  +dynamic title
+  +RequestAndShow createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::ShowHeartbeat"
+
+class "custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::RequestAndShow" {
+  +Map<dynamic, dynamic> data
+  +Color color
+  +String title
+  +List<ChartData> heartBeat
+  -TrackballBehavior _trackballBehavior
+  +void processHeartbeat()
+  +void initState()
+  +Widget build()
+}
+
+"custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::RequestAndShow" o-- "dart::ui::Color"
+"custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::RequestAndShow" o-- "syncfusion_flutter_charts::src::chart::user_interaction::trackball.dart::TrackballBehavior"
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::graphs::heartbeat_graph.dart::RequestAndShow"
+
+class "custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::ChartData" {
+  +num value
+  +num year
+}
+
+class "custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::HistogramDefault" {
+  +Map<dynamic, dynamic> data
+  +_HistogramDefaultState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::HistogramDefault"
+
+class "custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::_HistogramDefaultState" {
+  -bool _showDistributionCurve
+  -TooltipBehavior _tooltipBehavior
+  +Map<dynamic, dynamic> data
+  +List<ChartData> chartData
+  +Color color
+  +String title
+  +Widget buildSettings()
+  +Widget build()
+  -SfCartesianChart _buildDefaultHistogramChart()
+  -List<HistogramSeries<ChartData, double>> _getHistogramSeries()
+  +void initState()
+}
+
+"custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::_HistogramDefaultState" o-- "syncfusion_flutter_charts::src::common::user_interaction::tooltip.dart::TooltipBehavior"
+"custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::_HistogramDefaultState" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::graphs::zones_graph.dart::_HistogramDefaultState"
+
+class "custom_polar_beat_ui_v2::view::login_to_polar_web.dart::LoginToPolarWeb" {
+  +_LoginToPolarWebState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::login_to_polar_web.dart::LoginToPolarWeb"
+
+class "custom_polar_beat_ui_v2::view::login_to_polar_web.dart::_LoginToPolarWebState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::login_to_polar_web.dart::_LoginToPolarWebState"
+
+class "custom_polar_beat_ui_v2::view::show_data.dart::ShowData" {
+  +RequestAndShow createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::show_data.dart::ShowData"
+
+class "custom_polar_beat_ui_v2::view::show_data.dart::RequestAndShow" {
+  +List<Map<dynamic, dynamic>> newActivities
+  +List<Map<dynamic, dynamic>> savedActivities
+  +Map<dynamic, dynamic> msg3
+  +bool waiting
+  -ScrollController _scrollController
+  -ScrollController _scrollController2
+  +void onItemTapped()
+  +void initState()
+  +Widget build()
+}
+
+"custom_polar_beat_ui_v2::view::show_data.dart::RequestAndShow" o-- "flutter::src::widgets::scroll_controller.dart::ScrollController"
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::show_data.dart::RequestAndShow"
+
+class "custom_polar_beat_ui_v2::view::show_profile.dart::ShowProfile" {
+  +_ShowProfileState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::show_profile.dart::ShowProfile"
+
+class "custom_polar_beat_ui_v2::view::show_profile.dart::_ShowProfileState" {
+  +List<Map<dynamic, dynamic>> topDistanceActivities
+  +List<Map<dynamic, dynamic>> topCaloriesActivities
+  +List<Map<dynamic, dynamic>> topDurationActivities
+  +Widget build()
+  +void onStartButtonPressed()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::show_profile.dart::_ShowProfileState"
+
+class "custom_polar_beat_ui_v2::view::show_sort.dart::ShowSort" {
+  +SelectSort createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::show_sort.dart::ShowSort"
+
+class "custom_polar_beat_ui_v2::view::show_sort.dart::SelectSort" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::show_sort.dart::SelectSort"
+
+class "custom_polar_beat_ui_v2::view::sort.dart::Sort" {
+  +_SortState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::sort.dart::Sort"
+
+class "custom_polar_beat_ui_v2::view::sort.dart::_SortState" {
+  -int _tabIconIndexSelected
+  -int _tabIconIndexSelected2
+  -List<String> _listTextTabToggle
+  -List<Color> _listIconTabToggle
+  -List<String> _listGenderText
+  -List<String> _listGenderEmpty
+  -List<String> _listGenderEmpty2
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::sort.dart::_SortState"
+
+class "custom_polar_beat_ui_v2::view::starting_screen.dart::StartingScreen" {
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "custom_polar_beat_ui_v2::view::starting_screen.dart::StartingScreen"
+
+class "custom_polar_beat_ui_v2::view::starting_screen.dart::DebugAuthCode" {
+  +Future<String> msg
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "custom_polar_beat_ui_v2::view::starting_screen.dart::DebugAuthCode"
+
+
+@enduml
