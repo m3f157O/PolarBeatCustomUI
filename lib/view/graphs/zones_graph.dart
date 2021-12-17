@@ -15,9 +15,7 @@ class ChartData {
 
   ChartData(this.value, this.year);
 }
-///Renders histogram chart samples
-///
-///
+
 class HistogramDefault extends StatefulWidget {
 
 
@@ -86,7 +84,6 @@ class _HistogramDefaultState extends State<HistogramDefault> {
     }
   }
 
-  /// Get the cartesian chart with histogram series
   SfCartesianChart _buildDefaultHistogramChart() {
     return SfCartesianChart(
       plotAreaBorderWidth: 0,
@@ -97,7 +94,7 @@ class _HistogramDefaultState extends State<HistogramDefault> {
         maximum: 5,
       ),
       primaryYAxis: NumericAxis(
-          name: 'Number of Students',
+          name: 'Beats',
           minimum: 0,
           maximum: 220,
           axisLine: const AxisLine(width: 0),
@@ -107,7 +104,6 @@ class _HistogramDefaultState extends State<HistogramDefault> {
     );
   }
 
-  ///Get the histogram series
   List<HistogramSeries<ChartData, double>> _getHistogramSeries() {
 
     return <HistogramSeries<ChartData, double>>[
@@ -115,14 +111,11 @@ class _HistogramDefaultState extends State<HistogramDefault> {
         name: 'Score',
         dataSource: chartData,
 
-        /// If we enable this property distribution line is sets in histogram.
         showNormalDistributionCurve: _showDistributionCurve,
 
-        /// It used to add the color for distribution line.
         curveColor: const Color.fromRGBO(192, 108, 132, 1),
         binInterval: 1,
 
-        /// It used to add the dashes line for distribution line.
         curveDashArray: <double>[12, 3, 3, 3],
         width: 0.99,
         curveWidth: 2.5,

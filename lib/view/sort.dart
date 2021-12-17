@@ -47,7 +47,6 @@ class _SortState extends State<Sort> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
 
-            /// Basic Toggle Sample
             SizedBox(
               height: heightInPercent(7, context),
             ),

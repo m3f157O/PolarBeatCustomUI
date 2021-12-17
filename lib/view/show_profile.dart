@@ -34,7 +34,6 @@ class _ShowProfileState extends State<ShowProfile> {
     Color second=Provider.of<AppState>(context).second;
     int localCalories=Provider.of<AppState>(context).localCalories;
     int localDistance=Provider.of<AppState>(context).localDistance;
-    Color text=Provider.of<AppState>(context).text;
 
     String realname=profile["firstname"] ?? "";
 
@@ -271,7 +270,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                               ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
                                 },
                                 child: ListTile(
-                                  leading: Container(
+                                  leading: SizedBox(
                                     width: 40,
                                     height: 40,
                                     child: ShaderMask(
@@ -282,7 +281,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                         ]).createShader(bounds);
                                       },
                                       blendMode: BlendMode.srcATop,
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.accessibility,
                                         color: Colors.red,
                                         size: 30,
@@ -291,18 +290,18 @@ class _ShowProfileState extends State<ShowProfile> {
                                   ),
                                   title: Text(
                                     topCaloriesActivities.elementAt(i)['sport'].toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
                                   subtitle: Text(
                                     DateTime.parse(topCaloriesActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
                                   trailing: Text((topCaloriesActivities.elementAt(i)["calories"]).toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w900,
                                       )),
                                 ),
@@ -347,7 +346,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                               ExerciseDetails(data: topDistanceActivities.elementAt(i), color: main, second: second)));
                                 },
                                 child: ListTile(
-                                  leading: Container(
+                                  leading: SizedBox(
                                     width: 40,
                                     height: 40,
                                     child: ShaderMask(
@@ -358,7 +357,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                         ]).createShader(bounds);
                                       },
                                       blendMode: BlendMode.srcATop,
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.accessibility,
                                         color: Colors.red,
                                         size: 30,
@@ -367,18 +366,18 @@ class _ShowProfileState extends State<ShowProfile> {
                                   ),
                                   title: Text(
                                     topDistanceActivities.elementAt(i)['sport'].toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
                                   subtitle: Text(
                                     DateTime.parse(topDistanceActivities.elementAt(i).entries.elementAt(5).value).toString().substring(0,19),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
                                   trailing: Text((topDistanceActivities.elementAt(i)["distance"]).toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w900,
                                       )),
                                 ),
@@ -416,7 +415,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                               ExerciseDetails(data: topCaloriesActivities.elementAt(i), color: main, second: second)));
                                 },
                                 child: ListTile(
-                                  leading: Container(
+                                  leading: SizedBox(
                                     width: 40,
                                     height: 40,
                                     child: ShaderMask(

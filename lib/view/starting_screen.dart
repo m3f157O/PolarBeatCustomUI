@@ -36,7 +36,6 @@ class DebugAuthCode extends State<StartingScreen> {
 
     return MaterialApp(
 
-        title: 'Auth0 2',
         home: Scaffold(
 
             body: Row(
@@ -92,12 +91,12 @@ class DebugAuthCode extends State<StartingScreen> {
                   ),
 
                 ],
-              )],
+              )
+              ],
             )
+        )
 
-                  )
-
-            );
+    );
   }
 }
 

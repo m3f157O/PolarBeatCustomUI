@@ -97,13 +97,11 @@ class RequestAndShow extends State<ShowHeartbeat> {
                 primaryXAxis: NumericAxis(
 
                   interactiveTooltip: const InteractiveTooltip(
-                    // Enables the crosshair tooltip
                     enable: true,
                   ),
                 ),
                 primaryYAxis: NumericAxis(
                   interactiveTooltip: const InteractiveTooltip(
-                    // Enables the crosshair tooltip
                       enable: true
 
                   ),
