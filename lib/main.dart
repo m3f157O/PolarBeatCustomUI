@@ -30,7 +30,7 @@ void main() {
 const authDomain = 'custompolarinterface.eu.auth0.com';
 const authClient = 'rsy7ZGINmoO9EHFRiSzJddP8r2pR3wAr';
 const polarClient = '21e2f720-3832-42d4-b8ad-3d8ef0067023';
-const polarSecret = 'b9ea73d7-0189-4dce-ba0a-fce95c7ebd74';  //TODO PROTECT THIS
+
 
 const authRedirectUri = 'com.auth0.custompolarinterface://login-callback';
 const authIssuer = 'https://$authDomain';
